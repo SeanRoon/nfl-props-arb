@@ -4,13 +4,15 @@ FanDuel publishes no documented public API. The endpoints used here are the ones
 its own web client calls. They are unstable by nature, scraping them is contrary
 to FanDuel's terms of service, and access is actively defended.
 
-As of 2026-09-16 from this machine, ``sbapi.fanduel.com`` refuses the TLS
-handshake outright (``SSLV3_ALERT_HANDSHAKE_FAILURE``) from three independent
-TLS stacks: Python ``ssl``, curl/schannel, and curl_cffi/BoringSSL with browser
-impersonation. That is edge-level blocking rather than a fingerprint mismatch,
-so this provider cannot currently fetch from here. It is written to work on a
-network that permits it, and otherwise raises `FanDuelUnavailable` pointing at
-manual entry.
+`sbapi.fanduel.com` -- the hostname this module targets, and the one every
+public recipe still cites -- **no longer exists**. Against the same CloudFront
+IP, that SNI is rejected while `sportsbook.fanduel.com` completes a TLS 1.3
+handshake, and DNS is healthy. It is a retired endpoint rather than a block, so
+no amount of TLS impersonation will revive it. `api.sportsbook.fanduel.com`
+resolves and serves TLS but 404s every path tried so far.
+
+Until the live endpoint is identified by observing the browser, this provider
+cannot fetch and `--odds-source manual` is the working path.
 
 The parsing below follows the known shape of FanDuel's ``event-page`` payload
 but has **not** been validated against a live response. Treat

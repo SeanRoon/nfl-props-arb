@@ -93,7 +93,16 @@ Every resting NO offer at or below the fee-adjusted threshold is shown, **down t
 
 `odds/fanduel.py` targets the undocumented endpoints FanDuel's own web client uses (`sbapi.fanduel.com/api/event-page`, `/api/content-managed-page`). Scraping these is contrary to FanDuel's terms of service.
 
-**As of 2026-09-16, `sbapi.fanduel.com` refuses the TLS handshake from this machine** (`SSLV3_ALERT_HANDSHAKE_FAILURE`) across three independent TLS stacks — Python `ssl`, curl/schannel, and curl_cffi/BoringSSL with `chrome124`/`chrome120`/`safari17_0` impersonation. Every path on the host fails identically, while `sportsbook.fanduel.com` returns only the SPA shell. This is **edge-level blocking, not a fingerprint mismatch**, so impersonation alone will not fix it.
+**`sbapi.fanduel.com` no longer exists.** It refuses the TLS handshake (`SSLV3_ALERT_HANDSHAKE_FAILURE`) from every client tried — Python `ssl`, curl/schannel, and curl_cffi with eight fingerprints (Chrome, Edge, Firefox, Safari, Android). The uniformity was the clue:
+
+- DNS is healthy; system resolver and Cloudflare DoH agree on the A records.
+- Against the *same* CloudFront IP, SNI `sbapi.fanduel.com` is rejected while SNI `sportsbook.fanduel.com` completes a TLS 1.3 handshake.
+
+So the CDN simply does not serve that hostname any more. This is a **retired endpoint, not a block** — the widely-circulated `sbapi.fanduel.com` recipe is stale. Egress here is a residential Verizon FiOS IP in Pittsburgh (PA is a legal FanDuel state), so IP reputation is not the issue either.
+
+The successor is partly identified: `api.sportsbook.fanduel.com` resolves and completes TLS, but every guessed path returns an nginx `default backend - 404`. Routes recovered from the site's JS bundles (`/api/sports/fixedodds/readonly/v1/getMarketPrices`, `/api/sports/navigation/facet/v1.0/search`, `/api/v1/event-selections`) 404 there too, so they are served from another host — likely a state/region-specific one.
+
+**The way to settle it is to observe the real browser** rather than guess: load the NFL page in Playwright and record which host and path actually serves prop odds.
 
 Consequences:
 - `--odds-source manual` is the working path today.
@@ -115,5 +124,5 @@ Consequences:
 - **Phase 2 (done):** `edge` + `combine` math with golden tests.
 - **Phase 3 (done):** Polymarket US discovery and book client; 128 props across 16 games, 0 skipped.
 - **Phase 4 (done):** manual odds provider, scan pipeline, rich/JSON reporting, Parquet snapshots.
-- **Phase 5 (blocked):** FanDuel scraper written but unreachable from this network; parser unvalidated.
+- **Phase 5 (blocked):** FanDuel endpoint `sbapi.fanduel.com` is retired, not blocked; successor route unidentified. Scraper and parser unvalidated. Next move is browser observation, not more guessing.
 - **Phase 6 (not started):** accumulate snapshots, then measure whether the longshot bias is real and persistent rather than assumed.
