@@ -1,0 +1,5579 @@
+{
+  "events": [
+    {
+      "id": "101466",
+      "ticker": "nfl-det-buf-2026-09-17",
+      "slug": "nfl-det-buf-2026-09-17",
+      "title": "DET Lions vs BUF Bills",
+      "description": "DET Lions vs BUF Bills",
+      "startDate": "2026-09-18T00:15:00Z",
+      "endDate": "2026-09-18T23:59:00Z",
+      "active": true,
+      "closed": false,
+      "archived": false,
+      "category": "sports",
+      "createdAt": "2026-09-03T04:05:45Z",
+      "updatedAt": "2026-09-16T23:10:36Z",
+      "startTime": "2026-09-18T00:15:00Z",
+      "seriesSlug": "nfl-2025",
+      "period": "NS",
+      "markets": [
+        {
+          "id": "727262",
+          "question": "Total Successful Two-Point Conversions: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-2pc-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:06Z",
+          "description": "This market will settle to Yes if either team records at least one successful two-point conversion in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:06Z",
+          "updatedAt": "2026-09-16T22:24:50Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_total_two_point_conversions",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454014",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-2pc-0pt5",
+              "createdAt": "2026-09-08T02:52:06Z",
+              "updatedAt": "2026-09-08T02:52:06Z",
+              "description": "Yes",
+              "price": "0.3500",
+              "marketId": 727262,
+              "long": true,
+              "quote": {
+                "value": "0.3600",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454015",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-2pc-0pt5",
+              "createdAt": "2026-09-08T02:52:06Z",
+              "updatedAt": "2026-09-08T02:52:06Z",
+              "description": "No",
+              "price": "0.3600",
+              "marketId": 727262,
+              "long": false,
+              "quote": {
+                "value": "0.65",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"Yes\",\"No\"]",
+          "outcomePrices": "[\"0.3500\",\"0.3600\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Successful Two-Point Conversion?",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.3500",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.3600",
+            "currency": "USD"
+          },
+          "titleShort": "Two-point conversion",
+          "ep3SyncedAt": "2026-09-14T11:46:42Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "727263",
+          "question": "Pick-Six?: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-pick6-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:07Z",
+          "description": "This market will settle to Yes if either team records at least one interception return for a touchdown in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:07Z",
+          "updatedAt": "2026-09-16T22:09:45Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_pick_six",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454016",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-pick6-0pt5",
+              "createdAt": "2026-09-08T02:52:07Z",
+              "updatedAt": "2026-09-08T02:52:07Z",
+              "description": "Yes",
+              "price": "0.3300",
+              "marketId": 727263,
+              "long": true,
+              "quote": {
+                "value": "0.3500",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454017",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-pick6-0pt5",
+              "createdAt": "2026-09-08T02:52:07Z",
+              "updatedAt": "2026-09-08T02:52:07Z",
+              "description": "No",
+              "price": "0.3500",
+              "marketId": 727263,
+              "long": false,
+              "quote": {
+                "value": "0.67",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"No\",\"Yes\"]",
+          "outcomePrices": "[\"0.3300\",\"0.3500\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Pick-six",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.3300",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.3500",
+            "currency": "USD"
+          },
+          "titleShort": "Pick-six",
+          "ep3SyncedAt": "2026-09-14T11:46:42Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "727260",
+          "question": "Team Total Defensive/Special Teams Touchdowns: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-tdstd-det-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:03Z",
+          "image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+          "description": "Team Total Defensive/Special Teams Touchdowns settles Yes if Detroit Lions records more than 0.5 defensive or special teams touchdowns in the full game of the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. Defensive/special teams touchdowns include interception returns, opponent-fumble returns, blocked-kick returns, kickoff returns, and punt returns; offensive touchdowns do not count. If the game is delayed, postponed, or suspended before this market is determined and is not resumed or rescheduled within two days of the originally scheduled date, it will be flagged for manual last-fair-market-price settlement. Outcome sourced from the NFL.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:04Z",
+          "updatedAt": "2026-09-16T22:39:48Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_team_total_defensive_special_teams_touchdowns",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454010",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-tdstd-det-0pt5",
+              "createdAt": "2026-09-08T02:52:04Z",
+              "updatedAt": "2026-09-08T02:52:04Z",
+              "description": "Yes",
+              "price": "0.3100",
+              "marketId": 727260,
+              "long": true,
+              "teamId": 58,
+              "team": {
+                "id": 58,
+                "name": "Detroit Lions",
+                "abbreviation": "det",
+                "league": "nfl",
+                "record": "1-0",
+                "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/DET.png",
+                "alias": "Lions",
+                "safeName": "DET Lions",
+                "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingRight_Icon%40160x160.png",
+                "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingLeft_Icon%40160x160.png",
+                "colorPrimary": "#0076B6",
+                "providerId": 11,
+                "ordering": "away",
+                "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+                "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+                "displayAbbreviation": "DET",
+                "conference": "",
+                "providerIds": [
+                  {
+                    "provider": "PROVIDER_SPORTSDATAIO",
+                    "providerId": "11"
+                  },
+                  {
+                    "provider": "PROVIDER_SPORTRADAR",
+                    "providerId": "c5a59daa-53a7-4de0-851f-fb12be893e9e"
+                  }
+                ],
+                "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+                "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+                "color": {
+                  "light": "#0076B6",
+                  "dark": "#0076B6"
+                },
+                "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+              },
+              "quote": {
+                "value": "0.3200",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454011",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-tdstd-det-0pt5",
+              "createdAt": "2026-09-08T02:52:04Z",
+              "updatedAt": "2026-09-08T02:52:04Z",
+              "description": "No",
+              "price": "0.3200",
+              "marketId": 727260,
+              "long": false,
+              "teamId": 58,
+              "team": {
+                "id": 58,
+                "name": "Detroit Lions",
+                "abbreviation": "det",
+                "league": "nfl",
+                "record": "1-0",
+                "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/DET.png",
+                "alias": "Lions",
+                "safeName": "DET Lions",
+                "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingRight_Icon%40160x160.png",
+                "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingLeft_Icon%40160x160.png",
+                "colorPrimary": "#0076B6",
+                "providerId": 11,
+                "ordering": "home",
+                "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+                "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+                "displayAbbreviation": "DET",
+                "conference": "",
+                "providerIds": [
+                  {
+                    "provider": "PROVIDER_SPORTSDATAIO",
+                    "providerId": "11"
+                  },
+                  {
+                    "provider": "PROVIDER_SPORTRADAR",
+                    "providerId": "c5a59daa-53a7-4de0-851f-fb12be893e9e"
+                  }
+                ],
+                "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+                "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+                "color": {
+                  "light": "#0076B6",
+                  "dark": "#0076B6"
+                },
+                "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+              },
+              "quote": {
+                "value": "0.69",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"No\",\"Yes\"]",
+          "outcomePrices": "[\"0.3100\",\"0.3200\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Detroit Lions over 0.5 total D/ST touchdowns",
+          "color": "#0076B6",
+          "darkColor": "#0076B6",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.3100",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.3200",
+            "currency": "USD"
+          },
+          "metadata": {
+            "teamId": 58
+          },
+          "titleShort": "DET over 0.5 D/ST touchdowns",
+          "ep3SyncedAt": "2026-09-14T11:46:43Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "727261",
+          "question": "Team Total Defensive/Special Teams Touchdowns: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-tdstd-buf-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:05Z",
+          "image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+          "description": "Team Total Defensive/Special Teams Touchdowns settles Yes if Buffalo Bills records more than 0.5 defensive or special teams touchdowns in the full game of the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. Defensive/special teams touchdowns include interception returns, opponent-fumble returns, blocked-kick returns, kickoff returns, and punt returns; offensive touchdowns do not count. If the game is delayed, postponed, or suspended before this market is determined and is not resumed or rescheduled within two days of the originally scheduled date, it will be flagged for manual last-fair-market-price settlement. Outcome sourced from the NFL.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:05Z",
+          "updatedAt": "2026-09-16T22:09:46Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_team_total_defensive_special_teams_touchdowns",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454012",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-tdstd-buf-0pt5",
+              "createdAt": "2026-09-08T02:52:05Z",
+              "updatedAt": "2026-09-08T02:52:05Z",
+              "description": "Yes",
+              "price": "0.2600",
+              "marketId": 727261,
+              "long": true,
+              "teamId": 51,
+              "team": {
+                "id": 51,
+                "name": "Buffalo Bills",
+                "abbreviation": "buf",
+                "league": "nfl",
+                "record": "1-0",
+                "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/BUF.png",
+                "alias": "Bills",
+                "safeName": "BUF Bills",
+                "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingRight_Icon%40160x160.png",
+                "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingLeft_Icon%40160x160.png",
+                "colorPrimary": "#00338D",
+                "providerId": 4,
+                "ordering": "away",
+                "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+                "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+                "displayAbbreviation": "BUF",
+                "conference": "",
+                "providerIds": [
+                  {
+                    "provider": "PROVIDER_SPORTSDATAIO",
+                    "providerId": "4"
+                  },
+                  {
+                    "provider": "PROVIDER_SPORTRADAR",
+                    "providerId": "768c92aa-75ff-4a43-bcc0-f2798c2e1724"
+                  }
+                ],
+                "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+                "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+                "color": {
+                  "light": "#00338D",
+                  "dark": "#00338D"
+                },
+                "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+              },
+              "quote": {
+                "value": "0.2700",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454013",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-tdstd-buf-0pt5",
+              "createdAt": "2026-09-08T02:52:05Z",
+              "updatedAt": "2026-09-08T02:52:05Z",
+              "description": "No",
+              "price": "0.2700",
+              "marketId": 727261,
+              "long": false,
+              "teamId": 51,
+              "team": {
+                "id": 51,
+                "name": "Buffalo Bills",
+                "abbreviation": "buf",
+                "league": "nfl",
+                "record": "1-0",
+                "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/BUF.png",
+                "alias": "Bills",
+                "safeName": "BUF Bills",
+                "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingRight_Icon%40160x160.png",
+                "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingLeft_Icon%40160x160.png",
+                "colorPrimary": "#00338D",
+                "providerId": 4,
+                "ordering": "home",
+                "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+                "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+                "displayAbbreviation": "BUF",
+                "conference": "",
+                "providerIds": [
+                  {
+                    "provider": "PROVIDER_SPORTSDATAIO",
+                    "providerId": "4"
+                  },
+                  {
+                    "provider": "PROVIDER_SPORTRADAR",
+                    "providerId": "768c92aa-75ff-4a43-bcc0-f2798c2e1724"
+                  }
+                ],
+                "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+                "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+                "color": {
+                  "light": "#00338D",
+                  "dark": "#00338D"
+                },
+                "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+              },
+              "quote": {
+                "value": "0.74",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"Yes\",\"No\"]",
+          "outcomePrices": "[\"0.2600\",\"0.2700\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Buffalo Bills over 0.5 total D/ST touchdowns",
+          "color": "#00338D",
+          "darkColor": "#C60C30",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.2600",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.2700",
+            "currency": "USD"
+          },
+          "metadata": {
+            "teamId": 51
+          },
+          "titleShort": "BUF over 0.5 D/ST touchdowns",
+          "ep3SyncedAt": "2026-09-14T11:46:42Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "727259",
+          "question": "Total Defensive/Special Teams Touchdowns: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-dstd-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:02Z",
+          "description": "This market will settle to Yes if either team records at least one defensive or special teams touchdown in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:02Z",
+          "updatedAt": "2026-09-16T22:39:48Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_total_defensive_special_teams_touchdowns",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454008",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-dstd-0pt5",
+              "createdAt": "2026-09-08T02:52:02Z",
+              "updatedAt": "2026-09-08T02:52:02Z",
+              "description": "Yes",
+              "price": "0.1800",
+              "marketId": 727259,
+              "long": true,
+              "quote": {
+                "value": "0.2100",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454009",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-dstd-0pt5",
+              "createdAt": "2026-09-08T02:52:02Z",
+              "updatedAt": "2026-09-08T02:52:02Z",
+              "description": "No",
+              "price": "0.2100",
+              "marketId": 727259,
+              "long": false,
+              "quote": {
+                "value": "0.82",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"Yes\",\"No\"]",
+          "outcomePrices": "[\"0.1800\",\"0.2100\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Defensive or Special Team Touchdown?",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.1800",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.2100",
+            "currency": "USD"
+          },
+          "titleShort": "D/ST touchdown",
+          "ep3SyncedAt": "2026-09-14T11:46:43Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "727264",
+          "question": "Kickoff/Punt Return Touchdown?: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-krtd-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-08T02:52:08Z",
+          "description": "This market will settle to Yes if either team records at least one kickoff or punt return touchdown in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-08T02:52:08Z",
+          "updatedAt": "2026-09-16T22:24:50Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_kickoff_punt_return_touchdown",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1454018",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-krtd-0pt5",
+              "createdAt": "2026-09-08T02:52:08Z",
+              "updatedAt": "2026-09-08T02:52:08Z",
+              "description": "Yes",
+              "price": "0.0100",
+              "marketId": 727264,
+              "long": true,
+              "quote": {
+                "value": "0.1200",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1454019",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-krtd-0pt5",
+              "createdAt": "2026-09-08T02:52:08Z",
+              "updatedAt": "2026-09-08T02:52:08Z",
+              "description": "No",
+              "price": "0.1200",
+              "marketId": 727264,
+              "long": false,
+              "quote": {
+                "value": "0.99",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"No\",\"Yes\"]",
+          "outcomePrices": "[\"0.0100\",\"0.1200\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Kickoff/punt return touchdown",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.0100",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.1200",
+            "currency": "USD"
+          },
+          "titleShort": "Return touchdown",
+          "ep3SyncedAt": "2026-09-14T11:46:42Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "659745",
+          "question": "Overtime?: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-ot-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-03T04:32:46Z",
+          "description": "This market will settle to Yes if overtime is played in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-03T04:32:46Z",
+          "updatedAt": "2026-09-16T22:54:43Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_overtime",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1319002",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-ot-0pt5",
+              "createdAt": "2026-09-03T04:32:46Z",
+              "updatedAt": "2026-09-03T04:32:46Z",
+              "description": "Yes",
+              "price": "0.0600",
+              "marketId": 659745,
+              "long": true,
+              "quote": {
+                "value": "0.0700",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1319003",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-ot-0pt5",
+              "createdAt": "2026-09-03T04:32:46Z",
+              "updatedAt": "2026-09-03T04:32:46Z",
+              "description": "No",
+              "price": "0.0700",
+              "marketId": 659745,
+              "long": false,
+              "quote": {
+                "value": "0.94",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"Yes\",\"No\"]",
+          "outcomePrices": "[\"0.0600\",\"0.0700\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Overtime",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.0600",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.0700",
+            "currency": "USD"
+          },
+          "titleShort": "Overtime",
+          "ep3SyncedAt": "2026-09-14T11:48:14Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        },
+        {
+          "id": "746962",
+          "question": "Will there be a Safety?: Over 0.5",
+          "slug": "astatc-nfl-det-buf-2026-09-17-safety-0pt5",
+          "endDate": "2026-10-02T00:15:00Z",
+          "category": "sports",
+          "startDate": "2026-09-09T03:16:48Z",
+          "description": "This market will settle to Yes if either team records at least one safety in the Detroit Lions vs Buffalo Bills professional football game scheduled for Sep 17, 2026. Overtime is included if played. If the game is delayed, postponed, or suspended and not rescheduled to a date within two days of the originally scheduled date, the market will settle to the last fair market price. Outcome sourced from the relevant governing body.",
+          "active": true,
+          "marketType": "props",
+          "closed": false,
+          "createdAt": "2026-09-09T03:16:48Z",
+          "updatedAt": "2026-09-16T23:09:57Z",
+          "archived": false,
+          "orderPriceMinTickSize": 0.01,
+          "gameStartTime": "2026-09-18T00:15:00Z",
+          "manualActivation": false,
+          "sportsMarketType": "football_game_safety",
+          "line": 0.5,
+          "marketSides": [
+            {
+              "id": "1493414",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-safety-0pt5",
+              "createdAt": "2026-09-09T03:16:48Z",
+              "updatedAt": "2026-09-09T03:16:48Z",
+              "description": "Yes",
+              "price": "0.0500",
+              "marketId": 746962,
+              "long": true,
+              "quote": {
+                "value": "0.0600",
+                "currency": "USD"
+              },
+              "tradable": true
+            },
+            {
+              "id": "1493415",
+              "marketSideType": "MARKET_SIDE_TYPE_INSTRUMENT",
+              "identifier": "astatc-nfl-det-buf-2026-09-17-safety-0pt5",
+              "createdAt": "2026-09-09T03:16:48Z",
+              "updatedAt": "2026-09-09T03:16:48Z",
+              "description": "No",
+              "price": "0.0600",
+              "marketId": 746962,
+              "long": false,
+              "quote": {
+                "value": "0.95",
+                "currency": "USD"
+              },
+              "tradable": true
+            }
+          ],
+          "outcomes": "[\"Yes\",\"No\"]",
+          "outcomePrices": "[\"0.0500\",\"0.0600\"]",
+          "ep3Status": "OPEN",
+          "status": "MARKET_STATUS_OPEN",
+          "assetPriceTerms": null,
+          "sportsMarketTypeV2": "SPORTS_MARKET_TYPE_PROP",
+          "hidden": false,
+          "tags": [],
+          "title": "Safety scored",
+          "feeCoefficient": 0.06,
+          "bestBidQuote": {
+            "value": "0.0500",
+            "currency": "USD"
+          },
+          "bestAskQuote": {
+            "value": "0.0600",
+            "currency": "USD"
+          },
+          "titleShort": "Safety",
+          "ep3SyncedAt": "2026-09-14T11:45:55Z",
+          "minimumTradeQty": 0.01,
+          "comboEnabled": true
+        }
+      ],
+      "gameId": 19470,
+      "sportradarGameId": "5a002979-ae8f-4c03-b8da-00c900d91a09",
+      "participants": [],
+      "hidden": false,
+      "tags": [
+        {
+          "id": "1",
+          "label": "NFL",
+          "slug": "nfl",
+          "createdAt": "2025-09-25T16:13:27Z",
+          "updatedAt": "2026-09-16T23:10:45Z",
+          "league": {
+            "id": 1,
+            "name": "NFL",
+            "sportId": 3,
+            "tagId": 1,
+            "image": "https://static.polymarket.us/images/new-category-icons/Icon-Rugby.png",
+            "resolution": "https://www.nfl.com/",
+            "ordering": "away",
+            "activeSeriesId": 2,
+            "isOperational": true,
+            "automaticResolution": false,
+            "createdAt": "2026-03-05T18:30:42Z",
+            "slug": "nfl",
+            "abbreviation": "NFL"
+          },
+          "parentId": 13,
+          "subtags": [],
+          "hub": null
+        },
+        {
+          "id": "2",
+          "label": "Sports",
+          "slug": "sports",
+          "createdAt": "2025-09-25T16:13:27Z",
+          "updatedAt": "2026-09-16T23:10:45Z",
+          "subtags": [],
+          "hub": null
+        },
+        {
+          "id": "3",
+          "label": "Games",
+          "slug": "games",
+          "createdAt": "2025-09-25T16:13:27Z",
+          "updatedAt": "2026-09-16T23:10:45Z",
+          "subtags": [],
+          "hub": null
+        },
+        {
+          "id": "13",
+          "label": "Football",
+          "slug": "football",
+          "createdAt": "2026-03-05T18:30:42Z",
+          "updatedAt": "2026-09-16T23:10:45Z",
+          "sport": {
+            "id": 3,
+            "name": "Football",
+            "tagId": 13,
+            "createdAt": "2026-03-05T18:30:42Z",
+            "slug": "football"
+          },
+          "subtags": [
+            {
+              "id": "1",
+              "label": "NFL",
+              "slug": "nfl",
+              "createdAt": "2025-09-25T16:13:27Z",
+              "updatedAt": "2026-09-16T23:10:45Z",
+              "league": {
+                "id": 1,
+                "name": "NFL",
+                "sportId": 3,
+                "tagId": 1,
+                "image": "https://static.polymarket.us/images/new-category-icons/Icon-Rugby.png",
+                "resolution": "https://www.nfl.com/",
+                "ordering": "away",
+                "activeSeriesId": 2,
+                "isOperational": true,
+                "automaticResolution": false,
+                "createdAt": "2026-03-05T18:30:42Z",
+                "slug": "nfl",
+                "abbreviation": "NFL"
+              },
+              "parentId": 13,
+              "subtags": [],
+              "hub": null
+            }
+          ],
+          "hub": null
+        },
+        {
+          "id": "1237",
+          "label": "Week 2",
+          "slug": "week-2",
+          "updatedAt": "2026-09-16T23:10:45Z",
+          "tradable": false,
+          "subtags": [],
+          "hub": null
+        }
+      ],
+      "teams": [
+        {
+          "id": 58,
+          "name": "Detroit Lions",
+          "abbreviation": "det",
+          "league": "nfl",
+          "record": "1-0",
+          "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/DET.png",
+          "alias": "Lions",
+          "safeName": "DET Lions",
+          "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingRight_Icon%40160x160.png",
+          "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_DetroitLions_FacingLeft_Icon%40160x160.png",
+          "colorPrimary": "#0076B6",
+          "providerId": 11,
+          "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+          "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+          "displayAbbreviation": "DET",
+          "conference": "",
+          "providerIds": [
+            {
+              "provider": "PROVIDER_SPORTSDATAIO",
+              "providerId": "11"
+            },
+            {
+              "provider": "PROVIDER_SPORTRADAR",
+              "providerId": "c5a59daa-53a7-4de0-851f-fb12be893e9e"
+            }
+          ],
+          "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_L@320x320.png",
+          "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_DetroitLions_R@320x320.png",
+          "color": {
+            "light": "#0076B6",
+            "dark": "#0785CC"
+          },
+          "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+        },
+        {
+          "id": 51,
+          "name": "Buffalo Bills",
+          "abbreviation": "buf",
+          "league": "nfl",
+          "record": "1-0",
+          "logo": "https://polymarket-upload.s3.us-east-2.amazonaws.com/NFL+Team+Logos/BUF.png",
+          "alias": "Bills",
+          "safeName": "BUF Bills",
+          "homeIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingRight_Icon%40160x160.png",
+          "awayIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/Polymarket_BuffaloBills_FacingLeft_Icon%40160x160.png",
+          "colorPrimary": "#00338D",
+          "providerId": 4,
+          "longIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+          "shortIcon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+          "displayAbbreviation": "BUF",
+          "conference": "",
+          "providerIds": [
+            {
+              "provider": "PROVIDER_SPORTSDATAIO",
+              "providerId": "4"
+            },
+            {
+              "provider": "PROVIDER_SPORTRADAR",
+              "providerId": "768c92aa-75ff-4a43-bcc0-f2798c2e1724"
+            }
+          ],
+          "longIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_L@320x320.png",
+          "shortIconDark": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-logos/NFL/Polymarket_NFL_BuffaloBills_R@320x320.png",
+          "color": {
+            "light": "#00338D",
+            "dark": "#265BBF"
+          },
+          "imageDisplayType": "IMAGE_DISPLAY_TYPE_LOGO"
+        }
+      ],
+      "sortType": "manual",
+      "marketGroups": [
+        {
+          "id": "PRIMARY",
+          "title": "Primary",
+          "order": 0,
+          "marketIds": [
+            "657964"
+          ],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines",
+          "title": "Game Lines",
+          "order": 0,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread",
+          "title": "Spread",
+          "parentId": "game-lines",
+          "order": 0,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/full-game",
+          "title": "Full Game",
+          "parentId": "game-lines/spread",
+          "order": 0,
+          "marketIds": [
+            "890974",
+            "890972",
+            "890973",
+            "890971",
+            "890970",
+            "658075",
+            "658073",
+            "734475",
+            "658071",
+            "658069",
+            "658067",
+            "658065",
+            "658063",
+            "734474",
+            "658061",
+            "658059",
+            "658057",
+            "658055",
+            "658053",
+            "658051",
+            "658049",
+            "658047",
+            "658043",
+            "658045",
+            "658041",
+            "658039",
+            "658038",
+            "658036",
+            "658034",
+            "658032",
+            "658030",
+            "658028",
+            "734473",
+            "658025",
+            "658022",
+            "658019",
+            "658016",
+            "734472",
+            "658008",
+            "658013",
+            "658011"
+          ],
+          "line": 5.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/1st-half",
+          "title": "1st Half",
+          "parentId": "game-lines/spread",
+          "order": 1,
+          "marketIds": [
+            "726949",
+            "726950",
+            "726951",
+            "726948",
+            "726947",
+            "726946",
+            "726945",
+            "726943",
+            "726944",
+            "726942",
+            "726941",
+            "726940",
+            "726939",
+            "726938",
+            "726936",
+            "726937",
+            "726935",
+            "726934",
+            "726933",
+            "726932",
+            "726931",
+            "726930",
+            "726929",
+            "726928",
+            "726926",
+            "726927",
+            "726925",
+            "726924",
+            "726923",
+            "726922",
+            "726921",
+            "726920"
+          ],
+          "line": 3.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/2nd-half",
+          "title": "2nd Half",
+          "parentId": "game-lines/spread",
+          "order": 2,
+          "marketIds": [
+            "726979",
+            "726980",
+            "726981",
+            "726982",
+            "726983",
+            "726978",
+            "726977",
+            "726976",
+            "726974",
+            "726975",
+            "726973",
+            "726971",
+            "726972",
+            "726970",
+            "726969",
+            "726968",
+            "726967",
+            "726966",
+            "726965",
+            "726964",
+            "726963",
+            "726962",
+            "726961",
+            "726960",
+            "726959",
+            "726958",
+            "726957",
+            "726956",
+            "726955",
+            "726954",
+            "726953",
+            "726952"
+          ],
+          "line": 2.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/1st-quarter",
+          "title": "1st Quarter",
+          "parentId": "game-lines/spread",
+          "order": 3,
+          "marketIds": [
+            "727001",
+            "726998",
+            "726999",
+            "726997",
+            "726996",
+            "726995",
+            "726994",
+            "865461",
+            "726993",
+            "726992",
+            "726991",
+            "726989",
+            "726988",
+            "726984"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/2nd-quarter",
+          "title": "2nd Quarter",
+          "parentId": "game-lines/spread",
+          "order": 4,
+          "marketIds": [
+            "727019",
+            "727013",
+            "727014",
+            "727012",
+            "865462",
+            "727011",
+            "727009",
+            "727004",
+            "727002"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/3rd-quarter",
+          "title": "3rd Quarter",
+          "parentId": "game-lines/spread",
+          "order": 5,
+          "marketIds": [
+            "727035",
+            "727037",
+            "727033",
+            "727032",
+            "727031",
+            "727030",
+            "727029",
+            "865463",
+            "727028",
+            "727022"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/spread/4th-quarter",
+          "title": "4th Quarter",
+          "parentId": "game-lines/spread",
+          "order": 6,
+          "marketIds": [
+            "727055",
+            "727050",
+            "727049",
+            "727048",
+            "727047",
+            "865464",
+            "727046",
+            "727045",
+            "727042"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals",
+          "title": "Totals",
+          "parentId": "game-lines",
+          "order": 1,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/full-game",
+          "title": "Full Game",
+          "parentId": "game-lines/totals",
+          "order": 0,
+          "marketIds": [
+            "734756",
+            "734758",
+            "734760",
+            "734761",
+            "658983",
+            "658985",
+            "658987",
+            "658989",
+            "658991",
+            "658993",
+            "658995",
+            "658997",
+            "658999",
+            "891060",
+            "659001",
+            "891061",
+            "659003",
+            "891062",
+            "659005",
+            "891063",
+            "659006",
+            "659009",
+            "659011",
+            "659012",
+            "659014",
+            "659017",
+            "659018",
+            "659020",
+            "659022"
+          ],
+          "line": 54.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/1st-half",
+          "title": "1st Half",
+          "parentId": "game-lines/totals",
+          "order": 1,
+          "marketIds": [
+            "865465",
+            "865466",
+            "865467",
+            "727056",
+            "865469",
+            "727057",
+            "865470",
+            "727058",
+            "865471",
+            "727059",
+            "865472",
+            "865473",
+            "727060",
+            "865474",
+            "865475",
+            "865476",
+            "865477",
+            "865479",
+            "865480"
+          ],
+          "line": 26.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/2nd-half",
+          "title": "2nd Half",
+          "parentId": "game-lines/totals",
+          "order": 2,
+          "marketIds": [
+            "727061",
+            "865481",
+            "865483",
+            "727062",
+            "865486",
+            "727063",
+            "865487",
+            "727064",
+            "865488",
+            "865489",
+            "727065",
+            "865492",
+            "865494",
+            "865497"
+          ],
+          "line": 26.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/1st-quarter",
+          "title": "1st Quarter",
+          "parentId": "game-lines/totals",
+          "order": 3,
+          "marketIds": [
+            "865498",
+            "727066",
+            "865499",
+            "727067",
+            "865500",
+            "727068",
+            "727069",
+            "865501",
+            "865502",
+            "727070",
+            "865503",
+            "865505",
+            "727071",
+            "865504",
+            "865506"
+          ],
+          "line": 10.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/2nd-quarter",
+          "title": "2nd Quarter",
+          "parentId": "game-lines/totals",
+          "order": 4,
+          "marketIds": [
+            "727073",
+            "727072",
+            "727074",
+            "865507",
+            "727075",
+            "865508",
+            "865509",
+            "727076",
+            "727077",
+            "865510",
+            "865512",
+            "865511",
+            "865513",
+            "865514",
+            "865515"
+          ],
+          "line": 14.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/3rd-quarter",
+          "title": "3rd Quarter",
+          "parentId": "game-lines/totals",
+          "order": 5,
+          "marketIds": [
+            "865516",
+            "865517",
+            "727078",
+            "865519",
+            "865518",
+            "727080",
+            "727079",
+            "865520",
+            "865521",
+            "727082",
+            "727081",
+            "865524",
+            "727083",
+            "865523",
+            "865522"
+          ],
+          "line": 10.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/totals/4th-quarter",
+          "title": "4th Quarter",
+          "parentId": "game-lines/totals",
+          "order": 6,
+          "marketIds": [
+            "727085",
+            "865525",
+            "727084",
+            "727086",
+            "865526",
+            "727087",
+            "865527",
+            "727088",
+            "727089",
+            "865528",
+            "865529",
+            "865531",
+            "865530",
+            "865532",
+            "865533"
+          ],
+          "line": 15.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/full-game-team-totals",
+          "title": "Full Game Team Totals",
+          "parentId": "game-lines",
+          "order": 2,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-lines/full-game-team-totals/det-lions",
+          "title": "DET Lions",
+          "parentId": "game-lines/full-game-team-totals",
+          "order": 0,
+          "marketIds": [
+            "727091",
+            "727090",
+            "727092",
+            "865534",
+            "727093",
+            "865535",
+            "727094",
+            "727095",
+            "865536",
+            "727096",
+            "865537",
+            "727097",
+            "727098",
+            "865538",
+            "727099",
+            "865539",
+            "727100"
+          ],
+          "line": 24.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/full-game-team-totals/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "game-lines/full-game-team-totals",
+          "order": 1,
+          "marketIds": [
+            "727102",
+            "727103",
+            "727104",
+            "727101",
+            "727105",
+            "727106",
+            "865540",
+            "727107",
+            "727108",
+            "727109",
+            "865542",
+            "865541",
+            "727110",
+            "865543",
+            "727111",
+            "865544",
+            "865545"
+          ],
+          "line": 30.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/1st-half-team-totals",
+          "title": "1st Half Team Totals",
+          "parentId": "game-lines",
+          "order": 3,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-lines/1st-half-team-totals/det-lions",
+          "title": "DET Lions",
+          "parentId": "game-lines/1st-half-team-totals",
+          "order": 0,
+          "marketIds": [
+            "865546",
+            "865547",
+            "865548",
+            "727112",
+            "865550",
+            "865549",
+            "865551",
+            "727114",
+            "727113",
+            "727115",
+            "865552",
+            "727116",
+            "727117",
+            "727118",
+            "727119",
+            "865553",
+            "865554"
+          ],
+          "line": 10.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/1st-half-team-totals/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "game-lines/1st-half-team-totals",
+          "order": 1,
+          "marketIds": [
+            "865555",
+            "865556",
+            "727120",
+            "865557",
+            "865558",
+            "865559",
+            "727121",
+            "727122",
+            "727123",
+            "865560",
+            "727124",
+            "727125",
+            "727126",
+            "727127",
+            "865561",
+            "865562",
+            "865563"
+          ],
+          "line": 14.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/2nd-half-team-totals",
+          "title": "2nd Half Team Totals",
+          "parentId": "game-lines",
+          "order": 4,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-lines/2nd-half-team-totals/det-lions",
+          "title": "DET Lions",
+          "parentId": "game-lines/2nd-half-team-totals",
+          "order": 0,
+          "marketIds": [
+            "865565",
+            "865566",
+            "727128",
+            "865567",
+            "865568",
+            "865569",
+            "727129",
+            "727130",
+            "865570",
+            "727131",
+            "727132",
+            "727133",
+            "727134",
+            "727135",
+            "865571",
+            "865572"
+          ],
+          "line": 9.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-lines/2nd-half-team-totals/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "game-lines/2nd-half-team-totals",
+          "order": 1,
+          "marketIds": [
+            "865573",
+            "865574",
+            "727136",
+            "865576",
+            "865575",
+            "865577",
+            "727137",
+            "727138",
+            "727139",
+            "865578",
+            "727140",
+            "727141",
+            "727142",
+            "727143",
+            "865579",
+            "865580",
+            "865581"
+          ],
+          "line": 13.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props",
+          "title": "Player Props",
+          "order": 1,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns",
+          "title": "Anytime Touchdowns",
+          "parentId": "player-props",
+          "order": 0,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all",
+          "title": "All",
+          "parentId": "player-props/anytime-touchdowns",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 0,
+          "marketIds": [
+            "904282"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 1,
+          "marketIds": [
+            "904043",
+            "904042"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 2,
+          "marketIds": [
+            "904315",
+            "904314",
+            "904313"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 3,
+          "marketIds": [
+            "904285",
+            "904284",
+            "904283"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 4,
+          "marketIds": [
+            "904406",
+            "904405"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 5,
+          "marketIds": [
+            "904475"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 6,
+          "marketIds": [
+            "904395",
+            "904394",
+            "904393"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 7,
+          "marketIds": [
+            "904439",
+            "904438"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 8,
+          "marketIds": [
+            "904417",
+            "904416"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 9,
+          "marketIds": [
+            "904445",
+            "904444"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/gredor",
+          "title": "Greg Dortch",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 10,
+          "marketIds": [
+            "904480"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 11,
+          "marketIds": [
+            "904441"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jacsay",
+          "title": "Jacob Saylors",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 12,
+          "marketIds": [
+            "904481"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/siovak",
+          "title": "Sione Vaki",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 13,
+          "marketIds": [
+            "904477"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 14,
+          "marketIds": [
+            "904443"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 15,
+          "marketIds": [
+            "904442"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 16,
+          "marketIds": [
+            "904428",
+            "904427"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/raydav",
+          "title": "Ray Davis",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 17,
+          "marketIds": [
+            "904474"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/taymar",
+          "title": "Tay Martin",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 18,
+          "marketIds": [
+            "904483"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/browri",
+          "title": "Brock Wright",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 19,
+          "marketIds": [
+            "904479"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/jachaw",
+          "title": "Jackson Hawes",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 20,
+          "marketIds": [
+            "904476"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/tylcon",
+          "title": "Tyler Conklin",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 21,
+          "marketIds": [
+            "904484"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/kellat",
+          "title": "Keleki Latu",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 22,
+          "marketIds": [
+            "904482"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/all/tomken",
+          "title": "Tom Kennedy",
+          "parentId": "player-props/anytime-touchdowns/all",
+          "order": 23,
+          "marketIds": [
+            "904478"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/anytime-touchdowns",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904282"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 1,
+          "marketIds": [
+            "904285",
+            "904284",
+            "904283"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 2,
+          "marketIds": [
+            "904406",
+            "904405"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 3,
+          "marketIds": [
+            "904475"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 4,
+          "marketIds": [
+            "904395",
+            "904394",
+            "904393"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 5,
+          "marketIds": [
+            "904417",
+            "904416"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/jacsay",
+          "title": "Jacob Saylors",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 6,
+          "marketIds": [
+            "904481"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/siovak",
+          "title": "Sione Vaki",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 7,
+          "marketIds": [
+            "904477"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/taymar",
+          "title": "Tay Martin",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 8,
+          "marketIds": [
+            "904483"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/browri",
+          "title": "Brock Wright",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 9,
+          "marketIds": [
+            "904479"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/tylcon",
+          "title": "Tyler Conklin",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 10,
+          "marketIds": [
+            "904484"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/det-lions/tomken",
+          "title": "Tom Kennedy",
+          "parentId": "player-props/anytime-touchdowns/det-lions",
+          "order": 11,
+          "marketIds": [
+            "904478"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/anytime-touchdowns",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904043",
+            "904042"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904315",
+            "904314",
+            "904313"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 2,
+          "marketIds": [
+            "904439",
+            "904438"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 3,
+          "marketIds": [
+            "904445",
+            "904444"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/gredor",
+          "title": "Greg Dortch",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 4,
+          "marketIds": [
+            "904480"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 5,
+          "marketIds": [
+            "904441"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 6,
+          "marketIds": [
+            "904443"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 7,
+          "marketIds": [
+            "904442"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 8,
+          "marketIds": [
+            "904428",
+            "904427"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/raydav",
+          "title": "Ray Davis",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 9,
+          "marketIds": [
+            "904474"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/jachaw",
+          "title": "Jackson Hawes",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 10,
+          "marketIds": [
+            "904476"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/anytime-touchdowns/buf-bills/kellat",
+          "title": "Keleki Latu",
+          "parentId": "player-props/anytime-touchdowns/buf-bills",
+          "order": 11,
+          "marketIds": [
+            "904482"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr",
+          "title": "Fantasy Points (PPR)",
+          "parentId": "player-props",
+          "order": 1,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all",
+          "title": "All",
+          "parentId": "player-props/fantasy-points-ppr",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 0,
+          "marketIds": [
+            "904044"
+          ],
+          "line": 23,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 1,
+          "marketIds": [
+            "904286"
+          ],
+          "line": 24,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 2,
+          "marketIds": [
+            "904407"
+          ],
+          "line": 12,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 3,
+          "marketIds": [
+            "904316"
+          ],
+          "line": 17,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 4,
+          "marketIds": [
+            "904429"
+          ],
+          "line": 10,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 5,
+          "marketIds": [
+            "904440"
+          ],
+          "line": 13,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 6,
+          "marketIds": [
+            "904418"
+          ],
+          "line": 11,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 7,
+          "marketIds": [
+            "904396"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 8,
+          "marketIds": [
+            "904446"
+          ],
+          "line": 11,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/fantasy-points-ppr/all",
+          "order": 9,
+          "marketIds": [
+            "904024"
+          ],
+          "line": 17,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/fantasy-points-ppr",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/fantasy-points-ppr/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904286"
+          ],
+          "line": 24,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/fantasy-points-ppr/det-lions",
+          "order": 1,
+          "marketIds": [
+            "904407"
+          ],
+          "line": 12,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/fantasy-points-ppr/det-lions",
+          "order": 2,
+          "marketIds": [
+            "904418"
+          ],
+          "line": 11,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/fantasy-points-ppr/det-lions",
+          "order": 3,
+          "marketIds": [
+            "904396"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/fantasy-points-ppr/det-lions",
+          "order": 4,
+          "marketIds": [
+            "904024"
+          ],
+          "line": 17,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/fantasy-points-ppr",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/fantasy-points-ppr/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904044"
+          ],
+          "line": 23,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/fantasy-points-ppr/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904316"
+          ],
+          "line": 17,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/fantasy-points-ppr/buf-bills",
+          "order": 2,
+          "marketIds": [
+            "904429"
+          ],
+          "line": 10,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/fantasy-points-ppr/buf-bills",
+          "order": 3,
+          "marketIds": [
+            "904440"
+          ],
+          "line": 13,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/fantasy-points-ppr/buf-bills/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/fantasy-points-ppr/buf-bills",
+          "order": 4,
+          "marketIds": [
+            "904446"
+          ],
+          "line": 11,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns",
+          "title": "Passing Touchdowns",
+          "parentId": "player-props",
+          "order": 2,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/all",
+          "title": "All",
+          "parentId": "player-props/passing-touchdowns",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-touchdowns/all",
+          "order": 0,
+          "marketIds": [
+            "904033",
+            "904032",
+            "904031",
+            "904030"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-touchdowns/all",
+          "order": 1,
+          "marketIds": [
+            "904015",
+            "904013",
+            "904014",
+            "904012"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/passing-touchdowns",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-touchdowns/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904015",
+            "904013",
+            "904014",
+            "904012"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/passing-touchdowns",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-touchdowns/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-touchdowns/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904033",
+            "904032",
+            "904031",
+            "904030"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards",
+          "title": "Passing Yards",
+          "parentId": "player-props",
+          "order": 3,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/all",
+          "title": "All",
+          "parentId": "player-props/passing-yards",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-yards/all",
+          "order": 0,
+          "marketIds": [
+            "904029",
+            "904028",
+            "904027",
+            "904026",
+            "904025"
+          ],
+          "line": 250,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-yards/all",
+          "order": 1,
+          "marketIds": [
+            "904011",
+            "904010",
+            "904009",
+            "904008",
+            "904007"
+          ],
+          "line": 275,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/passing-yards",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-yards/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904011",
+            "904010",
+            "904009",
+            "904008",
+            "904007"
+          ],
+          "line": 275,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/passing-yards",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-yards/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-yards/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904029",
+            "904028",
+            "904027",
+            "904026",
+            "904025"
+          ],
+          "line": 250,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts",
+          "title": "Passing Attempts",
+          "parentId": "player-props",
+          "order": 4,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/all",
+          "title": "All",
+          "parentId": "player-props/passing-attempts",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-attempts/all",
+          "order": 0,
+          "marketIds": [
+            "904018",
+            "904017",
+            "904016"
+          ],
+          "line": 36,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-attempts/all",
+          "order": 1,
+          "marketIds": [
+            "904036",
+            "904035",
+            "904034"
+          ],
+          "line": 32,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/passing-attempts",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-attempts/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904018",
+            "904017",
+            "904016"
+          ],
+          "line": 36,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/passing-attempts",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-attempts/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-attempts/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904036",
+            "904035",
+            "904034"
+          ],
+          "line": 32,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions",
+          "title": "Passing Completions",
+          "parentId": "player-props",
+          "order": 5,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/all",
+          "title": "All",
+          "parentId": "player-props/passing-completions",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-completions/all",
+          "order": 0,
+          "marketIds": [
+            "904021",
+            "904020",
+            "904019"
+          ],
+          "line": 24,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-completions/all",
+          "order": 1,
+          "marketIds": [
+            "904039",
+            "904038",
+            "904037"
+          ],
+          "line": 22,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/passing-completions",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/passing-completions/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904021",
+            "904020",
+            "904019"
+          ],
+          "line": 24,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/passing-completions",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/passing-completions/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/passing-completions/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904039",
+            "904038",
+            "904037"
+          ],
+          "line": 22,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards",
+          "title": "Rushing Yards",
+          "parentId": "player-props",
+          "order": 6,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/all",
+          "title": "All",
+          "parentId": "player-props/rushing-yards",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/rushing-yards/all",
+          "order": 0,
+          "marketIds": [
+            "904294",
+            "904293",
+            "904292",
+            "904291",
+            "904290"
+          ],
+          "line": 90,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/rushing-yards/all",
+          "order": 1,
+          "marketIds": [
+            "904047",
+            "904046",
+            "904045"
+          ],
+          "line": 30,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/all/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/rushing-yards/all",
+          "order": 2,
+          "marketIds": [
+            "904309",
+            "904308",
+            "904307",
+            "904306",
+            "904305"
+          ],
+          "line": 80,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/rushing-yards",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/rushing-yards/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904294",
+            "904293",
+            "904292",
+            "904291",
+            "904290"
+          ],
+          "line": 90,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/rushing-yards",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/rushing-yards/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904047",
+            "904046",
+            "904045"
+          ],
+          "line": 30,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-yards/buf-bills/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/rushing-yards/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904309",
+            "904308",
+            "904307",
+            "904306",
+            "904305"
+          ],
+          "line": 80,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts",
+          "title": "Rushing Attempts",
+          "parentId": "player-props",
+          "order": 7,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/all",
+          "title": "All",
+          "parentId": "player-props/rushing-attempts",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/rushing-attempts/all",
+          "order": 0,
+          "marketIds": [
+            "904297",
+            "904296",
+            "904295"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/all/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/rushing-attempts/all",
+          "order": 1,
+          "marketIds": [
+            "904312",
+            "904310",
+            "904311"
+          ],
+          "line": 19,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/rushing-attempts",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/rushing-attempts/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904297",
+            "904296",
+            "904295"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/rushing-attempts",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/rushing-attempts/buf-bills/jamcoo",
+          "title": "James Cook III",
+          "parentId": "player-props/rushing-attempts/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904312",
+            "904310",
+            "904311"
+          ],
+          "line": 19,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards",
+          "title": "Receiving Yards",
+          "parentId": "player-props",
+          "order": 8,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all",
+          "title": "All",
+          "parentId": "player-props/receiving-yards",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 0,
+          "marketIds": [
+            "904434",
+            "904433",
+            "904432",
+            "904431",
+            "904430"
+          ],
+          "line": 60,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 1,
+          "marketIds": [
+            "904401",
+            "904400",
+            "904399",
+            "904398",
+            "904397"
+          ],
+          "line": 60,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 2,
+          "marketIds": [
+            "904454",
+            "904453",
+            "904452",
+            "904451",
+            "904450"
+          ],
+          "line": 50,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 3,
+          "marketIds": [
+            "904300",
+            "904299",
+            "904298"
+          ],
+          "line": 30,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 4,
+          "marketIds": [
+            "904389",
+            "904388",
+            "904387",
+            "904386",
+            "904385"
+          ],
+          "line": 80,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 5,
+          "marketIds": [
+            "904628"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 6,
+          "marketIds": [
+            "904415",
+            "904414",
+            "904412",
+            "904411",
+            "904413"
+          ],
+          "line": 40,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 7,
+          "marketIds": [
+            "904423",
+            "904422",
+            "904421",
+            "904420",
+            "904419"
+          ],
+          "line": 40,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 8,
+          "marketIds": [
+            "904629"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 9,
+          "marketIds": [
+            "904626"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/all/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/receiving-yards/all",
+          "order": 10,
+          "marketIds": [
+            "904627"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/receiving-yards",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/receiving-yards/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904401",
+            "904400",
+            "904399",
+            "904398",
+            "904397"
+          ],
+          "line": 60,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/receiving-yards/det-lions",
+          "order": 1,
+          "marketIds": [
+            "904300",
+            "904299",
+            "904298"
+          ],
+          "line": 30,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/receiving-yards/det-lions",
+          "order": 2,
+          "marketIds": [
+            "904389",
+            "904388",
+            "904387",
+            "904386",
+            "904385"
+          ],
+          "line": 80,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/receiving-yards/det-lions",
+          "order": 3,
+          "marketIds": [
+            "904415",
+            "904414",
+            "904412",
+            "904411",
+            "904413"
+          ],
+          "line": 40,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/det-lions/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/receiving-yards/det-lions",
+          "order": 4,
+          "marketIds": [
+            "904626"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/receiving-yards",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904434",
+            "904433",
+            "904432",
+            "904431",
+            "904430"
+          ],
+          "line": 60,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904454",
+            "904453",
+            "904452",
+            "904451",
+            "904450"
+          ],
+          "line": 50,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 2,
+          "marketIds": [
+            "904628"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 3,
+          "marketIds": [
+            "904423",
+            "904422",
+            "904421",
+            "904420",
+            "904419"
+          ],
+          "line": 40,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 4,
+          "marketIds": [
+            "904629"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receiving-yards/buf-bills/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/receiving-yards/buf-bills",
+          "order": 5,
+          "marketIds": [
+            "904627"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions",
+          "title": "Receptions",
+          "parentId": "player-props",
+          "order": 9,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all",
+          "title": "All",
+          "parentId": "player-props/receptions",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/receptions/all",
+          "order": 0,
+          "marketIds": [
+            "904437",
+            "904436",
+            "904435"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/receptions/all",
+          "order": 1,
+          "marketIds": [
+            "904410",
+            "904409",
+            "904408"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/receptions/all",
+          "order": 2,
+          "marketIds": [
+            "904624"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/receptions/all",
+          "order": 3,
+          "marketIds": [
+            "904426",
+            "904425",
+            "904424"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/receptions/all",
+          "order": 4,
+          "marketIds": [
+            "904622"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/receptions/all",
+          "order": 5,
+          "marketIds": [
+            "904303",
+            "904302",
+            "904301"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/receptions/all",
+          "order": 6,
+          "marketIds": [
+            "904392",
+            "904391",
+            "904390"
+          ],
+          "line": 8,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/receptions/all",
+          "order": 7,
+          "marketIds": [
+            "904404",
+            "904403",
+            "904402"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/receptions/all",
+          "order": 8,
+          "marketIds": [
+            "904449",
+            "904448",
+            "904447"
+          ],
+          "line": 4,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/receptions/all",
+          "order": 9,
+          "marketIds": [
+            "904623"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/all/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/receptions/all",
+          "order": 10,
+          "marketIds": [
+            "904625"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/receptions",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/receptions/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904410",
+            "904409",
+            "904408"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/receptions/det-lions",
+          "order": 1,
+          "marketIds": [
+            "904303",
+            "904302",
+            "904301"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/receptions/det-lions",
+          "order": 2,
+          "marketIds": [
+            "904392",
+            "904391",
+            "904390"
+          ],
+          "line": 8,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/receptions/det-lions",
+          "order": 3,
+          "marketIds": [
+            "904404",
+            "904403",
+            "904402"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/det-lions/isates",
+          "title": "Isaac TeSlaa",
+          "parentId": "player-props/receptions/det-lions",
+          "order": 4,
+          "marketIds": [
+            "904623"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/receptions",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904437",
+            "904436",
+            "904435"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/keocol",
+          "title": "Keon Coleman",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904624"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 2,
+          "marketIds": [
+            "904426",
+            "904425",
+            "904424"
+          ],
+          "line": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/dawkno",
+          "title": "Dawson Knox",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 3,
+          "marketIds": [
+            "904622"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 4,
+          "marketIds": [
+            "904449",
+            "904448",
+            "904447"
+          ],
+          "line": 4,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/receptions/buf-bills/jospal",
+          "title": "Joshua Palmer",
+          "parentId": "player-props/receptions/buf-bills",
+          "order": 5,
+          "marketIds": [
+            "904625"
+          ],
+          "line": 2,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception",
+          "title": "Longest Reception",
+          "parentId": "player-props",
+          "order": 10,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all",
+          "title": "All",
+          "parentId": "player-props/longest-reception",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/longest-reception/all",
+          "order": 0,
+          "marketIds": [
+            "904621"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/longest-reception/all",
+          "order": 1,
+          "marketIds": [
+            "904615"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/longest-reception/all",
+          "order": 2,
+          "marketIds": [
+            "904618"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/longest-reception/all",
+          "order": 3,
+          "marketIds": [
+            "904619"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/longest-reception/all",
+          "order": 4,
+          "marketIds": [
+            "904617"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/longest-reception/all",
+          "order": 5,
+          "marketIds": [
+            "904620"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/all/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/longest-reception/all",
+          "order": 6,
+          "marketIds": [
+            "904616"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/longest-reception",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/longest-reception/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904621"
+          ],
+          "line": 15,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/det-lions/amobro",
+          "title": "Amon-Ra St. Brown",
+          "parentId": "player-props/longest-reception/det-lions",
+          "order": 1,
+          "marketIds": [
+            "904618"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/det-lions/jamwil",
+          "title": "Jameson Williams",
+          "parentId": "player-props/longest-reception/det-lions",
+          "order": 2,
+          "marketIds": [
+            "904617"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/det-lions/samlap",
+          "title": "Sam LaPorta",
+          "parentId": "player-props/longest-reception/det-lions",
+          "order": 3,
+          "marketIds": [
+            "904620"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/longest-reception",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/buf-bills/djmoo",
+          "title": "DJ Moore",
+          "parentId": "player-props/longest-reception/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904615"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/buf-bills/khasha",
+          "title": "Khalil Shakir",
+          "parentId": "player-props/longest-reception/buf-bills",
+          "order": 1,
+          "marketIds": [
+            "904619"
+          ],
+          "line": 20,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/longest-reception/buf-bills/dalkin",
+          "title": "Dalton Kincaid",
+          "parentId": "player-props/longest-reception/buf-bills",
+          "order": 2,
+          "marketIds": [
+            "904616"
+          ],
+          "line": 25,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/scrimmage-yards",
+          "title": "Scrimmage Yards",
+          "parentId": "player-props",
+          "order": 11,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/scrimmage-yards/all",
+          "title": "All",
+          "parentId": "player-props/scrimmage-yards",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/scrimmage-yards/all/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/scrimmage-yards/all",
+          "order": 0,
+          "marketIds": [
+            "904289",
+            "904288",
+            "904287"
+          ],
+          "line": 130,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/scrimmage-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/scrimmage-yards",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/scrimmage-yards/det-lions/jahgib",
+          "title": "Jahmyr Gibbs",
+          "parentId": "player-props/scrimmage-yards/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904289",
+            "904288",
+            "904287"
+          ],
+          "line": 130,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown",
+          "title": "Interceptions Thrown",
+          "parentId": "player-props",
+          "order": 12,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/all",
+          "title": "All",
+          "parentId": "player-props/interceptions-thrown",
+          "order": 0,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/all/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/interceptions-thrown/all",
+          "order": 0,
+          "marketIds": [
+            "904023",
+            "904022"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/all/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/interceptions-thrown/all",
+          "order": 1,
+          "marketIds": [
+            "904041",
+            "904040"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/det-lions",
+          "title": "DET Lions",
+          "parentId": "player-props/interceptions-thrown",
+          "order": 1,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/det-lions/jargof",
+          "title": "Jared Goff",
+          "parentId": "player-props/interceptions-thrown/det-lions",
+          "order": 0,
+          "marketIds": [
+            "904023",
+            "904022"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "player-props/interceptions-thrown",
+          "order": 2,
+          "marketIds": [],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "player-props/interceptions-thrown/buf-bills/josall",
+          "title": "Josh Allen",
+          "parentId": "player-props/interceptions-thrown/buf-bills",
+          "order": 0,
+          "marketIds": [
+            "904041",
+            "904040"
+          ],
+          "line": 1,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props",
+          "title": "Game Props",
+          "order": 3,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-touchdown-scorer",
+          "title": "First Touchdown Scorer",
+          "parentId": "game-props",
+          "order": 0,
+          "marketIds": [
+            "904321",
+            "904322",
+            "904049",
+            "904455",
+            "904458",
+            "904456",
+            "904462",
+            "904459",
+            "904463",
+            "904457",
+            "904487",
+            "904460",
+            "904491",
+            "904488",
+            "904461",
+            "904485",
+            "904486",
+            "904489",
+            "904050",
+            "904490",
+            "904048",
+            "904492",
+            "904495",
+            "904493",
+            "904494"
+          ],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-touchdown-scorer-by-team-det",
+          "title": "First Touchdown Scorer for DET",
+          "parentId": "game-props",
+          "order": 1,
+          "marketIds": [
+            "904323",
+            "904464",
+            "904465",
+            "904466",
+            "904497",
+            "904054",
+            "904496",
+            "904498",
+            "904499",
+            "904500",
+            "904501",
+            "904502"
+          ],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "showMarketImages": true,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/first-touchdown-scorer-by-team-buf",
+          "title": "First Touchdown Scorer for BUF",
+          "parentId": "game-props",
+          "order": 2,
+          "marketIds": [
+            "904056",
+            "904324",
+            "904469",
+            "904468",
+            "904472",
+            "904467",
+            "904471",
+            "904470",
+            "904503",
+            "904504",
+            "904511",
+            "904519"
+          ],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "showMarketImages": true,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/most-passing-yards",
+          "title": "Most Passing Yards",
+          "parentId": "game-props",
+          "order": 3,
+          "marketIds": [
+            "904052",
+            "904051"
+          ],
+          "searchable": true,
+          "showAllThreshold": 5,
+          "showMarketImages": true,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points",
+          "title": "Race to X Points",
+          "subtitle": "Which team gets there first?",
+          "parentId": "game-props",
+          "order": 4,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points/race-to-7",
+          "title": "Race to 7",
+          "parentId": "game-props/race-to-x-points",
+          "order": 0,
+          "marketIds": [
+            "727269",
+            "727270",
+            "727271"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points/race-to-14",
+          "title": "Race to 14",
+          "parentId": "game-props/race-to-x-points",
+          "order": 1,
+          "marketIds": [
+            "727272",
+            "727273",
+            "727274"
+          ],
+          "line": 14,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points/race-to-21",
+          "title": "Race to 21",
+          "parentId": "game-props/race-to-x-points",
+          "order": 2,
+          "marketIds": [
+            "727275",
+            "727276",
+            "727277"
+          ],
+          "line": 21,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points/race-to-28",
+          "title": "Race to 28",
+          "parentId": "game-props/race-to-x-points",
+          "order": 3,
+          "marketIds": [
+            "727278",
+            "727279",
+            "727280"
+          ],
+          "line": 28,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/race-to-x-points/race-to-35",
+          "title": "Race to 35",
+          "parentId": "game-props/race-to-x-points",
+          "order": 4,
+          "marketIds": [
+            "727281",
+            "727282",
+            "727283"
+          ],
+          "line": 35,
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/half-winners",
+          "title": "Half Winners",
+          "parentId": "game-props",
+          "order": 5,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/half-winners/1st-half",
+          "title": "1st Half",
+          "subtitle": "Who wins the 1st half?",
+          "parentId": "game-props/half-winners",
+          "order": 0,
+          "marketIds": [
+            "659690",
+            "659691",
+            "659692"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/half-winners/2nd-half",
+          "title": "2nd Half",
+          "subtitle": "Who wins the 2nd half?",
+          "parentId": "game-props/half-winners",
+          "order": 1,
+          "marketIds": [
+            "659693",
+            "659694",
+            "659695"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/halftime-full-time",
+          "title": "Halftime / Full Time",
+          "subtitle": "1st half result, then final result",
+          "parentId": "game-props",
+          "order": 6,
+          "marketIds": [
+            "785049",
+            "784716",
+            "784710",
+            "784843",
+            "784983",
+            "784756",
+            "784762",
+            "784802",
+            "784952"
+          ],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/quarter-winners",
+          "title": "Quarter Winners",
+          "parentId": "game-props",
+          "order": 7,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/quarter-winners/1st-quarter",
+          "title": "1st Quarter",
+          "subtitle": "Who wins the 1st quarter?",
+          "parentId": "game-props/quarter-winners",
+          "order": 0,
+          "marketIds": [
+            "659696",
+            "659697",
+            "659698"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/quarter-winners/2nd-quarter",
+          "title": "2nd Quarter",
+          "subtitle": "Who wins the 2nd quarter?",
+          "parentId": "game-props/quarter-winners",
+          "order": 1,
+          "marketIds": [
+            "659699",
+            "659700",
+            "659701"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/quarter-winners/3rd-quarter",
+          "title": "3rd Quarter",
+          "subtitle": "Who wins the 3rd quarter?",
+          "parentId": "game-props/quarter-winners",
+          "order": 2,
+          "marketIds": [
+            "659702",
+            "659703",
+            "659704"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/quarter-winners/4th-quarter",
+          "title": "4th Quarter",
+          "subtitle": "Who wins the 4th quarter?",
+          "parentId": "game-props/quarter-winners",
+          "order": 3,
+          "marketIds": [
+            "659705",
+            "659706",
+            "659707"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-points",
+          "title": "First Team to Score Points",
+          "parentId": "game-props",
+          "order": 8,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-points/full-game",
+          "title": "Full Game",
+          "subtitle": "Which team scores first?",
+          "parentId": "game-props/first-team-to-score-points",
+          "order": 0,
+          "marketIds": [
+            "659718",
+            "659720",
+            "659719"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-points/2nd-half",
+          "title": "2nd Half",
+          "subtitle": "Which team scores first in the 2nd half?",
+          "parentId": "game-props/first-team-to-score-points",
+          "order": 1,
+          "marketIds": [
+            "659721",
+            "659723",
+            "659722"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-a-td",
+          "title": "First Team to Score a TD",
+          "parentId": "game-props",
+          "order": 9,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-a-td/full-game",
+          "title": "Full Game",
+          "subtitle": "Which team scores the first touchdown?",
+          "parentId": "game-props/first-team-to-score-a-td",
+          "order": 0,
+          "marketIds": [
+            "659724",
+            "659728",
+            "659726"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/first-team-to-score-a-td/2nd-half",
+          "title": "2nd Half",
+          "subtitle": "Which team scores the first touchdown in the 2nd half?",
+          "parentId": "game-props/first-team-to-score-a-td",
+          "order": 1,
+          "marketIds": [
+            "659729",
+            "659731",
+            "659730"
+          ],
+          "showMarketImages": true,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td",
+          "title": "Both Teams to Score a TD",
+          "parentId": "game-props",
+          "order": 10,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/full-game",
+          "title": "Full Game",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 0,
+          "marketIds": [
+            "659738"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/1st-half",
+          "title": "1st Half",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 1,
+          "marketIds": [
+            "659739"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/2nd-half",
+          "title": "2nd Half",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 2,
+          "marketIds": [
+            "659740"
+          ],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/1st-quarter",
+          "title": "1st Quarter",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 3,
+          "marketIds": [
+            "659741"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/2nd-quarter",
+          "title": "2nd Quarter",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 4,
+          "marketIds": [
+            "659742"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/3rd-quarter",
+          "title": "3rd Quarter",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 5,
+          "marketIds": [
+            "659743"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/both-teams-to-score-a-td/4th-quarter",
+          "title": "4th Quarter",
+          "parentId": "game-props/both-teams-to-score-a-td",
+          "order": 6,
+          "marketIds": [
+            "659744"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/exact-margin-of-victory",
+          "title": "Exact Margin of Victory",
+          "parentId": "game-props",
+          "order": 11,
+          "marketIds": [
+            "659714",
+            "659715",
+            "659712",
+            "659716",
+            "659713",
+            "659711",
+            "659717",
+            "659708",
+            "659710",
+            "659709"
+          ],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/highest-scoring-quarter",
+          "title": "Highest Scoring Quarter",
+          "parentId": "game-props",
+          "order": 12,
+          "marketIds": [
+            "727265",
+            "727266",
+            "727268",
+            "727267"
+          ],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/defensive-or-special-team-touchdown",
+          "title": "Defensive or Special Team Touchdown?",
+          "parentId": "game-props",
+          "order": 13,
+          "marketIds": [
+            "727259"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/successful-two-point-conversion",
+          "title": "Successful Two-Point Conversion?",
+          "parentId": "game-props",
+          "order": 14,
+          "marketIds": [
+            "727262"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/team-total-offensive-yards",
+          "title": "Team Total Offensive Yards",
+          "parentId": "game-props",
+          "order": 15,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/team-total-offensive-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "game-props/team-total-offensive-yards",
+          "order": 0,
+          "marketIds": [
+            "727191",
+            "727193",
+            "727194",
+            "727192",
+            "727195",
+            "727196"
+          ],
+          "line": 350.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/team-total-offensive-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "game-props/team-total-offensive-yards",
+          "order": 1,
+          "marketIds": [
+            "727197",
+            "727199",
+            "727201",
+            "727203",
+            "727207",
+            "727205"
+          ],
+          "line": 500.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "game-props/pick-six",
+          "title": "Pick Six?",
+          "parentId": "game-props",
+          "order": 16,
+          "marketIds": [
+            "727263"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/kickoff-or-punt-return-touchdown",
+          "title": "Kickoff or Punt Return Touchdown?",
+          "parentId": "game-props",
+          "order": 17,
+          "marketIds": [
+            "727264"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/will-there-be-a-safety",
+          "title": "Will there be a Safety?",
+          "parentId": "game-props",
+          "order": 18,
+          "marketIds": [
+            "746962"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "game-props/will-there-be-overtime",
+          "title": "Will there be Overtime?",
+          "parentId": "game-props",
+          "order": 19,
+          "marketIds": [
+            "659745"
+          ],
+          "line": 0.5,
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props",
+          "title": "Team Props",
+          "order": 4,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-touchdowns",
+          "title": "Team Total Touchdowns",
+          "parentId": "team-props",
+          "order": 0,
+          "marketIds": [],
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-touchdowns/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-touchdowns",
+          "order": 0,
+          "marketIds": [
+            "727152",
+            "727153",
+            "727154",
+            "727155",
+            "727156"
+          ],
+          "line": 2.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-touchdowns/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-touchdowns",
+          "order": 1,
+          "marketIds": [
+            "727157",
+            "727158",
+            "727159",
+            "727160",
+            "727161"
+          ],
+          "line": 3.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-1st-downs",
+          "title": "Team Total 1st Downs",
+          "parentId": "team-props",
+          "order": 1,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-1st-downs/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-1st-downs",
+          "order": 0,
+          "marketIds": [
+            "727239",
+            "727240",
+            "727243",
+            "727241",
+            "727242",
+            "727245",
+            "727246",
+            "727244"
+          ],
+          "line": 17.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-1st-downs/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-1st-downs",
+          "order": 1,
+          "marketIds": [
+            "727247",
+            "727249",
+            "727248",
+            "727254",
+            "727253",
+            "727251",
+            "727250",
+            "727252"
+          ],
+          "line": 25.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-touchdowns",
+          "title": "Team Total Passing Touchdowns",
+          "parentId": "team-props",
+          "order": 2,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-touchdowns/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-passing-touchdowns",
+          "order": 0,
+          "marketIds": [
+            "820684",
+            "820686",
+            "820687",
+            "820688",
+            "820689"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-touchdowns/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-passing-touchdowns",
+          "order": 1,
+          "marketIds": [
+            "820690",
+            "820691",
+            "820692",
+            "820694",
+            "820693"
+          ],
+          "line": 2.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-touchdowns",
+          "title": "Team Total Rushing Touchdowns",
+          "parentId": "team-props",
+          "order": 3,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-touchdowns/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-rushing-touchdowns",
+          "order": 0,
+          "marketIds": [
+            "820674",
+            "820675",
+            "820676",
+            "820677",
+            "820678"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-touchdowns/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-rushing-touchdowns",
+          "order": 1,
+          "marketIds": [
+            "820679",
+            "820680",
+            "820681",
+            "820682",
+            "820683"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-yards",
+          "title": "Team Total Passing Yards",
+          "parentId": "team-props",
+          "order": 4,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-passing-yards",
+          "order": 0,
+          "marketIds": [
+            "820654",
+            "820655",
+            "820656",
+            "820657",
+            "820658"
+          ],
+          "line": 265.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-passing-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-passing-yards",
+          "order": 1,
+          "marketIds": [
+            "820659",
+            "820660",
+            "820661",
+            "820663",
+            "820662"
+          ],
+          "line": 280.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-yards",
+          "title": "Team Total Rushing Yards",
+          "parentId": "team-props",
+          "order": 5,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-rushing-yards",
+          "order": 0,
+          "marketIds": [
+            "820644",
+            "820645",
+            "820646",
+            "820647",
+            "820648"
+          ],
+          "line": 109.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-rushing-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-rushing-yards",
+          "order": 1,
+          "marketIds": [
+            "820649",
+            "820651",
+            "820650",
+            "820652",
+            "820653"
+          ],
+          "line": 157.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-scrimmage-yards",
+          "title": "Team Total Scrimmage Yards",
+          "parentId": "team-props",
+          "order": 6,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-scrimmage-yards/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-scrimmage-yards",
+          "order": 0,
+          "marketIds": [
+            "820666",
+            "820665",
+            "820664",
+            "820667",
+            "820668"
+          ],
+          "line": 392.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-scrimmage-yards/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-scrimmage-yards",
+          "order": 1,
+          "marketIds": [
+            "820669",
+            "820670",
+            "820671",
+            "820672",
+            "820673"
+          ],
+          "line": 395.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-receptions",
+          "title": "Team Total Receptions",
+          "parentId": "team-props",
+          "order": 7,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-receptions/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-receptions",
+          "order": 0,
+          "marketIds": [
+            "820695",
+            "820697",
+            "820696",
+            "820698",
+            "820699"
+          ],
+          "line": 26.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-receptions/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-receptions",
+          "order": 1,
+          "marketIds": [
+            "820700",
+            "820701",
+            "820702",
+            "820703",
+            "820704"
+          ],
+          "line": 23.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-field-goals-made",
+          "title": "Team Total Field Goals Made",
+          "parentId": "team-props",
+          "order": 8,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-field-goals-made/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-field-goals-made",
+          "order": 0,
+          "marketIds": [
+            "820705",
+            "820706",
+            "820707",
+            "820708",
+            "820709"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-field-goals-made/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-field-goals-made",
+          "order": 1,
+          "marketIds": [
+            "820710",
+            "820711",
+            "820712",
+            "820713",
+            "820715"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-40-yard-field-goals-made",
+          "title": "Team Total 40+ Yard Field Goals Made",
+          "parentId": "team-props",
+          "order": 9,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-40-yard-field-goals-made/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-40-yard-field-goals-made",
+          "order": 0,
+          "marketIds": [
+            "820716",
+            "820717",
+            "820718",
+            "820719",
+            "820720"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-40-yard-field-goals-made/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-40-yard-field-goals-made",
+          "order": 1,
+          "marketIds": [
+            "820721",
+            "820722",
+            "820723"
+          ],
+          "line": 0.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-4th-down-conversions",
+          "title": "Team Total 4th Down Conversions",
+          "parentId": "team-props",
+          "order": 10,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-4th-down-conversions/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-4th-down-conversions",
+          "order": 0,
+          "marketIds": [
+            "746958",
+            "746959"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-4th-down-conversions/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-4th-down-conversions",
+          "order": 1,
+          "marketIds": [
+            "746960",
+            "746961"
+          ],
+          "line": 1.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-sacks",
+          "title": "Team Total Sacks",
+          "parentId": "team-props",
+          "order": 11,
+          "marketIds": [],
+          "initialCollapsed": true,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-sacks/det-lions",
+          "title": "DET Lions",
+          "parentId": "team-props/team-total-sacks",
+          "order": 0,
+          "marketIds": [
+            "727229",
+            "727228",
+            "727227",
+            "727230",
+            "727231",
+            "727232"
+          ],
+          "line": 3.5,
+          "initialCollapsed": false,
+          "live": false
+        },
+        {
+          "id": "team-props/team-total-sacks/buf-bills",
+          "title": "BUF Bills",
+          "parentId": "team-props/team-total-sacks",
+          "order": 1,
+          "marketIds": [
+            "727233",
+            "727234",
+            "727236",
+            "727237",
+            "727238",
+            "727235"
+          ],
+          "line": 3.5,
+          "initialCollapsed": false,
+          "live": false
+        }
+      ],
+      "primaryTag": {
+        "id": "1",
+        "label": "NFL",
+        "slug": "nfl",
+        "createdAt": "2025-09-25T16:13:27Z",
+        "updatedAt": "2026-09-16T23:10:45Z",
+        "league": {
+          "id": 1,
+          "name": "NFL",
+          "sportId": 3,
+          "tagId": 1,
+          "image": "https://static.polymarket.us/images/new-category-icons/Icon-Rugby.png",
+          "resolution": "https://www.nfl.com/",
+          "ordering": "away",
+          "activeSeriesId": 2,
+          "isOperational": true,
+          "automaticResolution": false,
+          "createdAt": "2026-03-05T18:30:42Z",
+          "slug": "nfl",
+          "abbreviation": "NFL"
+        },
+        "parentId": 13,
+        "subtags": [],
+        "hub": null
+      },
+      "streamProvider": "",
+      "streamRequiresAuth": false,
+      "combos": {
+        "enabled": true,
+        "numMarkets": 837,
+        "numSpreadsAndTotalsMarkets": 370
+      },
+      "marketCounts": {
+        "numMarkets": 856,
+        "numSpreadsAndTotalsMarkets": 370
+      }
+    }
+  ]
+}

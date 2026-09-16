@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+data/cache/
+data/manual_odds.csv
+data/unmatched.jsonl
+scan_out.json

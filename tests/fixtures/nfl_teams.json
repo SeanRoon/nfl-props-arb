@@ -1,0 +1,138 @@
+{
+  "den": {
+    "name": "Denver Broncos",
+    "alias": "Broncos"
+  },
+  "kc": {
+    "name": "Kansas City Chiefs",
+    "alias": "Chiefs"
+  },
+  "lac": {
+    "name": "Los Angeles Chargers",
+    "alias": "Chargers"
+  },
+  "lv": {
+    "name": "Las Vegas Raiders",
+    "alias": "Raiders"
+  },
+  "hou": {
+    "name": "Houston Texans",
+    "alias": "Texans"
+  },
+  "ind": {
+    "name": "Indianapolis Colts",
+    "alias": "Colts"
+  },
+  "jax": {
+    "name": "Jacksonville Jaguars",
+    "alias": "Jaguars"
+  },
+  "ten": {
+    "name": "Tennessee Titans",
+    "alias": "Titans"
+  },
+  "bal": {
+    "name": "Baltimore Ravens",
+    "alias": "Ravens"
+  },
+  "cin": {
+    "name": "Cincinnati Bengals",
+    "alias": "Bengals"
+  },
+  "cle": {
+    "name": "Cleveland Browns",
+    "alias": "Browns"
+  },
+  "pit": {
+    "name": "Pittsburgh Steelers",
+    "alias": "Steelers"
+  },
+  "ari": {
+    "name": "Arizona Cardinals",
+    "alias": "Cardinals"
+  },
+  "lar": {
+    "name": "Los Angeles Rams",
+    "alias": "Rams"
+  },
+  "sea": {
+    "name": "Seattle Seahawks",
+    "alias": "Seahawks"
+  },
+  "sf": {
+    "name": "San Francisco 49ers",
+    "alias": "49ers"
+  },
+  "chi": {
+    "name": "Chicago Bears",
+    "alias": "Bears"
+  },
+  "det": {
+    "name": "Detroit Lions",
+    "alias": "Lions"
+  },
+  "gb": {
+    "name": "Green Bay Packers",
+    "alias": "Packers"
+  },
+  "min": {
+    "name": "Minnesota Vikings",
+    "alias": "Vikings"
+  },
+  "buf": {
+    "name": "Buffalo Bills",
+    "alias": "Bills"
+  },
+  "mia": {
+    "name": "Miami Dolphins",
+    "alias": "Dolphins"
+  },
+  "ne": {
+    "name": "New England Patriots",
+    "alias": "Patriots"
+  },
+  "nyj": {
+    "name": "New York Jets",
+    "alias": "Jets"
+  },
+  "atl": {
+    "name": "Atlanta Falcons",
+    "alias": "Falcons"
+  },
+  "car": {
+    "name": "Carolina Panthers",
+    "alias": "Panthers"
+  },
+  "no": {
+    "name": "New Orleans Saints",
+    "alias": "Saints"
+  },
+  "tb": {
+    "name": "Tampa Bay Buccaneers",
+    "alias": "Buccaneers"
+  },
+  "dal": {
+    "name": "Dallas Cowboys",
+    "alias": "Cowboys"
+  },
+  "nyg": {
+    "name": "New York Giants",
+    "alias": "Giants"
+  },
+  "phi": {
+    "name": "Philadelphia Eagles",
+    "alias": "Eagles"
+  },
+  "was": {
+    "name": "Washington Commanders",
+    "alias": "Commanders"
+  },
+  "txs": {
+    "name": "Tigers",
+    "alias": "Tigers"
+  },
+  "cel": {
+    "name": "Celtic FC",
+    "alias": "The Bhoys"
+  }
+}

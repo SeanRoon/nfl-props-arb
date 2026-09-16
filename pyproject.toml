@@ -1,0 +1,43 @@
+[project]
+name = "nfl-props-arb"
+version = "0.1.0"
+description = "Scanner for +EV NO-side trades on Polymarket US NFL game props, anchored to FanDuel odds."
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "rich>=13.7",
+    "typer>=0.12",
+    "pandas>=2.2",
+    "pyarrow>=16.0",
+]
+
+[project.optional-dependencies]
+scrape = ["curl-cffi>=0.7"]
+
+[project.scripts]
+nflprops = "nfl_props_arb.cli:app"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.5", "mypy>=1.10"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nfl_props_arb"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
