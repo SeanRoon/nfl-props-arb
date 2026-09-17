@@ -14,9 +14,14 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .baselines import DEFAULT_PATH as BASELINES_PATH
+from .baselines import Baseline, apply_overrides, load
+from .baselines import write_template as write_baselines
 from .odds.base import OddsProvider
+from .odds.baseline import BaselineOdds
 from .odds.manual import DEFAULT_PATH, ManualOdds, write_template
 from .polymarket.client import PolymarketUS, discover
+from .props import PropType
 from .report import render, to_json
 from .scan import run_scan
 
@@ -35,7 +40,21 @@ def _window(days: int) -> tuple[str, str]:
     )
 
 
-def _provider(source: str, odds_file: Path) -> OddsProvider:
+def _baselines(path: Path, overrides: list[str] | None) -> dict[PropType, Baseline]:
+    try:
+        table = load(path)
+        return apply_overrides(table, overrides or [])
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+
+
+def _provider(
+    source: str,
+    odds_file: Path,
+    baselines: dict[PropType, Baseline] | None = None,
+) -> OddsProvider:
+    if source == "baseline":
+        return BaselineOdds(baselines)
     if source == "manual":
         return ManualOdds(odds_file)
     if source == "fanduel":
@@ -47,7 +66,7 @@ def _provider(source: str, odds_file: Path) -> OddsProvider:
 
 @app.command()
 def scan(
-    odds_source: Annotated[str, typer.Option(help="manual | fanduel")] = "fanduel",
+    odds_source: Annotated[str, typer.Option(help="baseline | manual | fanduel")] = "baseline",
     odds_file: Annotated[Path, typer.Option(help="CSV for --odds-source manual")] = DEFAULT_PATH,
     days: Annotated[int, typer.Option(help="Kickoff window, in days ahead")] = 8,
     slippage: Annotated[
@@ -55,11 +74,28 @@ def scan(
     ] = 0.0,
     as_json: Annotated[bool, typer.Option("--json", help="Emit JSON instead of a table")] = False,
     ladder: Annotated[bool, typer.Option(help="Show the per-level liquidity ladder")] = True,
+    baselines_file: Annotated[
+        Path, typer.Option("--baselines", help="Baseline odds TOML")
+    ] = BASELINES_PATH,
+    set_odds: Annotated[
+        list[str] | None,
+        typer.Option("--set", help="Override a baseline, e.g. --set dst_td=+850"),
+    ] = None,
+    min_edge: Annotated[
+        float | None,
+        typer.Option(help="Global minimum edge in points; overrides per-prop values"),
+    ] = None,
 ) -> None:
-    """Find NO offers priced below FanDuel's implied floor, after fees."""
-    provider = _provider(odds_source, odds_file)
+    """Find NO offers priced below the book's implied floor, after fees."""
+    table = _baselines(baselines_file, set_odds) if odds_source == "baseline" else {}
+    provider = _provider(odds_source, odds_file, table or None)
+    thresholds = (
+        {p: (min_edge if min_edge is not None else b.min_edge_pts) for p, b in table.items()}
+        if table
+        else ({} if min_edge is None else dict.fromkeys(PropType, min_edge))
+    )
     try:
-        result = run_scan(provider, days=days, slippage=slippage)
+        result = run_scan(provider, days=days, slippage=slippage, min_edge_pts=thresholds)
     except FileNotFoundError as exc:
         console.print(f"[red]{exc}[/red]")
         raise typer.Exit(1) from exc
@@ -112,6 +148,19 @@ def odds_template(
     console.print(
         "[dim]Fill the american_odds column, then: "
         "nflprops scan --odds-source manual[/dim]"
+    )
+
+
+@app.command("baselines-template")
+def baselines_template(
+    out: Annotated[Path, typer.Option(help="Where to write the TOML")] = BASELINES_PATH,
+) -> None:
+    """Write an editable baseline-odds file with the built-in defaults."""
+    path = write_baselines(out)
+    console.print(f"Wrote [bold]{path}[/bold].")
+    console.print(
+        "[dim]Baselines are assumptions. The scan prints the price each market "
+        "would need, so verify the top edges against a book.[/dim]"
     )
 
 

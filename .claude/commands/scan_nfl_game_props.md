@@ -30,8 +30,11 @@ The scanner joins on exact enum keys, but you are the last check before real mon
 
 1. **Confirm the two markets describe the same event.** Read the Polymarket `question` and the FanDuel `label` side by side. A whole-game "either team" market and a single-team market are different bets. So are "Over 0.5" and "Over 1.5".
 2. **For derived floors** (`floor.method == "leg_product"`), restate the multiplication and confirm **both** teams' legs are present. The scanner refuses partial derivations, but say the arithmetic out loud so the operator can check it: `0.889 × 0.889 = 0.7901`.
-3. **Report liquidity honestly.** Every qualifying level is listed down to a single share, by design. Many are dust — a 0.01-share order is worth a fraction of a cent. State the fillable size next to the edge; a large edge on 0.01 shares is not an opportunity, and saying so is the point.
-4. **Flag anything unfamiliar.** If a Polymarket `sportsMarketType` or a FanDuel market label has not been seen before, mark it **needs human confirmation** rather than presenting it as actionable.
+3. **Never present a baseline-derived edge as confirmed.** Any row with
+   `floor_is_assumed` is a candidate, not a signal. Say what to check and what
+   the answer would have to be.
+4. **Report liquidity honestly.** Every qualifying level is listed down to a single share, by design. Many are dust — a 0.01-share order is worth a fraction of a cent. State the fillable size next to the edge; a large edge on 0.01 shares is not an opportunity, and saying so is the point.
+5. **Flag anything unfamiliar.** If a Polymarket `sportsMarketType` or a FanDuel market label has not been seen before, mark it **needs human confirmation** rather than presenting it as actionable.
 
 ## Report
 

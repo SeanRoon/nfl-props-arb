@@ -110,6 +110,7 @@ def run_scan(
     days: int = 8,
     slippage: float = DEFAULT_SLIPPAGE,
     client: PolymarketUS | None = None,
+    min_edge_pts: dict[PropType, float] | None = None,
 ) -> ScanResult:
     """Discover props, price them against `provider`, and return opportunities."""
     owns_client = client is None
@@ -141,8 +142,18 @@ def run_scan(
             if floor is None:
                 unpriced.append({"key": str(prop.key), "slug": prop.slug, "reason": reason})
                 continue
-            client.load_book(prop)
             max_buy = max_buy_price(floor.value, prop.theta, slippage)
+            # The NO ladder is cheapest at the top and only grows more expensive
+            # deeper down, so if the best NO already exceeds max_buy no level can
+            # qualify. The event payload carries bestBidQuote, so this is decided
+            # without spending a request -- important against a 60/min limit.
+            top_no = prop.no_ask
+            if top_no is None or top_no > max_buy + 1e-9:
+                opportunities.append(
+                    Opportunity(prop=prop, floor=floor, max_buy=max_buy, quotes=used)
+                )
+                continue
+            client.load_book(prop)
             levels = qualifying_levels(prop.levels, max_buy)
             edges = [
                 Edge(no_price=lv.price, floor=floor.value, theta=prop.theta, qty=lv.qty)
@@ -159,6 +170,15 @@ def run_scan(
                     quotes=used,
                 )
             )
+        if min_edge_pts:
+            # Suppress rows below the per-prop threshold. This filters on EDGE,
+            # never on size: qualifying liquidity is still reported in full.
+            opportunities = [
+                o
+                for o in opportunities
+                if not o.triggered
+                or o.best_edge_pts >= min_edge_pts.get(o.prop.key.prop, 0.0)
+            ]
         opportunities.sort(key=lambda o: -o.best_edge_pts)
         return ScanResult(
             opportunities=opportunities,

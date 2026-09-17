@@ -12,6 +12,7 @@ this host or the quotes are not fillable.
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -96,10 +97,29 @@ class PolymarketUS:
         self.close()
 
     def _get(self, path: str, **params: Any) -> dict[str, Any]:
-        r = self._client.get(path, params={k: v for k, v in params.items() if v is not None})
-        r.raise_for_status()
-        payload: dict[str, Any] = json.loads(r.content.decode("utf-8"))
-        return payload
+        """GET with a short backoff.
+
+        Public gateway endpoints are rate limited (about 60 requests/minute), and
+        a slate scan is request-heavy, so transient 429s and connection resets
+        are retried rather than failing the whole run.
+        """
+        clean = {k: v for k, v in params.items() if v is not None}
+        last: Exception | None = None
+        for attempt in range(4):
+            try:
+                r = self._client.get(path, params=clean)
+                if r.status_code == 429:
+                    time.sleep(2.0 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                payload: dict[str, Any] = json.loads(r.content.decode("utf-8"))
+                return payload
+            except (httpx.TransportError, httpx.HTTPStatusError) as exc:
+                last = exc
+                if attempt == 3:
+                    break
+                time.sleep(0.5 * (2**attempt))
+        raise RuntimeError(f"Polymarket request failed after retries: {path}") from last
 
     def nfl_events(self, start_min: str, start_max: str, limit: int = 200) -> list[dict[str, Any]]:
         """Open NFL events with kickoff inside the window (ISO-8601 UTC strings)."""

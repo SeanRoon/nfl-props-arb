@@ -24,6 +24,10 @@ uv run mypy src                              # type-check
 
 uv run nflprops markets                      # list priceable Polymarket props (debug)
 uv run nflprops markets --books              # ...with live NO asks
+uv run nflprops scan                         # default: baseline odds
+uv run nflprops scan --min-edge 5            # only edges >= 5 points
+uv run nflprops scan --set dst_td=+850       # override one baseline
+uv run nflprops baselines-template           # emit editable data/baselines.toml
 uv run nflprops odds-template                # emit data/manual_odds.csv to fill in
 uv run nflprops scan --odds-source manual    # scan using hand-entered odds
 uv run nflprops scan --json                  # machine-readable output
@@ -49,6 +53,11 @@ These were established by probing the live API on 2026-09-16 and are expensive t
 - **Fees are real and exceed a flat 0.5% buffer.** Polymarket US charges takers `shares × theta × p × (1-p)`; makers pay nothing. NFL props carry `feeCoefficient = 0.06`. Against a +650 floor of 0.86667 the true break-even NO price is **0.85942**, so the intuitive "86.2%" threshold is *negative* EV by ~0.25 points. `edge.max_buy_price` solves the quadratic rather than subtracting a guess.
 - **Every target market is an `Over 0.5` line** ("at least one"). A 1.5 line asks for *two* occurrences and must never be matched against a FanDuel "will it happen" price — `props.REQUIRED_LINE` enforces this and skips the rest.
 - **`tagSlug=nfl` leaks non-NFL teams** (Celtic FC and a "Tigers" entry both appeared), which is why `teams.TEAMS` is an explicit 32-team list rather than derived at runtime.
+- **Public endpoints are rate limited to roughly 60 requests/minute.** A slate is
+  128 markets, so the scanner never fetches a book it does not need: the event
+  payload already carries `bestBidQuote`, and because the NO ladder is cheapest at
+  the top and only grows more expensive deeper down, a market whose best NO already
+  exceeds `max_buy` cannot qualify at any level. `_get` also retries with backoff.
 - **Polymarket lists NFL away-team-first** (`ordering: "away"` in `/v1/sports`), so ticker `nfl-det-buf-2026-09-17` is DET **at** BUF.
 
 ## Architecture
@@ -84,6 +93,27 @@ Two properties, both favourable:
 - **Independence is an approximation.** The two teams' events are positively correlated (a sloppy, turnover-heavy game lifts both), so true "neither" is somewhat *higher* than the product — again conservative. It is not an exact identity.
 
 **A partial leg set is never derived from.** One missing leg would *overstate* the floor and manufacture an edge that does not exist, so `leg_product_floor` raises `IncompleteLegsError` and the market is reported as unpriced. A direct whole-game quote, when FanDuel offers one, always beats the product.
+
+### Baseline odds (the default source)
+
+With no live book feed available, `--odds-source baseline` prices every game off
+a per-prop assumed line in `data/baselines.toml`. These six props sit in a narrow
+band across games -- a D/ST touchdown prices much the same whoever is playing --
+so a per-prop constant is a serviceable stand-in.
+
+Two things keep this honest:
+
+- **Baselines err short** (a smaller `+` number). Since `floor = 1 - implied_yes`,
+  a shorter assumed price means a lower floor and a *stricter* buy threshold. Being
+  wrong costs missed signals rather than bad fills.
+- **Every report prints `Book need`** -- the American price that market must
+  actually be at *or longer* to break even, from `edge.required_american_odds`.
+  That turns verification into a single comparison against the app instead of
+  re-deriving anything, and the header states plainly that floors are assumptions.
+
+`min_edge_pts` is per prop in the TOML; `--min-edge` overrides all of them. This
+filters on **edge**, never on size -- qualifying liquidity is still reported in
+full, per the rule below.
 
 ### Liquidity is reported, never filtered
 
@@ -125,4 +155,6 @@ Consequences:
 - **Phase 3 (done):** Polymarket US discovery and book client; 128 props across 16 games, 0 skipped.
 - **Phase 4 (done):** manual odds provider, scan pipeline, rich/JSON reporting, Parquet snapshots.
 - **Phase 5 (blocked):** FanDuel endpoint `sbapi.fanduel.com` is retired, not blocked; successor route unidentified. Scraper and parser unvalidated. Next move is browser observation, not more guessing.
+- **Phase 5.5 (done):** baseline-odds provider as the default source, per-prop
+  minimum edge, and a `Book need` column so manual verification is one comparison.
 - **Phase 6 (not started):** accumulate snapshots, then measure whether the longshot bias is real and persistent rather than assumed.

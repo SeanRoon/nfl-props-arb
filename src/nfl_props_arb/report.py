@@ -8,6 +8,7 @@ from typing import Any, Literal
 from rich.console import Console
 from rich.table import Table
 
+from .edge import required_american_odds
 from .scan import Opportunity, ScanResult
 
 
@@ -49,6 +50,10 @@ def opportunity_dict(o: Opportunity) -> dict[str, Any]:
             "explanation": o.floor.explanation,
         },
         "max_buy_price": o.max_buy,
+        "required_american_odds": (
+            required_american_odds(best.no_price, o.prop.theta) if best else None
+        ),
+        "floor_is_assumed": any(q.source == "baseline" for q in o.quotes),
         "triggered": o.triggered,
         "best_edge_pts": best.edge_pts if best else None,
         "roi": best.roi if best else None,
@@ -102,9 +107,10 @@ def render(result: ScanResult, console: Console, *, show_ladder: bool = True) ->
 
     table = Table(show_lines=False, header_style="bold", box=None, pad_edge=False)
     columns: tuple[tuple[str, Literal["left", "right"]], ...] = (
-        ("Game", "left"), ("Prop", "left"), ("FD", "right"),
+        ("Game", "left"), ("Prop", "left"), ("Book", "right"),
         ("Floor", "right"), ("Max", "right"), ("NO", "right"),
-        ("Edge", "right"), ("ROI", "right"), ("Shares", "right"), ("EV", "right"),
+        ("Edge", "right"), ("Shares", "right"), ("Cost", "right"), ("EV", "right"),
+        ("Book need", "right"),
     )
     for col, just in columns:
         table.add_column(col, justify=just, overflow="fold")
@@ -125,7 +131,11 @@ def render(result: ScanResult, console: Console, *, show_ladder: bool = True) ->
             f"[green]{best.edge_pts:+.1f}[/green]",
             f"{best.roi:.1%}",
             f"{o.total_shares:,.2f}",
+            f"${o.total_cost:,.2f}",
             f"${o.total_ev:,.2f}",
+            (lambda a: f"{a:+d} or longer" if a is not None else "-")(
+                required_american_odds(best.no_price, o.prop.theta)
+            ),
         )
     console.print(table)
 

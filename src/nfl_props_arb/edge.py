@@ -148,3 +148,26 @@ class Edge:
     @property
     def is_positive(self) -> bool:
         return self.ev_per_share > 0.0
+
+
+def required_implied_yes(no_price: float, theta: float = DEFAULT_THETA) -> float:
+    """Highest sportsbook YES probability at which buying NO here breaks even.
+
+    Buying NO at `no_price` costs `effective_cost(no_price)` all-in, and needs a
+    floor at least that high. Since floor = 1 - implied_yes, the book's implied
+    YES must be at or below this value.
+    """
+    return 1.0 - effective_cost(no_price, theta)
+
+
+def required_american_odds(no_price: float, theta: float = DEFAULT_THETA) -> int | None:
+    """The book price this market needs, expressed as American odds.
+
+    Returns the break-even line: the real price must be *this or longer* for the
+    trade to be +EV. None when no finite price works. This is what makes a
+    manual spot-check cheap -- one number to compare against the app.
+    """
+    p = required_implied_yes(no_price, theta)
+    if not 0.0 < p < 1.0:
+        return None
+    return prob_to_american(p)
