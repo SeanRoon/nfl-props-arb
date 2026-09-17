@@ -102,7 +102,8 @@ def test_required_odds_round_trips_to_break_even():
 
     odds = required_american_odds(0.80, theta=0.06)
     floor = 1 - american_to_prob(odds)
-    assert Edge(no_price=0.80, floor=floor, theta=0.06, qty=1).edge_pts == pytest.approx(0, abs=0.05)
+    edge = Edge(no_price=0.80, floor=floor, theta=0.06, qty=1)
+    assert edge.edge_pts == pytest.approx(0, abs=0.05)
 
 
 def test_baseline_dataclass_defaults_min_edge_to_zero():
