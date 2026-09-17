@@ -109,8 +109,8 @@ def render(result: ScanResult, console: Console, *, show_ladder: bool = True) ->
     columns: tuple[tuple[str, Literal["left", "right"]], ...] = (
         ("Game", "left"), ("Prop", "left"), ("Book", "right"),
         ("Floor", "right"), ("Max", "right"), ("NO", "right"),
-        ("Edge", "right"), ("Shares", "right"), ("Cost", "right"), ("EV", "right"),
-        ("Book need", "right"),
+        ("Edge", "right"), ("ROI", "right"), ("Shares", "right"),
+        ("Cost", "right"), ("EV", "right"), ("Book need", "right"),
     )
     for col, just in columns:
         table.add_column(col, justify=just, overflow="fold")
