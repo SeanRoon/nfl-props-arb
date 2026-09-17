@@ -37,17 +37,19 @@ class Baseline:
 
 # Short-side estimates of typical US retail prices.
 #
-# dst_td / pick_six / two_pt were set by the operator on 2026-09-17 and are the
-# closest to real lines. return_td and safety remain unmeasured placeholders.
-# Overtime is anchored on a real observation: Bovada priced DET@BUF at +900 on
-# 2026-09-16, so +800 here is one notch conservative.
+# All six set by the operator on 2026-09-17.
+#
+# Caveat worth keeping: Bovada priced DET@BUF overtime at +900 on 2026-09-16,
+# so the +1200 here is LONGER than an actually observed quote. A too-long
+# baseline overstates the floor and can manufacture edge, which is the failure
+# direction that costs money rather than missing trades.
 DEFAULT_BASELINES: dict[PropType, Baseline] = {
-    PropType.DST_TD: Baseline(american=750, scope=Scope.TEAM, min_edge_pts=2.0),
-    PropType.PICK_SIX: Baseline(american=650, scope=Scope.GAME, min_edge_pts=2.0),
-    PropType.RETURN_TD: Baseline(american=900, scope=Scope.GAME, min_edge_pts=2.0),
-    PropType.SAFETY: Baseline(american=800, scope=Scope.GAME, min_edge_pts=2.0),
-    PropType.OVERTIME: Baseline(american=800, scope=Scope.GAME, min_edge_pts=2.0),
-    PropType.TWO_PT: Baseline(american=250, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.DST_TD: Baseline(american=800, scope=Scope.TEAM, min_edge_pts=2.0),
+    PropType.PICK_SIX: Baseline(american=800, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.RETURN_TD: Baseline(american=1100, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.SAFETY: Baseline(american=1100, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.OVERTIME: Baseline(american=1200, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.TWO_PT: Baseline(american=400, scope=Scope.GAME, min_edge_pts=2.0),
 }
 
 TEMPLATE = '''# Baseline sportsbook odds for each prop, used by --odds-source baseline.
@@ -63,32 +65,32 @@ TEMPLATE = '''# Baseline sportsbook odds for each prop, used by --odds-source ba
 #   min_edge_pts - suppress rows below this edge, in probability points.
 
 [dst_td]
-american = 750
+american = 800
 scope = "team"
 min_edge_pts = 2.0
 
 [pick_six]
-american = 650
+american = 800
 scope = "game"
 min_edge_pts = 2.0
 
 [return_td]
-american = 900
+american = 1100
 scope = "game"
 min_edge_pts = 2.0
 
 [safety]
-american = 800
+american = 1100
 scope = "game"
 min_edge_pts = 2.0
 
 [overtime]
-american = 800
+american = 1200
 scope = "game"
 min_edge_pts = 2.0
 
 [two_pt]
-american = 250
+american = 400
 scope = "game"
 min_edge_pts = 2.0
 '''

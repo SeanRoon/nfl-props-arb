@@ -11,31 +11,31 @@
 #   min_edge_pts - suppress rows below this edge, in probability points.
 
 [dst_td]
-american = 750
+american = 800
 scope = "team"
 min_edge_pts = 2.0
 
 [pick_six]
-american = 650
+american = 800
 scope = "game"
 min_edge_pts = 2.0
 
 [return_td]
-american = 900
+american = 1100
 scope = "game"
 min_edge_pts = 2.0
 
 [safety]
-american = 800
+american = 1100
 scope = "game"
 min_edge_pts = 2.0
 
 [overtime]
-american = 800
+american = 1200
 scope = "game"
 min_edge_pts = 2.0
 
 [two_pt]
-american = 250
+american = 400
 scope = "game"
 min_edge_pts = 2.0
