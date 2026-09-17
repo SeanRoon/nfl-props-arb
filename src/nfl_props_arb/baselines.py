@@ -35,16 +35,19 @@ class Baseline:
     min_edge_pts: float = 0.0
 
 
-# Deliberately short-side estimates of typical US retail prices.
-# Overtime is anchored on a real observation: Bovada priced DET@BUF at +900
-# on 2026-09-16, so +800 here is one notch conservative.
+# Short-side estimates of typical US retail prices.
+#
+# dst_td / pick_six / two_pt were set by the operator on 2026-09-17 and are the
+# closest to real lines. return_td and safety remain unmeasured placeholders.
+# Overtime is anchored on a real observation: Bovada priced DET@BUF at +900 on
+# 2026-09-16, so +800 here is one notch conservative.
 DEFAULT_BASELINES: dict[PropType, Baseline] = {
-    PropType.DST_TD: Baseline(american=700, scope=Scope.TEAM, min_edge_pts=2.0),
-    PropType.PICK_SIX: Baseline(american=500, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.DST_TD: Baseline(american=750, scope=Scope.TEAM, min_edge_pts=2.0),
+    PropType.PICK_SIX: Baseline(american=650, scope=Scope.GAME, min_edge_pts=2.0),
     PropType.RETURN_TD: Baseline(american=900, scope=Scope.GAME, min_edge_pts=2.0),
     PropType.SAFETY: Baseline(american=800, scope=Scope.GAME, min_edge_pts=2.0),
     PropType.OVERTIME: Baseline(american=800, scope=Scope.GAME, min_edge_pts=2.0),
-    PropType.TWO_PT: Baseline(american=220, scope=Scope.GAME, min_edge_pts=2.0),
+    PropType.TWO_PT: Baseline(american=250, scope=Scope.GAME, min_edge_pts=2.0),
 }
 
 TEMPLATE = '''# Baseline sportsbook odds for each prop, used by --odds-source baseline.
@@ -60,12 +63,12 @@ TEMPLATE = '''# Baseline sportsbook odds for each prop, used by --odds-source ba
 #   min_edge_pts - suppress rows below this edge, in probability points.
 
 [dst_td]
-american = 700
+american = 750
 scope = "team"
 min_edge_pts = 2.0
 
 [pick_six]
-american = 500
+american = 650
 scope = "game"
 min_edge_pts = 2.0
 
@@ -85,7 +88,7 @@ scope = "game"
 min_edge_pts = 2.0
 
 [two_pt]
-american = 220
+american = 250
 scope = "game"
 min_edge_pts = 2.0
 '''
