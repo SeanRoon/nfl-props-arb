@@ -118,7 +118,8 @@ module docstring has the details; the ones that bite:
 - **Status mapping keeps ambiguity committed.** Nothing filled → `rejected`
   (capital released); 409 or 5xx or no executions → `submitted` (capital held
   until reconciled). A fill records its *actual* size in the ledger, costed at our
-  limit price — whether `avgPx` on a short order is long-side is undocumented.
+  limit price. `avgPx` on a short order is long-side too (first live fill,
+  2026-09-23: NO at 0.69 reported `avgPx` 0.31).
 - **Live runs check buying power first** (`GET /v1/account/balances`) and
   `fit_to_budget` trims the plan to it.
 - **Fees round to the cent per fill** (banker's rounding). At zero-edge limits a

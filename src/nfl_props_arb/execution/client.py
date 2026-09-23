@@ -13,11 +13,15 @@ Written to the venue's published spec (docs.polymarket.us, read 2026-09-23):
   * Executions come back in the response only when `synchronousExecution` is
     set; otherwise the reply is an order id and nothing about fills.
 
+Observed on the first live fill (2026-09-23, order CNYHQK5AAWP6):
+
+  * `avgPx` on a short order **is quoted long-side** too: NO filled at 0.69
+    reported `avgPx` 0.31. It is passed through raw in the result message and
+    never used for the cap, which is computed from our own limit price and the
+    filled quantity.
+
 Not documented, so treated conservatively rather than guessed:
 
-  * Whether `avgPx` on a short order is quoted long-side. It is passed through
-    raw in the result message and never used for the cap, which is computed from
-    our own limit price and the filled quantity.
   * The error body shape. Any 4xx other than 409 is treated as a refusal; 409
     (duplicate) and 5xx are ambiguous and leave the capital committed.
 """
