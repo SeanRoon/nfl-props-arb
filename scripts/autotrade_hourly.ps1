@@ -21,7 +21,7 @@ $logDir = Join-Path $repo 'logs'
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 $log = Join-Path $logDir ("autotrade-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd'))
 
-"=== $(Get-Date -Format 'u') run start ===" | Add-Content -Path $log -Encoding utf8
+"=== $((Get-Date).ToUniversalTime().ToString('u')) run start ===" | Add-Content -Path $log -Encoding utf8
 
 # LIVE since 2026-09-23 (operator instruction), $100 all-in cap per market.
 # Kill switch without touching the scheduler: New-Item data\HALT
@@ -29,5 +29,5 @@ $log = Join-Path $logDir ("autotrade-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd')
 & uv run --extra execute nflprops autotrade --live --max-per-market 100 *>&1 | Add-Content -Path $log -Encoding utf8
 $code = $LASTEXITCODE
 
-"=== $(Get-Date -Format 'u') run end (exit $code) ===" | Add-Content -Path $log -Encoding utf8
+"=== $((Get-Date).ToUniversalTime().ToString('u')) run end (exit $code) ===" | Add-Content -Path $log -Encoding utf8
 exit $code
