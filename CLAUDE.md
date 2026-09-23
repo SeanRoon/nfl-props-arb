@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-A scanner for **+EV NO-side trades on Polymarket US NFL game props**, priced against FanDuel. **Read-only — no order placement.**
+A scanner for **+EV NO-side trades on Polymarket US NFL game props**, priced against FanDuel, plus an hourly autotrader that acts on it.
+
+**This package can place orders.** That was not true before 2026-09-22. `autotrade` is the only command that can move money; everything else — `scan`, `markets`, `snapshot`, the templates — is strictly read-only, and `polymarket/client.py` still touches nothing but the public gateway.
 
 The premise is that Polymarket's game props carry **longshot bias**: the market overprices low-probability YES outcomes (a safety, a pick six, overtime). FanDuel prices the same events sharply, with vig. Buying NO on Polymarket below FanDuel's implied NO price means buying something worth at least what you paid, with FanDuel's entire hold as the safety margin.
 
@@ -31,15 +33,113 @@ uv run nflprops baselines-template           # emit editable data/baselines.toml
 uv run nflprops odds-template                # emit data/manual_odds.csv to fill in
 uv run nflprops scan --odds-source manual    # scan using hand-entered odds
 uv run nflprops scan --json                  # machine-readable output
+uv run nflprops scan --no-include-started    # drop games already under way
 uv run nflprops snapshot                     # record the slate to Parquet
+
+uv run nflprops autotrade-template           # emit editable data/autotrade.toml
+uv run nflprops autotrade                    # DRY RUN: what it would buy
+uv run nflprops autotrade --live             # place the orders
+uv run nflprops autotrade --live --max-per-market 5
 ```
 
 `--slippage` adds a cushion *beyond* the modelled taker fee. `--days` sets the kickoff window.
 
+## Autotrade
+
+Hourly, deterministic, read-the-ledger-first. Same scan + ledger + clock always
+produces the same orders; there is no sampling and no judgement in the loop. The
+judgement is entirely in the operator's `max_buy` numbers.
+
+**Thresholds** live in `data/autotrade.toml`, kept separate from `baselines.toml`
+so the scanner's assumptions and the trader's live limits cannot drift into one
+another. Set by the operator on 2026-09-22:
+
+| Prop | Limit | Tradeable |
+|---|---|---|
+| `dst_td`, `two_pt` | 0.69 | yes |
+| `pick_six`, `return_td`, `safety` | 0.83 | yes |
+| `overtime` | — | **no** (no limit given) |
+
+These are **already fee-adjusted**: the most the operator will pay all-in, fees
+included. They are *not* floors, and must never be run through
+`edge.max_buy_price` a second time — that subtracts the fee twice and turns 0.69
+into 0.6747. The implied floor is `effective_cost(max_buy, theta)`, which inverts
+back exactly; `combine.max_buy_floor` is the single place this is encoded and
+`tests/unit/test_max_buy.py` asserts the round trip at both observed thetas.
+
+Consequences worth knowing:
+
+- **An offer at exactly the limit is bought, at exactly zero edge.** Deliberate,
+  at the operator's instruction. `scan.py` filters edges at `>= -1e-9` rather than
+  `> 0` for this reason.
+- **D/ST TD is `scope = "game"` here**, unlike `baselines.toml`. 0.69 is a
+  whole-game number, so the leg-product derivation is bypassed and the same flat
+  cap applies to team-scoped D/ST markets. Since a single team's NO rarely trades
+  under 0.69, this trades the whole-game market in practice.
+
+**Guards**, in the order they bite:
+
+1. `data/HALT` exists → the run does nothing and exits 0. Kill switch.
+2. Prop not `tradeable`, or has no `max_buy` → never bought (this is `overtime`).
+3. Kickoff past, imminent (`--kickoff-buffer`, default 15 min), or unparseable →
+   skipped. Checked at planning **and** again immediately before each submission,
+   because a slate takes minutes to price against a rate-limited gateway.
+4. `--max-per-market` (default $100) enforced against `data/ledger.jsonl`, so it
+   holds *across* runs. Without this an hourly job re-buys the same qualifying
+   offer every hour.
+
+The cap is measured in **all-in cost**, price plus taker fee, because that is what
+leaves the account.
+
+**Ledger.** `data/ledger.jsonl`, append-only, fsynced, one record per order.
+Written *before* submission and reconciled after: an order whose response is lost
+may well have been accepted, so its capital stays committed until reconciled.
+Recording after the fact would understate exposure in exactly the case where
+being wrong costs a double position. A raised exception is not a rejection and
+does not release the capital.
+
+**Orders are limit, immediate-or-cancel, priced at the level being taken.** Never
+market orders: the whole strategy is a price threshold. IOC because a resting
+order would still be live after kickoff.
+
+### The order API
+
+`execution/client.py` is written to docs.polymarket.us (read 2026-09-23). The
+module docstring has the details; the ones that bite:
+
+- **`price.value` is always the YES price, even on `ORDER_INTENT_BUY_SHORT`.** NO
+  at 0.69 is sent as `0.31`. Sending the NO price does not error — it buys at the
+  wrong price. `long_price_for_no` is the single place this is encoded, and it
+  rounds to the tick in the direction that lowers the NO price.
+- **Signature is Ed25519 over `timestamp_ms + METHOD + path`**, body unsigned,
+  headers `X-PM-Access-Key` / `X-PM-Timestamp` / `X-PM-Signature`. The venue issues
+  a 64-byte key (seed + public key); `credentials.load` keeps the 32-byte seed.
+- **`synchronousExecution: true`**, or the response carries no fills at all.
+- **Status mapping keeps ambiguity committed.** Nothing filled → `rejected`
+  (capital released); 409 or 5xx or no executions → `submitted` (capital held
+  until reconciled). A fill records its *actual* size in the ledger, costed at our
+  limit price — whether `avgPx` on a short order is long-side is undocumented.
+- **Live runs check buying power first** (`GET /v1/account/balances`) and
+  `fit_to_budget` trims the plan to it.
+- **Fees round to the cent per fill** (banker's rounding). At zero-edge limits a
+  tiny fill can pay up to half a cent more than modelled.
+
+Credentials come from the environment only, never from `data/` or anywhere in the
+repo: `POLYMARKET_US_KEY_ID` plus `POLYMARKET_US_KEY_FILE` or `POLYMARKET_US_KEY`.
+Needs the `execute` extra (`uv sync --extra execute`) for Ed25519.
+
+### Scheduling
+
+`scripts/autotrade_hourly.ps1` pins the working directory to the repo — config
+paths are relative, so a wrong cwd silently loads built-in defaults instead of the
+operator's limits — and appends to `logs/autotrade-YYYY-MM-DD.log`. It runs
+`--dry-run`; change the flag when ready. Registration command is in its header
+comment. Not registered as part of the build; that is the operator's call.
+
 ## Venue: Polymarket US (public read API)
 
 - **Public gateway:** `https://gateway.polymarket.us` — markets, books, BBO, events, series, sports. **No auth, no KYC.**
-- **Authenticated:** `https://api.polymarket.us` — orders, portfolio, balances. Requires KYC via the iOS app and Ed25519-signed requests. **Nothing in this repo touches it.**
+- **Authenticated:** `https://api.polymarket.us` — orders, portfolio, balances. Requires KYC via the iOS app and Ed25519-signed requests. Only `execution/client.py` touches it.
 - Polymarket US is a **separate CFTC-regulated exchange** from international Polymarket, with its own order book and its own liquidity. Prices must come from the `.us` host; an international quote is not fillable from a US account. A prior project (`../pm-wt-selftrader`) stalled on exactly this distinction.
 - Discovery: `GET /v1/events?tagSlug=nfl&closed=false&startDateMin=...&startDateMax=...` returns events with **nested markets**, so one request covers a whole slate.
 
@@ -141,7 +241,7 @@ Consequences:
 
 ## Conventions
 
-- **Read-only.** No order-placement code in this repo, mirroring `../pm-wt-selftrader`. Execution, if it ships, goes in a separate private repo.
+- **Read-only except `execution/`.** Order placement lives in `execution/` and is reached only from `autotrade`. The earlier convention was that execution would go in a separate private repo, mirroring `../pm-wt-selftrader`; the operator chose to build it here on 2026-09-22. Keep the boundary visible: nothing outside `execution/` should import it, and `polymarket/client.py` stays a read client.
 - **Tests are offline.** Network calls live in production code; tests run against recorded fixtures in `tests/fixtures/`. Don't add tests that hit live endpoints.
 - **NO side only.** The strategy buys NO; YES-side edges are out of scope by design.
 - **Floors come from the YES price**, never a book's own NO quote, so FanDuel's vig always sits on our side.
@@ -158,3 +258,8 @@ Consequences:
 - **Phase 5.5 (done):** baseline-odds provider as the default source, per-prop
   minimum edge, and a `Book need` column so manual verification is one comparison.
 - **Phase 6 (not started):** accumulate snapshots, then measure whether the longshot bias is real and persistent rather than assumed.
+- **Phase 7 (in progress):** hourly autotrader. Fee-adjusted `max_buy` thresholds,
+  live-game filter, per-market cap against an append-only ledger, dry-run mode,
+  Task Scheduler script, and order submission to the documented API — all done
+  and tested offline. Remaining: confirm the first live fills against the app,
+  then switch the scheduled script from `--dry-run` to `--live`.

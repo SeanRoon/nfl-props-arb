@@ -6,7 +6,14 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from .combine import Floor, IncompleteLegsError, Leg, direct_floor, leg_product_floor
+from .combine import (
+    Floor,
+    IncompleteLegsError,
+    Leg,
+    direct_floor,
+    leg_product_floor,
+    max_buy_floor,
+)
 from .edge import Edge, NoLevel, max_buy_price, qualifying_levels
 from .odds.base import OddsProvider, PropQuote
 from .polymarket.client import PmProp, PolymarketUS, discover
@@ -80,11 +87,19 @@ def _floor_for_prop(
 
     Prefers a direct same-scope quote. For a whole-game market with only
     per-team legs, falls back to the product of the legs.
+
+    A quote carrying a fee-adjusted `max_buy` resolves differently: the floor is
+    the all-in cost at that limit, which needs the market's own theta and so can
+    only be computed here, where the prop is in hand. See `combine.max_buy_floor`.
     """
     key = prop.key
     direct = by_key.get((key.game, key.prop, key.scope, key.team))
     if direct is not None:
-        return direct_floor(direct.implied_yes), (direct,), None
+        if direct.max_buy is not None:
+            return max_buy_floor(direct.max_buy, prop.theta), (direct,), None
+        implied = direct.implied_yes
+        assert implied is not None
+        return direct_floor(implied), (direct,), None
 
     if key.scope is Scope.GAME:
         legs = legs_by_game.get((key.game, key.prop), {})
@@ -111,6 +126,8 @@ def run_scan(
     slippage: float = DEFAULT_SLIPPAGE,
     client: PolymarketUS | None = None,
     min_edge_pts: dict[PropType, float] | None = None,
+    exclude_started: bool = False,
+    kickoff_buffer: timedelta = timedelta(0),
 ) -> ScanResult:
     """Discover props, price them against `provider`, and return opportunities."""
     owns_client = client is None
@@ -121,6 +138,9 @@ def run_scan(
             client,
             now.strftime("%Y-%m-%dT00:00:00Z"),
             (now + timedelta(days=days)).strftime("%Y-%m-%dT00:00:00Z"),
+            exclude_started=exclude_started,
+            now=now,
+            kickoff_buffer=kickoff_buffer,
         )
         games = sorted({p.key.game for p in props})
         quotes = provider.quotes_for(games)
@@ -130,9 +150,13 @@ def run_scan(
         }
         legs_by_game: dict[tuple[GameKey, PropType], dict[str, Leg]] = {}
         for q in quotes:
-            if q.scope is Scope.TEAM and q.team:
+            # Only book odds make legs. A fee-adjusted price cap has no implied
+            # probability, and multiplying two caps together would mean nothing.
+            if q.scope is Scope.TEAM and q.team and q.american is not None:
+                implied = q.implied_yes
+                assert implied is not None
                 legs_by_game.setdefault((q.game, q.prop), {})[q.team] = Leg(
-                    team=q.team, american=q.american, implied_yes=q.implied_yes
+                    team=q.team, american=q.american, implied_yes=implied
                 )
 
         opportunities: list[Opportunity] = []
@@ -142,7 +166,16 @@ def run_scan(
             if floor is None:
                 unpriced.append({"key": str(prop.key), "slug": prop.slug, "reason": reason})
                 continue
-            max_buy = max_buy_price(floor.value, prop.theta, slippage)
+            # An operator's fee-adjusted limit is used as written. Re-solving it
+            # from its own implied floor round-trips to the same number, but only
+            # to within float error -- and "within float error" is not good enough
+            # for a threshold the operator expects an offer at exactly 0.69 to
+            # clear. Slippage still applies, as a cushion on the price itself.
+            max_buy = (
+                floor.max_buy - slippage
+                if floor.max_buy is not None
+                else max_buy_price(floor.value, prop.theta, slippage)
+            )
             # The NO ladder is cheapest at the top and only grows more expensive
             # deeper down, so if the best NO already exceeds max_buy no level can
             # qualify. The event payload carries bestBidQuote, so this is decided
@@ -159,7 +192,11 @@ def run_scan(
                 Edge(no_price=lv.price, floor=floor.value, theta=prop.theta, qty=lv.qty)
                 for lv in levels
             ]
-            edges = [e for e in edges if e.is_positive]
+            # Every level here is already at or below max_buy, which is the
+            # break-even price by construction, so this only sheds float noise.
+            # Inclusive of zero on purpose: an offer at exactly the operator's
+            # limit is a trade they asked to take, at exactly zero edge.
+            edges = [e for e in edges if e.ev_per_share >= -1e-9]
             opportunities.append(
                 Opportunity(
                     prop=prop,

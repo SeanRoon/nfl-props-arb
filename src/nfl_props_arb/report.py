@@ -9,11 +9,23 @@ from rich.console import Console
 from rich.table import Table
 
 from .edge import required_american_odds
+from .odds.base import PropQuote
 from .scan import Opportunity, ScanResult
 
 
 def _sign(n: int) -> str:
     return f"+{n}" if n > 0 else str(n)
+
+
+def _book_cell(q: PropQuote) -> str:
+    """How a quote reads in the Book column.
+
+    A fee-adjusted operator limit is not a book price and must not be dressed up
+    as one, so it shows as the cap it is.
+    """
+    if q.american is None:
+        return f"<={q.max_buy:.3f}" if q.max_buy is not None else "-"
+    return _sign(q.american)
 
 
 def opportunity_dict(o: Opportunity) -> dict[str, Any]:
@@ -37,6 +49,7 @@ def opportunity_dict(o: Opportunity) -> dict[str, Any]:
             {
                 "label": q.label,
                 "american": q.american,
+                "max_buy": q.max_buy,
                 "implied_yes": q.implied_yes,
                 "scope": q.scope.value,
                 "team": q.team,
@@ -124,7 +137,7 @@ def render(result: ScanResult, console: Console, *, show_ladder: bool = True) ->
         table.add_row(
             matchup,
             prop,
-            "/".join(_sign(q.american) for q in o.quotes) or "-",
+            "/".join(_book_cell(q) for q in o.quotes) or "-",
             f"{o.floor.value:.3f}",
             f"{o.max_buy:.3f}",
             f"{best.no_price:.3f}",

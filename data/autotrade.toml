@@ -1,0 +1,45 @@
+# Fee-adjusted buy limits for `nflprops autotrade`.
+#
+# Kept separate from baselines.toml on purpose: the scanner's ASSUMPTIONS and the
+# trader's LIVE LIMITS must never drift into one another.
+#
+#   max_buy   - the most you will pay for a NO share, all-in, fees included.
+#               Used exactly as written: the tool does not re-subtract fees. An
+#               offer at exactly this price qualifies, at zero edge.
+#   scope     - "game" applies one flat limit to the whole-game market and to
+#               team-scoped markets alike, bypassing the leg-product derivation.
+#   tradeable - false leaves the prop scanned and reported but never bought.
+#
+# A prop with `american` instead of `max_buy` is priced the scanner's way: floor
+# from the complement, threshold solved for fees.
+
+[dst_td]
+max_buy = 0.69
+scope = "game"
+tradeable = true
+
+[two_pt]
+max_buy = 0.69
+scope = "game"
+tradeable = true
+
+[pick_six]
+max_buy = 0.83
+scope = "game"
+tradeable = true
+
+[return_td]
+max_buy = 0.83
+scope = "game"
+tradeable = true
+
+[safety]
+max_buy = 0.83
+scope = "game"
+tradeable = true
+
+# No operator limit set for overtime, so it is never bought.
+[overtime]
+american = 1200
+scope = "game"
+tradeable = false

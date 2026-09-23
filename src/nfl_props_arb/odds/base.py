@@ -17,30 +17,50 @@ from ..props import GameKey, PropType, Scope
 
 @dataclass(frozen=True)
 class PropQuote:
-    """One sportsbook price for one prop, at one scope."""
+    """One price for one prop, at one scope.
+
+    Carries exactly one of two kinds of price:
+
+    * `american` -- a book's YES price. The NO floor is its complement.
+    * `max_buy`  -- an operator's already-fee-adjusted NO limit. There is no
+      implied probability to read off it until a market's theta is known, so
+      `implied_yes` is None and the floor is resolved in `scan._floor_for_prop`.
+    """
 
     game: GameKey
     prop: PropType
     scope: Scope
-    american: int
     fetched_at: datetime
+    american: int | None = None
+    max_buy: float | None = None
     team: str | None = None
     label: str = ""      # the book's own wording, kept for operator verification
     source: str = ""
 
     @property
-    def implied_yes(self) -> float:
-        """Vig-inclusive implied probability of the YES outcome."""
+    def implied_yes(self) -> float | None:
+        """Vig-inclusive implied probability of the YES outcome.
+
+        None for a `max_buy` quote: a fee-adjusted buy limit is not a probability,
+        and inventing one would put a fabricated number in the report.
+        """
+        if self.american is None:
+            return None
         return american_to_prob(self.american)
 
     @property
-    def no_complement(self) -> float:
-        return 1.0 - self.implied_yes
+    def no_complement(self) -> float | None:
+        implied = self.implied_yes
+        return None if implied is None else 1.0 - implied
 
     def __str__(self) -> str:
         where = f" [{self.team.upper()}]" if self.team else ""
+        if self.american is None:
+            return f"{self.prop.value}{where} max buy {self.max_buy:.4f} (fee-adjusted)"
         sign = "+" if self.american > 0 else ""
-        return f"{self.prop.value}{where} {sign}{self.american} ({self.implied_yes:.2%})"
+        implied = self.implied_yes
+        assert implied is not None
+        return f"{self.prop.value}{where} {sign}{self.american} ({implied:.2%})"
 
 
 @runtime_checkable

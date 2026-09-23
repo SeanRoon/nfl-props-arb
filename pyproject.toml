@@ -13,6 +13,8 @@ dependencies = [
 
 [project.optional-dependencies]
 scrape = ["curl-cffi>=0.7"]
+# Order placement only. Nothing on the read-only paths imports this.
+execute = ["cryptography>=42.0"]
 
 [project.scripts]
 nflprops = "nfl_props_arb.cli:app"

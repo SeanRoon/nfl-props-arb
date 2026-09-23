@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import httpx
@@ -50,6 +51,36 @@ class PmProp:
     @property
     def url(self) -> str:
         return f"https://polymarket.us/market/{self.slug}"
+
+    @property
+    def kickoff_at(self) -> datetime | None:
+        """Kickoff as an aware UTC datetime, or None if it cannot be parsed.
+
+        `start_date` arrives as whatever the event payload carried. It is not
+        validated upstream, so this is the only place it becomes a real time.
+        """
+        raw = (self.start_date or "").strip()
+        if not raw:
+            return None
+        try:
+            parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return parsed if parsed.tzinfo is not None else parsed.replace(tzinfo=UTC)
+
+    def has_started(self, now: datetime, buffer: timedelta = timedelta(0)) -> bool:
+        """Has this game kicked off, or is it about to within `buffer`?
+
+        **An unparseable or missing kickoff counts as started.** The whole point
+        of the check is to refuse to trade a game that is already under way, and
+        a market whose kickoff cannot be established is exactly the case where
+        that cannot be ruled out. Failing closed costs a missed trade; failing
+        open buys a NO on an event that may already have happened.
+        """
+        kickoff = self.kickoff_at
+        if kickoff is None:
+            return True
+        return kickoff - buffer <= now
 
 
 def _amount(node: Any) -> float | None:
@@ -136,12 +167,24 @@ class PolymarketUS:
         return data.get("events") or []
 
     def props_from_events(
-        self, events: list[dict[str, Any]]
+        self,
+        events: list[dict[str, Any]],
+        *,
+        exclude_started: bool = False,
+        now: datetime | None = None,
+        kickoff_buffer: timedelta = timedelta(0),
     ) -> tuple[list[PmProp], list[dict[str, Any]]]:
         """Extract the prop markets we can price, plus anything skipped.
 
         Skips are returned rather than dropped so gaps in coverage stay visible.
+
+        `exclude_started` drops games already under way. It is off by default so
+        the scanner still reports everything, but note that the event query alone
+        does *not* do this: `startDateMin` is floored to midnight UTC and
+        `closed=false` excludes only settled events, so a game that kicked off
+        earlier the same day is still returned.
         """
+        moment = now or datetime.now(UTC)
         props: list[PmProp] = []
         skipped: list[dict[str, Any]] = []
         for ev in events:
@@ -165,20 +208,28 @@ class PolymarketUS:
                     if team is None:
                         skipped.append({"slug": m.get("slug"), "reason": "team_unresolved"})
                         continue
-                props.append(
-                    PmProp(
-                        key=PropKey(game=game, prop=prop, scope=scope, team=team),
-                        slug=m["slug"],
-                        market_id=str(m.get("id")),
-                        question=m.get("question") or "",
-                        title=m.get("title") or "",
-                        theta=float(m.get("feeCoefficient") or 0.0),
-                        line=float(line),
-                        event_ticker=ev.get("ticker") or "",
-                        start_date=ev.get("startDate") or "",
-                        best_yes_bid=_amount(m.get("bestBidQuote")),
-                    )
+                candidate = PmProp(
+                    key=PropKey(game=game, prop=prop, scope=scope, team=team),
+                    slug=m["slug"],
+                    market_id=str(m.get("id")),
+                    question=m.get("question") or "",
+                    title=m.get("title") or "",
+                    theta=float(m.get("feeCoefficient") or 0.0),
+                    line=float(line),
+                    event_ticker=ev.get("ticker") or "",
+                    start_date=ev.get("startDate") or "",
+                    best_yes_bid=_amount(m.get("bestBidQuote")),
                 )
+                if exclude_started and candidate.has_started(moment, kickoff_buffer):
+                    skipped.append(
+                        {
+                            "slug": candidate.slug,
+                            "reason": "started",
+                            "kickoff": candidate.start_date,
+                        }
+                    )
+                    continue
+                props.append(candidate)
         return props, skipped
 
     def load_book(self, prop: PmProp) -> PmProp:
@@ -200,7 +251,18 @@ class PolymarketUS:
 
 
 def discover(
-    client: PolymarketUS, start_min: str, start_max: str
+    client: PolymarketUS,
+    start_min: str,
+    start_max: str,
+    *,
+    exclude_started: bool = False,
+    now: datetime | None = None,
+    kickoff_buffer: timedelta = timedelta(0),
 ) -> tuple[list[PmProp], list[dict[str, Any]]]:
     """Convenience: events -> priceable props for a kickoff window."""
-    return client.props_from_events(client.nfl_events(start_min, start_max))
+    return client.props_from_events(
+        client.nfl_events(start_min, start_max),
+        exclude_started=exclude_started,
+        now=now,
+        kickoff_buffer=kickoff_buffer,
+    )

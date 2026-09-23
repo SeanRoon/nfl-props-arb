@@ -25,6 +25,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .edge import effective_cost, fee_per_share
 from .props import GameKey, PropKey, Scope
 
 
@@ -59,12 +60,19 @@ class Floor:
     """A NO-side floor with a record of how it was derived."""
 
     value: float
-    method: str              # "direct" | "leg_product"
+    method: str              # "direct" | "leg_product" | "max_buy"
     legs: tuple[Leg, ...] = ()
+    max_buy: float | None = None   # set only when method == "max_buy"
 
     @property
     def explanation(self) -> str:
         """Human-auditable arithmetic, e.g. ``0.800 x 0.800 = 0.640``."""
+        if self.method == "max_buy":
+            assert self.max_buy is not None
+            return (
+                f"{self.max_buy:.4f} + fee {self.value - self.max_buy:.4f} "
+                f"= {self.value:.4f}  (operator limit)"
+            )
         if self.method == "direct":
             return f"1 - {1.0 - self.value:.4f} = {self.value:.4f}"
         parts = " x ".join(f"{lg.no_complement:.3f}" for lg in self.legs)
@@ -77,6 +85,30 @@ def direct_floor(implied_yes: float) -> Floor:
     if not 0.0 <= implied_yes <= 1.0:
         raise ValueError(f"implied probability out of range: {implied_yes}")
     return Floor(value=1.0 - implied_yes, method="direct")
+
+
+def max_buy_floor(max_buy: float, theta: float) -> Floor:
+    """Floor implied by an operator's already-fee-adjusted buy limit.
+
+    The operator has said "pay no more than `max_buy`, all-in". Breaking even at
+    that price means the true NO value is exactly what it costs to buy there, so
+    the implied floor is the all-in cost:
+
+        floor = max_buy + theta * max_buy * (1 - max_buy)
+
+    This inverts `edge.max_buy_price` exactly -- feeding this floor back through
+    the solver returns `max_buy` -- which is what lets a fee-adjusted limit reuse
+    the whole existing pricing path. The one thing it must never do is go through
+    that solver on the way *in*, which would subtract the fee a second time.
+
+    At the limit price itself the edge is exactly zero. That is intended: the
+    operator's number is the break-even point they chose, not a profit target.
+    """
+    if not 0.0 < max_buy < 1.0:
+        raise ValueError(f"max_buy out of range: {max_buy}")
+    if fee_per_share(max_buy, theta) < 0.0:
+        raise ValueError(f"negative fee from theta={theta}")
+    return Floor(value=effective_cost(max_buy, theta), method="max_buy", max_buy=max_buy)
 
 
 def leg_product_floor(key: PropKey, legs: dict[str, Leg]) -> Floor:
