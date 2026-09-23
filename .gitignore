@@ -13,3 +13,4 @@ data/ledger.jsonl
 data/HALT
 logs/
 *.key
+data/fills.csv

@@ -445,3 +445,21 @@ def test_no_budget_places_nothing():
     )
     kept, dropped = fit_to_budget(planned, 0.0)
     assert kept == [] and len(dropped) == len(planned)
+
+
+def test_a_fill_logs_its_size_and_no_price(tmp_path):
+    path = tmp_path / "l.jsonl"
+
+    class Venue:
+        name = "stub"
+
+        def place(self, request: OrderRequest) -> OrderResult:
+            # The venue reports avgPx long-side, as observed live.
+            return OrderResult(status="partial", order_id="o1", filled_shares=3.0, avg_price=0.37)
+
+    planned, _ = plan_orders(
+        _result(_opportunity()), DEFAULT_AUTOTRADE, exposure={}, cap=100.0, now=NOW
+    )
+    execute(planned, Venue(), run_id="r", ledger_path=path, now=NOW)
+    (fill,) = ledger.fills(path)
+    assert (fill.shares, fill.fill_price, fill.order_id) == (3.0, 0.63, "o1")

@@ -40,6 +40,7 @@ uv run nflprops autotrade-template           # emit editable data/autotrade.toml
 uv run nflprops autotrade                    # DRY RUN: what it would buy
 uv run nflprops autotrade --live             # place the orders
 uv run nflprops autotrade --live --max-per-market 5
+uv run nflprops fills                        # every fill to date, with totals
 ```
 
 `--slippage` adds a cushion *beyond* the modelled taker fee. `--days` sets the kickoff window.
@@ -98,6 +99,12 @@ Recording after the fact would understate exposure in exactly the case where
 being wrong costs a double position. A raised exception is not a rejection and
 does not release the capital.
 
+**Fills.** `nflprops fills` lists every filled or partly filled order with
+totals, and every live run rewrites `data/fills.csv`. Both are *derived from the
+ledger* rather than kept alongside it, so they cannot disagree with the exposure
+the cap is enforced against. A fill's `extra` holds `filled_shares` and
+`fill_no_price` (the venue's long-side `avgPx`, converted).
+
 **Orders are limit, immediate-or-cancel, priced at the level being taken.** Never
 market orders: the whole strategy is a price threshold. IOC because a resting
 order would still be live after kickoff.
@@ -134,7 +141,8 @@ Needs the `execute` extra (`uv sync --extra execute`) for Ed25519.
 `scripts/autotrade_hourly.ps1` pins the working directory to the repo — config
 paths are relative, so a wrong cwd silently loads built-in defaults instead of the
 operator's limits — and appends to `logs/autotrade-YYYY-MM-DD.log`. It runs
-`--dry-run`; change the flag when ready. Registration command is in its header
+**`--live` at a $100 cap**, registered hourly as task `nflprops-autotrade` on
+2026-09-23 (interactive logon only: it runs while the operator is logged in). Registration command is in its header
 comment. Not registered as part of the build; that is the operator's call.
 
 ## Venue: Polymarket US (public read API)
@@ -259,8 +267,8 @@ Consequences:
 - **Phase 5.5 (done):** baseline-odds provider as the default source, per-prop
   minimum edge, and a `Book need` column so manual verification is one comparison.
 - **Phase 6 (not started):** accumulate snapshots, then measure whether the longshot bias is real and persistent rather than assumed.
-- **Phase 7 (in progress):** hourly autotrader. Fee-adjusted `max_buy` thresholds,
+- **Phase 7 (live):** hourly autotrader. Fee-adjusted `max_buy` thresholds,
   live-game filter, per-market cap against an append-only ledger, dry-run mode,
   Task Scheduler script, and order submission to the documented API — all done
-  and tested offline. Remaining: confirm the first live fills against the app,
-  then switch the scheduled script from `--dry-run` to `--live`.
+  and tested offline. First live fill 2026-09-23 matched the app
+  and the balance to the cent; the hourly task went live the same day.

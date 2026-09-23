@@ -276,15 +276,19 @@ def execute(
             )
             raise
         # An IOC order that fills in part is cancelled for the rest, so a fill
-        # commits only what it took. Priced at our own limit, not the venue's
-        # avgPx, whose convention for short orders is undocumented.
+        # commits only what it took, costed at our own limit price.
         committed = None
-        if outcome.status in ("filled", "partial"):
+        extra: dict[str, Any] = {}
+        if outcome.status in ledger.FILL_STATUSES:
             committed = effective_cost(order.price, order.theta) * outcome.filled_shares
+            extra = {"filled_shares": outcome.filled_shares}
+            if outcome.avg_price is not None:
+                # The venue quotes avgPx long-side even on NO orders.
+                extra["fill_no_price"] = round(1.0 - outcome.avg_price, PRICE_PRECISION)
         ledger.append(
             _record(
                 order, run_id, key, outcome.status, outcome.message, outcome.order_id,
-                notional=committed,
+                notional=committed, extra=extra,
             ),
             ledger_path,
         )
@@ -330,6 +334,7 @@ def _record(
     order_id: str | None = None,
     *,
     notional: float | None = None,
+    extra: dict[str, Any] | None = None,
 ) -> ledger.OrderRecord:
     return ledger.OrderRecord(
         ts=ledger.now_iso(),
@@ -346,4 +351,5 @@ def _record(
         idempotency_key=key,
         order_id=order_id,
         note=note,
+        extra=extra or {},
     )

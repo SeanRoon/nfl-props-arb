@@ -23,8 +23,10 @@ $log = Join-Path $logDir ("autotrade-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd')
 
 "=== $(Get-Date -Format 'u') run start ===" | Add-Content -Path $log -Encoding utf8
 
-# --dry-run by default. Change to --live only when you mean it.
-& uv run nflprops autotrade --dry-run *>&1 | Add-Content -Path $log -Encoding utf8
+# LIVE since 2026-09-23 (operator instruction), $100 all-in cap per market.
+# Kill switch without touching the scheduler: New-Item data\HALT
+# Needs POLYMARKET_US_KEY_ID and POLYMARKET_US_KEY_FILE as user env vars.
+& uv run --extra execute nflprops autotrade --live --max-per-market 100 *>&1 | Add-Content -Path $log -Encoding utf8
 $code = $LASTEXITCODE
 
 "=== $(Get-Date -Format 'u') run end (exit $code) ===" | Add-Content -Path $log -Encoding utf8

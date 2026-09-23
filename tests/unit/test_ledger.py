@@ -92,3 +92,55 @@ def test_records_round_trip(tmp_path):
     ledger.append(_rec(key="k1"), path)
     got = list(ledger.read(path))
     assert len(got) == 1 and got[0].idempotency_key == "k1"
+
+
+# --- fills -------------------------------------------------------------------
+
+
+def _write(path, *recs):
+    for r in recs:
+        ledger.append(r, path)
+
+
+def test_fills_are_only_filled_and_partial_orders(tmp_path):
+    from dataclasses import replace
+
+    path = tmp_path / "l.jsonl"
+    _write(
+        path,
+        _rec(key="a", status="intent"),
+        replace(_rec(key="a", status="filled"), extra={"filled_shares": 10.0}),
+        _rec(key="b", status="rejected"),
+        _rec(key="c", status="dry_run"),
+        _rec(key="d", status="intent"),
+    )
+    assert [f.status for f in ledger.fills(path)] == ["filled"]
+
+
+def test_a_partial_fill_reports_what_was_taken(tmp_path):
+    from dataclasses import replace
+
+    path = tmp_path / "l.jsonl"
+    rec = replace(
+        _rec(key="p", status="partial", shares=10.0, notional=2.8, price=0.69),
+        extra={"filled_shares": 4.0, "fill_no_price": 0.69},
+    )
+    _write(path, rec)
+    (fill,) = ledger.fills(path)
+    assert (fill.shares, fill.fill_price, fill.cost, fill.payout_if_no) == (4.0, 0.69, 2.8, 4.0)
+
+
+def test_old_fill_records_without_filled_shares_count_in_full(tmp_path):
+    path = tmp_path / "l.jsonl"
+    _write(path, _rec(key="o", status="filled", shares=1.41))
+    assert ledger.fills(path)[0].shares == 1.41
+
+
+def test_fills_csv_is_rewritten_not_appended(tmp_path):
+    path = tmp_path / "l.jsonl"
+    out = tmp_path / "fills.csv"
+    _write(path, _rec(key="a", status="filled"))
+    assert ledger.write_fills_csv(out, path) == 1
+    assert ledger.write_fills_csv(out, path) == 1
+    lines = out.read_text(encoding="utf-8").splitlines()
+    assert lines[0].startswith("ts,game,prop") and len(lines) == 2

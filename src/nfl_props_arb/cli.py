@@ -31,6 +31,7 @@ from .baselines import DEFAULT_PATH as BASELINES_PATH
 from .baselines import write_template as write_baselines
 from .execution.dryrun import DryRunOrderClient
 from .ledger import DEFAULT_PATH as LEDGER_PATH
+from .ledger import write_fills_csv
 from .odds.base import OddsProvider
 from .odds.baseline import BaselineOdds
 from .odds.manual import DEFAULT_PATH, ManualOdds, write_template
@@ -44,6 +45,7 @@ app = typer.Typer(
     help="Scan Polymarket US NFL game props for +EV NO trades anchored to FanDuel.",
 )
 console = Console()
+FILLS_CSV = Path("data/fills.csv")
 
 
 def _window(days: int) -> tuple[str, str]:
@@ -319,6 +321,8 @@ def autotrade(
     if not live:
         console.print("\n[dim]Dry run. Nothing placed. Re-run with --live to submit.[/dim]")
         return
+    rows = write_fills_csv(FILLS_CSV, ledger_path)
+    console.print(f"\n[dim]{rows} fill(s) to date in {FILLS_CSV}[/dim]")
     if failures:
         # Non-zero so Task Scheduler surfaces the run as failed.
         raise typer.Exit(1)
@@ -380,6 +384,52 @@ def _render_plan(
             reasons[s["reason"]] = reasons.get(s["reason"], 0) + 1
         summary = ", ".join(f"{k}={v}" for k, v in sorted(reasons.items()))
         console.print(f"  [dim]{len(skipped)} qualifying rows not traded ({summary})[/dim]")
+
+
+@app.command()
+def fills(
+    ledger_path: Annotated[
+        Path, typer.Option("--ledger", help="Append-only order ledger")
+    ] = LEDGER_PATH,
+    csv_out: Annotated[
+        Path, typer.Option("--csv", help="Also rewrite this CSV of every fill")
+    ] = FILLS_CSV,
+) -> None:
+    """Every order the autotrader has had filled, with totals. Read-only."""
+    from .ledger import fills as load_fills
+
+    rows = load_fills(ledger_path)
+    write_fills_csv(csv_out, ledger_path)
+    if not rows:
+        console.print("No fills yet.")
+        return
+
+    table = Table(title=f"Autotrader fills ({len(rows)})")
+    for col in ("Filled (UTC)", "Game", "Prop"):
+        table.add_column(col)
+    for col in ("Shares", "Limit", "Fill", "Cost", "Pays if NO"):
+        table.add_column(col, justify="right")
+    table.add_column("Order")
+    for f in rows:
+        table.add_row(
+            f.ts[:16].replace("T", " "),
+            f.game,
+            f.prop,
+            f"{f.shares:g}",
+            f"{f.limit_price:.4f}",
+            "-" if f.fill_price is None else f"{f.fill_price:.4f}",
+            f"${f.cost:,.2f}",
+            f"${f.payout_if_no:,.2f}",
+            (f.order_id or "") + ("" if f.status == "filled" else " (partial)"),
+        )
+    console.print(table)
+    cost = sum(f.cost for f in rows)
+    payout = sum(f.payout_if_no for f in rows)
+    console.print(
+        f"  {sum(f.shares for f in rows):g} shares, ${cost:,.2f} spent, "
+        f"${payout:,.2f} if every NO wins (${payout - cost:,.2f} profit)"
+    )
+    console.print(f"  [dim]CSV: {csv_out}[/dim]")
 
 
 @app.command()

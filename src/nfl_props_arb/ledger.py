@@ -25,6 +25,7 @@ machine thought it was doing.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import os
@@ -40,6 +41,7 @@ DEFAULT_PATH = Path("data/ledger.jsonl")
 # is set only when the venue has affirmatively refused the order.
 OPEN_STATUSES = frozenset({"intent", "submitted", "filled", "partial"})
 REJECTED = "rejected"
+FILL_STATUSES = frozenset({"filled", "partial"})
 DRY_RUN = "dry_run"
 
 
@@ -133,3 +135,84 @@ def append(record: OrderRecord, path: Path | str = DEFAULT_PATH) -> OrderRecord:
 
 def now_iso() -> str:
     return datetime.now(UTC).isoformat()
+
+
+@dataclass(frozen=True)
+class Fill:
+    """One order that took shares, as the fills report shows it."""
+
+    ts: str
+    game: str
+    prop: str
+    slug: str
+    shares: float
+    limit_price: float
+    fill_price: float | None   # NO terms; None if the venue reported no avgPx
+    cost: float                # all-in, fee included, at our limit price
+    order_id: str | None
+    status: str
+
+    @property
+    def payout_if_no(self) -> float:
+        """What the position pays if the event does not happen: $1 a share."""
+        return self.shares
+
+
+def fills(path: Path | str = DEFAULT_PATH) -> list[Fill]:
+    """Every order that filled in whole or part, oldest first.
+
+    Derived from the ledger rather than kept separately, so the fills report can
+    never disagree with the exposure the cap is enforced against. Latest record
+    per idempotency key wins, as in `load_exposure`.
+    """
+    latest: dict[str, OrderRecord] = {}
+    for rec in read(path):
+        latest[rec.idempotency_key] = rec
+    out = []
+    for rec in latest.values():
+        if rec.status not in FILL_STATUSES:
+            continue
+        # Records from before `filled_shares` was logged were all full fills.
+        shares = float(rec.extra.get("filled_shares", rec.shares))
+        out.append(
+            Fill(
+                ts=rec.ts,
+                game=rec.game,
+                prop=rec.prop,
+                slug=rec.slug,
+                shares=shares,
+                limit_price=rec.price,
+                fill_price=rec.extra.get("fill_no_price"),
+                cost=rec.notional,
+                order_id=rec.order_id,
+                status=rec.status,
+            )
+        )
+    return sorted(out, key=lambda f: f.ts)
+
+
+FILLS_CSV_FIELDS = (
+    "ts", "game", "prop", "slug", "shares", "limit_price", "fill_price", "cost",
+    "payout_if_no", "order_id", "status",
+)
+
+
+def write_fills_csv(path: Path | str, ledger_path: Path | str = DEFAULT_PATH) -> int:
+    """Rewrite a CSV of every fill from the ledger. Returns the row count.
+
+    Regenerated whole each time rather than appended, so it cannot drift from
+    the ledger or double-count a fill if a run is interrupted.
+    """
+    rows = fills(ledger_path)
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(FILLS_CSV_FIELDS)
+        for f in rows:
+            writer.writerow(
+                [f.ts, f.game, f.prop, f.slug, f"{f.shares:g}", f"{f.limit_price:.4f}",
+                 "" if f.fill_price is None else f"{f.fill_price:.4f}", f"{f.cost:.4f}",
+                 f"{f.payout_if_no:.2f}", f.order_id or "", f.status]
+            )
+    return len(rows)
