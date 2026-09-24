@@ -463,3 +463,47 @@ def test_a_fill_logs_its_size_and_no_price(tmp_path):
     execute(planned, Venue(), run_id="r", ledger_path=path, now=NOW)
     (fill,) = ledger.fills(path)
     assert (fill.shares, fill.fill_price, fill.order_id) == (3.0, 0.63, "o1")
+
+
+# --- minimum order size -----------------------------------------------------------
+
+
+def test_a_level_under_one_share_is_not_ordered():
+    planned, skipped = plan_orders(
+        _result(_opportunity(levels=((0.63, 0.99),))),
+        DEFAULT_AUTOTRADE, exposure={}, cap=100.0, now=NOW,
+    )
+    assert planned == [] and skipped[0]["reason"] == "size_below_minimum"
+
+
+def test_exactly_one_share_is_ordered():
+    planned, _ = plan_orders(
+        _result(_opportunity(levels=((0.63, 1.0),))),
+        DEFAULT_AUTOTRADE, exposure={}, cap=100.0, now=NOW,
+    )
+    assert [o.shares for o in planned] == [1.0]
+
+
+def test_dust_level_does_not_block_a_real_one_behind_it():
+    planned, _ = plan_orders(
+        _result(_opportunity(levels=((0.63, 0.02), (0.65, 20.0)))),
+        DEFAULT_AUTOTRADE, exposure={}, cap=100.0, now=NOW,
+    )
+    assert [(o.price, o.shares) for o in planned] == [(0.65, 20.0)]
+
+
+def test_cap_room_under_one_share_orders_nothing():
+    planned, skipped = plan_orders(
+        _result(_opportunity(levels=((0.63, 50.0),))),
+        DEFAULT_AUTOTRADE, exposure={"mkt-two-pt": 99.5}, cap=100.0, now=NOW,
+    )
+    assert planned == [] and skipped[0]["reason"] == "size_below_minimum"
+
+
+def test_budget_never_shrinks_an_order_below_one_share():
+    planned, _ = plan_orders(
+        _result(_opportunity(levels=((0.63, 5.0),))),
+        DEFAULT_AUTOTRADE, exposure={}, cap=100.0, now=NOW,
+    )
+    kept, dropped = fit_to_budget(planned, 0.5)
+    assert kept == [] and dropped[0]["reason"] == "buying_power"

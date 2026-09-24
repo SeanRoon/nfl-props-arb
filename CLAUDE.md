@@ -88,6 +88,10 @@ Consequences worth knowing:
 4. `--max-per-market` (default $100) enforced against `data/ledger.jsonl`, so it
    holds *across* runs. Without this an hourly job re-buys the same qualifying
    offer every hour.
+5. **Minimum order is 1 share** (`MIN_SHARES`, operator 2026-09-24). Dust levels
+   under a share are skipped, not a reason to stop; a deeper order sweeps them
+   anyway. Cap or buying-power room under one share places nothing. The scanner
+   still *reports* dust -- this only governs what the autotrader sends.
 
 The cap is measured in **all-in cost**, price plus taker fee, because that is what
 leaves the account.

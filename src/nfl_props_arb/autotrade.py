@@ -42,7 +42,11 @@ HALT_FILE = Path("data/HALT")
 
 # Polymarket US quotes size to two decimals; anything finer cannot be sent.
 SHARE_PRECISION = 2
-MIN_SHARES = 0.01
+
+# Smallest order worth sending (operator, 2026-09-24). The venue accepts 0.01, but
+# fees round to the cent per fill, so a sub-share order at a zero-edge limit pays
+# away more than it can earn -- and the books are full of 0.01-share dust.
+MIN_SHARES = 1.0
 
 # NO prices are derived as `1 - yes_bid`, which leaves float noise: a 0.67 level
 # arrives as 0.6699999999999999. Rounding here keeps that out of the limit price
@@ -172,9 +176,13 @@ def plan_orders(
         took_any = False
         for edge in opp.edges:
             per_share = effective_cost(edge.no_price, opp.prop.theta)
-            shares = _floor_shares(min(edge.qty, remaining / per_share))
+            affordable = remaining / per_share
+            if affordable < MIN_SHARES:
+                break  # the cap cannot fund a minimum order at any deeper price
+            shares = _floor_shares(min(edge.qty, affordable))
             if shares < MIN_SHARES:
-                break
+                # A dust level. A deeper order still sweeps it first, being cheaper.
+                continue
             order = PlannedOrder(
                 slug=slug,
                 market_id=opp.prop.market_id,
