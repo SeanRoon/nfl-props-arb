@@ -180,3 +180,58 @@ def test_64_byte_venue_key_is_reduced_to_its_seed():
     raw = base64.b64encode(SEED + public).decode()
     creds = load({"POLYMARKET_US_KEY_ID": "kid", "POLYMARKET_US_KEY": raw})
     assert creds.private_key == SEED
+
+
+# --- resting bids and cancels ---------------------------------------------------
+
+
+def test_bid_is_post_only_gtd_short_at_the_long_price():
+    from datetime import UTC, datetime, timedelta, timezone
+
+    seen = {}
+
+    def handler(req):
+        seen["body"] = json.loads(req.content)
+        return httpx.Response(200, json={"id": "ord-9"})
+
+    eastern = timezone(timedelta(hours=-4))
+    out = _client(handler).place_bid(
+        "mkt", 0.69, 50.0, datetime(2026, 9, 27, 12, 45, tzinfo=eastern)
+    )
+    assert (out.status, out.order_id) == ("resting", "ord-9")
+    body = seen["body"]
+    assert body["price"] == {"value": "0.31", "currency": "USD"}
+    assert body["intent"] == "ORDER_INTENT_BUY_SHORT"
+    assert body["tif"] == "TIME_IN_FORCE_GOOD_TILL_DATE"
+    assert body["goodTillTime"] == "2026-09-27T16:45:00Z"   # converted to UTC
+    assert body["participateDontInitiate"] is True
+    assert "synchronousExecution" not in body
+    assert UTC  # imported for clarity
+
+
+def test_a_naive_expiry_is_refused():
+    from datetime import datetime
+
+    with pytest.raises(OrderSpecError):
+        _client(lambda r: httpx.Response(200)).place_bid("m", 0.69, 1.0, datetime(2026, 9, 27))
+
+
+def test_a_crossing_bid_rejection_is_reported():
+    from datetime import UTC, datetime
+
+    out = _client(lambda r: httpx.Response(400, text="would match")).place_bid(
+        "m", 0.69, 1.0, datetime(2026, 9, 27, tzinfo=UTC)
+    )
+    assert out.status == "rejected"
+
+
+def test_cancel_signs_the_path_with_the_order_id():
+    seen = {}
+
+    def handler(req):
+        seen["path"] = req.url.path
+        seen["body"] = json.loads(req.content)
+        return httpx.Response(200, json={})
+
+    ok, _ = _client(handler).cancel("ORD1", "mkt")
+    assert ok and seen["path"] == "/v1/order/ORD1/cancel" and seen["body"] == {"marketSlug": "mkt"}

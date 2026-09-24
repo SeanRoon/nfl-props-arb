@@ -41,6 +41,9 @@ uv run nflprops autotrade                    # DRY RUN: what it would buy
 uv run nflprops autotrade --live             # place the orders
 uv run nflprops autotrade --live --max-per-market 5
 uv run nflprops fills                        # every fill to date, with totals
+uv run nflprops bids --prop two_pt --shares 50   # DRY RUN: resting bids at max_buy
+uv run nflprops bids --live ...              # place them
+uv run nflprops bids-cancel [--all] [--live] # cancel our bids (--all: manual ones too)
 ```
 
 `--slippage` adds a cushion *beyond* the modelled taker fee. `--days` sets the kickoff window.
@@ -139,6 +142,27 @@ module docstring has the details; the ones that bite:
 Credentials come from the environment only, never from `data/` or anywhere in the
 repo: `POLYMARKET_US_KEY_ID` plus `POLYMARKET_US_KEY_FILE` or `POLYMARKET_US_KEY`.
 Needs the `execute` extra (`uv sync --extra execute`) for Ed25519.
+
+### Resting bids (`bids`)
+
+Separate from the autotrader and run by hand. Where `autotrade` *takes* offers at
+or under `max_buy` once an hour, `bids` *makes*: a post-only NO bid at each prop's
+`max_buy` in every target market. `bids.py` has the rules; the ones that bite:
+
+- **Every bid is good-till-date, expiring at kickoff minus the buffer.** Enforced
+  by the venue, so it holds while this machine sleeps. A resting NO bid alive
+  during the game is a free option for anyone watching the play.
+- **Post-only** (`participateDontInitiate`). Markets whose NO ask is already at or
+  under the limit are skipped as `would_cross` -- the autotrader takes those.
+- **One open NO order per market**, ours or manual; repeated runs never stack.
+- **Whole bids only, soonest kickoff first**, within buying power. Resting orders
+  reserve buying power, which also shrinks what the autotrader can spend.
+- Makers pay no fee, so a maker fill at 0.69 costs exactly 0.69.
+- Placed order ids go to `data/bids.jsonl`; `bids-cancel` cancels only those
+  unless given `--all`.
+
+**Bid fills are not in the autotrader's ledger.** They fill asynchronously, so the
+per-market cap does not see them, and neither does `nflprops fills`.
 
 ### Scheduling
 

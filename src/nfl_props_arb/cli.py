@@ -3,9 +3,10 @@
 Mostly read-only. `scan`, `markets`, `odds-template`, `baselines-template` and
 `snapshot` touch nothing but the public gateway and the local filesystem.
 
-`autotrade` is the exception, and the only command in this package that can move
-money. It defaults to `--dry-run` and requires `--live` to be said out loud. See
-`autotrade.py` for the guards and `execution/` for the venue client.
+`autotrade`, `bids` and `bids-cancel` are the exceptions: the only commands that
+can move money or change orders. Each defaults to `--dry-run` and requires `--live`
+to be said out loud. See `autotrade.py` and `bids.py` for the guards and
+`execution/` for the venue client.
 """
 
 from __future__ import annotations
@@ -384,6 +385,150 @@ def _render_plan(
             reasons[s["reason"]] = reasons.get(s["reason"], 0) + 1
         summary = ", ".join(f"{k}={v}" for k, v in sorted(reasons.items()))
         console.print(f"  [dim]{len(skipped)} qualifying rows not traded ({summary})[/dim]")
+
+
+@app.command()
+def bids(
+    live: Annotated[
+        bool,
+        typer.Option("--live/--dry-run", help="Actually place the bids. Off by default."),
+    ] = False,
+    shares: Annotated[float, typer.Option(help="Shares per bid")] = 50.0,
+    prop: Annotated[
+        list[str] | None,
+        typer.Option("--prop", help="Only these props, e.g. --prop two_pt (repeatable)"),
+    ] = None,
+    price: Annotated[
+        float | None,
+        typer.Option(help="NO price to bid; defaults to each prop's max_buy, never above it"),
+    ] = None,
+    config: Annotated[
+        Path, typer.Option(help="Fee-adjusted buy limits TOML")
+    ] = AUTOTRADE_PATH,
+    days: Annotated[int, typer.Option(help="Kickoff window, in days ahead")] = 8,
+    kickoff_buffer: Annotated[
+        int, typer.Option(help="Minutes before kickoff each bid expires")
+    ] = 15,
+    halt_file: Annotated[Path, typer.Option(help="Kill switch: exists = do nothing")] = HALT_FILE,
+) -> None:
+    """Rest a post-only NO bid at max_buy in every market the autotrader targets.
+
+    Each bid expires at kickoff minus the buffer, enforced by the venue. Markets
+    with an open order already, or an offer the autotrader can take, are skipped.
+    Defaults to a dry run.
+    """
+    from .autotrade import is_halted
+    from .bids import fit_to_budget as fit_bids
+    from .bids import log as log_bid
+    from .bids import plan_bids, record
+
+    if is_halted(halt_file):
+        console.print(f"[yellow]HALTED[/yellow] -- {halt_file} exists. Nothing done.")
+        return
+    try:
+        only = {PropType(p.strip().lower()) for p in prop} if prop else None
+    except ValueError as exc:
+        raise typer.BadParameter(f"unknown prop: {exc}") from exc
+
+    thresholds = _baselines(config, None, defaults=DEFAULT_AUTOTRADE)
+    buffer = timedelta(minutes=kickoff_buffer)
+    now = datetime.now(UTC)
+    with PolymarketUS() as pm:
+        props, _ = discover(
+            pm, *_window(days), exclude_started=True, now=now, kickoff_buffer=buffer
+        )
+
+    # Open orders are read in a dry run too, so the preview matches what --live does.
+    client = _order_client()
+    open_slugs = {
+        o["marketSlug"] for o in client.open_orders() if o.get("outcomeSide") == "OUTCOME_SIDE_NO"
+    }
+    planned, skipped = plan_bids(
+        props, thresholds, shares=shares, now=now, kickoff_buffer=buffer,
+        open_slugs=open_slugs, only=only, price=price,
+    )
+    budget = client.buying_power()
+    planned, short = fit_bids(planned, budget)
+    skipped += short
+
+    mode = "[red]LIVE[/red]" if live else "[cyan]DRY RUN[/cyan]"
+    console.print(
+        f"\n[bold]bids[/bold] {mode}  {len(planned)} bid(s) of {shares:g} shares, "
+        f"${sum(b.notional for b in planned):,.2f} reserved of ${budget:,.2f} buying power"
+    )
+    table = Table()
+    for col in ("Game", "Prop", "Team", "NO bid", "Shares", "Reserves", "Expires (UTC)"):
+        table.add_column(col)
+    for b in planned:
+        table.add_row(
+            b.game, b.prop, b.team or "", f"{b.no_price:.2f}", f"{b.shares:g}",
+            f"${b.notional:,.2f}", b.expires_at.strftime("%m-%d %H:%M"),
+        )
+    console.print(table)
+    if skipped:
+        reasons: dict[str, int] = {}
+        for s in skipped:
+            reasons[s["reason"]] = reasons.get(s["reason"], 0) + 1
+        summary = ", ".join(f"{k}={v}" for k, v in sorted(reasons.items()))
+        console.print(f"  [dim]skipped: {summary}[/dim]")
+    if not live:
+        console.print("\n[dim]Dry run. Nothing placed. Re-run with --live to place.[/dim]")
+        return
+
+    failures = 0
+    for b in planned:
+        outcome = client.place_bid(b.slug, b.no_price, b.shares, b.expires_at)
+        event = "placed" if outcome.status == "resting" else outcome.status
+        log_bid(record(b, event, order_id=outcome.order_id, note=outcome.message))
+        colour = "green" if event == "placed" else "red"
+        if event != "placed":
+            failures += 1
+        console.print(
+            f"  [{colour}]{event:<9}[/{colour}] {b.slug} {b.shares:g} @ {b.no_price:.2f}  "
+            f"{outcome.order_id or ''} {outcome.message}"
+        )
+    if failures:
+        raise typer.Exit(1)
+
+
+@app.command("bids-cancel")
+def bids_cancel(
+    live: Annotated[
+        bool,
+        typer.Option("--live/--dry-run", help="Actually cancel. Off by default."),
+    ] = False,
+    all_orders: Annotated[
+        bool,
+        typer.Option("--all", help="Every open NO order on NFL props, including manual ones"),
+    ] = False,
+) -> None:
+    """Cancel open bids placed by `bids` (or, with --all, every open NFL prop NO order)."""
+    from .bids import placed_order_ids
+
+    client = _order_client()
+    mine = placed_order_ids()
+    targets = [
+        o for o in client.open_orders()
+        if o.get("outcomeSide") == "OUTCOME_SIDE_NO"
+        and (o["id"] in mine or (all_orders and o["marketSlug"].startswith("astatc-nfl-")))
+    ]
+    mode = "[red]LIVE[/red]" if live else "[cyan]DRY RUN[/cyan]"
+    console.print(f"\n[bold]bids-cancel[/bold] {mode}  {len(targets)} open order(s)")
+    for o in targets:
+        no_price = 1.0 - float(o["price"]["value"])
+        source = "bids" if o["id"] in mine else "manual/other"
+        line = (
+            f"{o['marketSlug']} NO {no_price:.2f} x {o['leavesQuantity']} "
+            f"({o['id']}, {source})"
+        )
+        if not live:
+            console.print(f"  would cancel {line}")
+            continue
+        ok, detail = client.cancel(o["id"], o["marketSlug"])
+        colour = "green" if ok else "red"
+        console.print(f"  [{colour}]{detail}[/{colour}] {line}")
+    if not live and targets:
+        console.print("\n[dim]Dry run. Nothing cancelled. Re-run with --live to cancel.[/dim]")
 
 
 @app.command()

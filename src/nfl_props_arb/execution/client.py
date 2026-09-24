@@ -32,6 +32,7 @@ import base64
 import json
 import math
 import time
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -42,6 +43,7 @@ from .credentials import Credentials
 API_BASE = "https://api.polymarket.us"
 ORDERS_PATH = "/v1/orders"
 BALANCES_PATH = "/v1/account/balances"
+OPEN_ORDERS_PATH = "/v1/orders/open"
 
 # Every NFL prop market observed carries orderPriceMinTickSize = 0.01.
 PRICE_TICK = 0.01
@@ -135,6 +137,65 @@ class LiveOrderClient:
             if bal.get("currency") == "USD":
                 return float(bal["buyingPower"])
         raise RuntimeError("no USD balance in /v1/account/balances response")
+
+    def place_bid(
+        self, slug: str, no_price: float, shares: float, expires_at: datetime
+    ) -> OrderResult:
+        """Rest a post-only NO bid that the venue expires at `expires_at`.
+
+        Not IOC and not synchronous: the order is meant to sit on the book. A 2xx
+        with an order id is `resting`; anything else is reported, never retried.
+        """
+        if shares <= 0:
+            raise OrderSpecError(f"non-positive size {shares}")
+        if expires_at.tzinfo is None:
+            raise OrderSpecError("expiry must be timezone-aware")
+        body = {
+            "marketSlug": slug,
+            "type": "ORDER_TYPE_LIMIT",
+            "price": {"value": f"{long_price_for_no(no_price):.2f}", "currency": "USD"},
+            "quantity": shares,
+            "tif": "TIME_IN_FORCE_GOOD_TILL_DATE",
+            # Format as seen on live GTD orders: ISO 8601, UTC, whole seconds.
+            "goodTillTime": expires_at.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "intent": "ORDER_INTENT_BUY_SHORT",
+            "participateDontInitiate": True,
+            "manualOrderIndicator": "MANUAL_ORDER_INDICATOR_AUTOMATIC",
+        }
+        raw = json.dumps(body, separators=(",", ":")).encode("utf-8")
+        headers = {"Content-Type": "application/json", **self.auth_headers("POST", ORDERS_PATH)}
+        response = self._client.post(ORDERS_PATH, content=raw, headers=headers)
+        code = response.status_code
+        if code == 409 or code >= 500:
+            return OrderResult(
+                status="submitted",
+                message=f"HTTP {code}, outcome unknown, check open orders: {response.text[:400]}",
+            )
+        if code >= 400:
+            return OrderResult(status="rejected", message=f"HTTP {code}: {response.text[:400]}")
+        payload = json.loads(response.content.decode("utf-8"))
+        order_id = payload.get("id")
+        if not order_id:
+            return OrderResult(status="submitted", message="no order id returned", raw=payload)
+        return OrderResult(status="resting", order_id=order_id, raw=payload)
+
+    def open_orders(self) -> list[dict[str, Any]]:
+        """Every open order on the account. Read-only; raises on any failure."""
+        headers = self.auth_headers("GET", OPEN_ORDERS_PATH)
+        response = self._client.get(OPEN_ORDERS_PATH, headers=headers)
+        response.raise_for_status()
+        orders: list[dict[str, Any]] = response.json().get("orders") or []
+        return orders
+
+    def cancel(self, order_id: str, slug: str) -> tuple[bool, str]:
+        """Cancel one order. Returns (ok, detail)."""
+        path = f"/v1/order/{order_id}/cancel"
+        raw = json.dumps({"marketSlug": slug}, separators=(",", ":")).encode("utf-8")
+        headers = {"Content-Type": "application/json", **self.auth_headers("POST", path)}
+        response = self._client.post(path, content=raw, headers=headers)
+        if response.status_code >= 400:
+            return False, f"HTTP {response.status_code}: {response.text[:300]}"
+        return True, "cancelled"
 
     def _build_request(self, request: OrderRequest) -> tuple[str, dict[str, Any]]:
         """Map an OrderRequest onto the venue's wire format."""
