@@ -90,15 +90,18 @@ def test_team_scoped_dst_markets_are_bid_too():
     assert (bid.team, bid.no_price) == ("det", 0.69)
 
 
-def test_budget_keeps_whole_bids_soonest_kickoff_first():
-    props = [
-        _prop("late", kickoff="2026-09-28T00:20:00Z"),
-        _prop("early", kickoff="2026-09-27T17:00:00Z"),
-    ]
+def test_budget_is_checked_per_bid_not_summed():
+    """The venue checks collateral per instrument, so every affordable bid rests."""
+    props = [_prop("a"), _prop("b"), _prop("c")]
     planned, _ = _plan(props)
-    kept, dropped = fit_to_budget(planned, 40.0)   # one bid reserves 34.50
-    assert [b.slug for b in kept] == ["early"]
-    assert dropped == [{"slug": "late", "reason": "buying_power"}]
+    kept, dropped = fit_to_budget(planned, 40.0)   # each bid reserves 34.50
+    assert [b.slug for b in kept] == ["a", "b", "c"] and dropped == []
+
+
+def test_a_bid_bigger_than_buying_power_is_dropped():
+    planned, _ = _plan([_prop()])
+    kept, dropped = fit_to_budget(planned, 30.0)
+    assert kept == [] and dropped == [{"slug": "m-2pt", "reason": "buying_power"}]
 
 
 def test_placed_ids_come_only_from_placed_events(tmp_path):

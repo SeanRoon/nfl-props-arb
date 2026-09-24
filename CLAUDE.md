@@ -155,8 +155,12 @@ or under `max_buy` once an hour, `bids` *makes*: a post-only NO bid at each prop
 - **Post-only** (`participateDontInitiate`). Markets whose NO ask is already at or
   under the limit are skipped as `would_cross` -- the autotrader takes those.
 - **One open NO order per market**, ours or manual; repeated runs never stack.
-- **Whole bids only, soonest kickoff first**, within buying power. Resting orders
-  reserve buying power, which also shrinks what the autotrader can spend.
+- **Buying power is checked per bid, not summed.** Polymarket US scopes its
+  collateral check to one instrument (Collateral and Margin docs; confirmed on the
+  account 2026-09-23, when ~$107 of resting manual orders left buying power
+  unchanged). So bids rest in every market at once; a bid is dropped only if it
+  alone exceeds buying power. When fills spend the cash, the venue cancels the
+  bids that are no longer funded -- buying power caps what *fills*, not what rests.
 - Makers pay no fee, so a maker fill at 0.69 costs exactly 0.69.
 - Placed order ids go to `data/bids.jsonl`; `bids-cancel` cancels only those
   unless given `--all`.

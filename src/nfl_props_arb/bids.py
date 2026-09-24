@@ -56,7 +56,7 @@ class PlannedBid:
 
     @property
     def notional(self) -> float:
-        """Buying power the venue reserves while the bid rests. Makers pay no fee."""
+        """Cost if the bid fills in full, and its collateral check. Makers pay no fee."""
         return self.no_price * self.shares
 
 
@@ -118,18 +118,20 @@ def plan_bids(
 def fit_to_budget(
     planned: list[PlannedBid], budget: float
 ) -> tuple[list[PlannedBid], list[dict[str, Any]]]:
-    """Keep whole bids, soonest kickoff first, while their reservation fits.
+    """Keep each bid whose own reservation fits in `budget`.
 
-    Bids are not shrunk to fit: a 50-share order was asked for, and a scatter of
-    odd sizes is harder to read in the app than a clear "these did not fit".
+    Checked per bid, not summed: the venue scopes its collateral check to one
+    instrument, counting only open orders in that same market ("One $10 order on
+    instrument A and one $10 order on instrument B: both accepted" -- Collateral
+    and Margin docs). So every bid can rest at once. When a fill spends the cash,
+    the venue cancels whichever resting bids are no longer funded; fills are
+    never unwound. Budget therefore caps what can *fill*, not what can rest.
     """
     kept: list[PlannedBid] = []
     skipped: list[dict[str, Any]] = []
-    remaining = budget
     for bid in planned:
-        if bid.notional <= remaining + 1e-9:
+        if bid.notional <= budget + 1e-9:
             kept.append(bid)
-            remaining -= bid.notional
         else:
             skipped.append({"slug": bid.slug, "reason": "buying_power"})
     return kept, skipped

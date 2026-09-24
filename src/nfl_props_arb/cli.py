@@ -454,10 +454,11 @@ def bids(
     mode = "[red]LIVE[/red]" if live else "[cyan]DRY RUN[/cyan]"
     console.print(
         f"\n[bold]bids[/bold] {mode}  {len(planned)} bid(s) of {shares:g} shares, "
-        f"${sum(b.notional for b in planned):,.2f} reserved of ${budget:,.2f} buying power"
+        f"${sum(b.notional for b in planned):,.2f} if every bid filled; "
+        f"${budget:,.2f} buying power caps what can actually fill"
     )
     table = Table()
-    for col in ("Game", "Prop", "Team", "NO bid", "Shares", "Reserves", "Expires (UTC)"):
+    for col in ("Game", "Prop", "Team", "NO bid", "Shares", "Cost if filled", "Expires (UTC)"):
         table.add_column(col)
     for b in planned:
         table.add_row(
