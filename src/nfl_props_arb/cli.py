@@ -39,7 +39,7 @@ from .odds.manual import DEFAULT_PATH, ManualOdds, write_template
 from .polymarket.client import PolymarketUS, discover
 from .props import PropType
 from .report import render, to_json
-from .scan import run_scan
+from .scan import listed_only, run_scan
 
 app = typer.Typer(
     add_completion=False,
@@ -136,6 +136,7 @@ def scan(
     except FileNotFoundError as exc:
         console.print(f"[red]{exc}[/red]")
         raise typer.Exit(1) from exc
+    result = listed_only(result)
     if as_json:
         print(to_json(result))
     else:

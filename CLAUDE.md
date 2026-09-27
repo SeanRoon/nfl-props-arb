@@ -256,6 +256,15 @@ Two things keep this honest:
 filters on **edge**, never on size -- qualifying liquidity is still reported in
 full, per the rule below.
 
+### Team D/ST rows are left out of the report
+
+Polymarket US puts team D/ST touchdown markets on no tab of the event page (every
+game's `marketGroups` omits them; checked 2026-09-27), so the operator cannot find
+them in the app. `scan` drops them via `scan.listed_only` (operator, 2026-09-27).
+`autotrade` does not: it takes the full `run_scan` result and still trades them
+through the API. The whole-game D/ST market stays in the report, and its floor is
+unaffected, since the leg product uses odds legs rather than these rows.
+
 ### Liquidity is reported, never filtered
 
 Every resting NO offer at or below the fee-adjusted threshold is shown, **down to a single share** (operator mandate). Thin size is information for the operator, not grounds for suppressing a signal. In practice many qualifying levels are dust — 0.01-share orders worth a fraction of a cent — and the `Shares` column is what distinguishes those from a real fill.

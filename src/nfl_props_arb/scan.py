@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -24,6 +24,13 @@ QuoteKey = tuple[GameKey, PropType, Scope, str | None]
 
 # Extra cushion beyond the modelled taker fee, for slippage and staleness.
 DEFAULT_SLIPPAGE = 0.0
+
+# Markets the `scan` report leaves out (operator, 2026-09-27). Polymarket US lists
+# team D/ST touchdown markets on no tab of the event page -- every game's
+# `marketGroups` omits them -- so the operator cannot act on them from the app.
+# They are still priced, still traded by `autotrade`, and still reached by the
+# API; the whole-game D/ST floor comes from the odds legs, not from these rows.
+UNLISTED: frozenset[tuple[PropType, Scope]] = frozenset({(PropType.DST_TD, Scope.TEAM)})
 
 
 @dataclass
@@ -76,6 +83,26 @@ class ScanResult:
     @property
     def triggered(self) -> list[Opportunity]:
         return [o for o in self.opportunities if o.triggered]
+
+
+def _listed(prop: PmProp) -> bool:
+    return (prop.key.prop, prop.key.scope) not in UNLISTED
+
+
+def listed_only(result: ScanResult) -> ScanResult:
+    """The result without markets the operator cannot find on the site.
+
+    For the report only. `autotrade` takes the full result: an unlisted market is
+    as tradeable through the API as any other.
+    """
+    kept = [o for o in result.opportunities if _listed(o.prop)]
+    dropped = len(result.opportunities) - len(kept)
+    return replace(
+        result,
+        opportunities=kept,
+        considered=result.considered - dropped,
+        unpriced=[u for u in result.unpriced if u.get("listed", True)],
+    )
 
 
 def _floor_for_prop(
@@ -164,7 +191,14 @@ def run_scan(
         for prop in props:
             floor, used, reason = _floor_for_prop(prop, by_key, legs_by_game)
             if floor is None:
-                unpriced.append({"key": str(prop.key), "slug": prop.slug, "reason": reason})
+                unpriced.append(
+                    {
+                        "key": str(prop.key),
+                        "slug": prop.slug,
+                        "reason": reason,
+                        "listed": _listed(prop),
+                    }
+                )
                 continue
             # An operator's fee-adjusted limit is used as written. Re-solving it
             # from its own implied floor round-trips to the same number, but only
