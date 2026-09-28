@@ -39,8 +39,16 @@ $log = Join-Path $logDir ("autotrade-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd')
 # LIVE since 2026-09-23 (operator instruction), $100 all-in cap per market.
 # Kill switch without touching the scheduler: New-Item data\HALT
 # Needs POLYMARKET_US_KEY_ID and POLYMARKET_US_KEY_FILE as user env vars.
-& uv run --extra execute nflprops autotrade --live --max-per-market 100 *>&1 | Add-Content -Path $log -Encoding utf8
+#
+# 'Continue' around the native call: Windows PowerShell 5.1 turns each stderr line
+# into an ErrorRecord, and under 'Stop' the first one aborts the script -- losing
+# the traceback and the run-end line (runs of 2026-09-25 and 2026-09-28 13:44Z).
+# "$_" logs stderr as plain text.
+$ErrorActionPreference = 'Continue'
+& uv run --extra execute nflprops autotrade --live --max-per-market 100 *>&1 |
+    ForEach-Object { "$_" } | Add-Content -Path $log -Encoding utf8
 $code = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
 
 "=== $((Get-Date).ToUniversalTime().ToString('u')) run end (exit $code) ===" | Add-Content -Path $log -Encoding utf8
 exit $code
