@@ -232,6 +232,11 @@ class PolymarketUS:
                 props.append(candidate)
         return props, skipped
 
+    def bbo(self, slug: str) -> dict[str, Any]:
+        """Top of book plus stats, including `settlementPx` and `state` once settled."""
+        data: dict[str, Any] = self._get(f"/v1/markets/{slug}/bbo").get("marketData") or {}
+        return data
+
     def load_book(self, prop: PmProp) -> PmProp:
         """Populate the NO ladder from the market's YES bid side.
 

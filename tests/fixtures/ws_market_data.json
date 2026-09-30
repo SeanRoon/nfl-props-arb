@@ -1,0 +1,230 @@
+[
+ {
+  "requestId": "r0",
+  "subscriptionType": "SUBSCRIPTION_TYPE_MARKET_DATA",
+  "marketData": {
+   "marketSlug": "asc-nfl-pit-cle-2026-10-01-1h-neg-20pt5",
+   "bids": [
+    {
+     "px": {
+      "value": "0.0100",
+      "currency": "USD"
+     },
+     "qty": "12.0000"
+    }
+   ],
+   "offers": [
+    {
+     "px": {
+      "value": "0.0200",
+      "currency": "USD"
+     },
+     "qty": "1.0000"
+    },
+    {
+     "px": {
+      "value": "0.0500",
+      "currency": "USD"
+     },
+     "qty": "2744.0000"
+    },
+    {
+     "px": {
+      "value": "0.0600",
+      "currency": "USD"
+     },
+     "qty": "305.0000"
+    },
+    {
+     "px": {
+      "value": "0.0700",
+      "currency": "USD"
+     },
+     "qty": "305.0000"
+    },
+    {
+     "px": {
+      "value": "0.0800",
+      "currency": "USD"
+     },
+     "qty": "1147.0000"
+    },
+    {
+     "px": {
+      "value": "0.0900",
+      "currency": "USD"
+     },
+     "qty": "100.0000"
+    },
+    {
+     "px": {
+      "value": "0.1100",
+      "currency": "USD"
+     },
+     "qty": "334.0000"
+    },
+    {
+     "px": {
+      "value": "0.1200",
+      "currency": "USD"
+     },
+     "qty": "4425.0000"
+    },
+    {
+     "px": {
+      "value": "0.1500",
+      "currency": "USD"
+     },
+     "qty": "50.0000"
+    },
+    {
+     "px": {
+      "value": "0.1700",
+      "currency": "USD"
+     },
+     "qty": "2000.0000"
+    },
+    {
+     "px": {
+      "value": "0.1800",
+      "currency": "USD"
+     },
+     "qty": "50.0000"
+    },
+    {
+     "px": {
+      "value": "0.2100",
+      "currency": "USD"
+     },
+     "qty": "3410.0000"
+    },
+    {
+     "px": {
+      "value": "0.2900",
+      "currency": "USD"
+     },
+     "qty": "250.0000"
+    },
+    {
+     "px": {
+      "value": "0.4400",
+      "currency": "USD"
+     },
+     "qty": "250.0000"
+    },
+    {
+     "px": {
+      "value": "0.5600",
+      "currency": "USD"
+     },
+     "qty": "250.0000"
+    },
+    {
+     "px": {
+      "value": "0.9900",
+      "currency": "USD"
+     },
+     "qty": "110001.0000"
+    }
+   ],
+   "state": "MARKET_STATE_OPEN",
+   "stats": {
+    "openPx": {
+     "value": "0.0500",
+     "currency": "USD"
+    },
+    "lowPx": {
+     "value": "0.0500",
+     "currency": "USD"
+    },
+    "highPx": {
+     "value": "0.0500",
+     "currency": "USD"
+    },
+    "lastTradePx": {
+     "value": "0.0500",
+     "currency": "USD"
+    },
+    "sharesTraded": "35.0000",
+    "notionalTraded": {
+     "value": "1.7500",
+     "currency": "USD"
+    },
+    "lastTradeQty": "34.0000",
+    "openInterest": "35.0000",
+    "openSetTime": "2026-09-30T00:00:06.849514781Z",
+    "highSetTime": "2026-09-30T00:00:06.849514781Z",
+    "lowSetTime": "2026-09-30T00:00:06.849514781Z",
+    "lastTradeSetTime": "2026-09-30T00:00:06.849514781Z",
+    "openInterestSetTime": "2026-09-30T00:00:06.870755242Z",
+    "notionalSetTime": "2026-09-30T00:00:06.849514781Z",
+    "currentPx": {
+     "value": "0.0150",
+     "currency": "USD"
+    },
+    "lastPriceSample": {
+     "longPx": {
+      "value": "0.0500",
+      "currency": "USD"
+     },
+     "shortPx": {
+      "value": "0.95",
+      "currency": "USD"
+     },
+     "ts": "2026-09-30T19:04:13.253883876Z"
+    }
+   },
+   "transactTime": "2026-09-30T19:04:13.253883876Z"
+  }
+ },
+ {
+  "requestId": "r2",
+  "subscriptionType": "SUBSCRIPTION_TYPE_MARKET_DATA_LITE",
+  "marketDataLite": {
+   "marketSlug": "aec-nfl-pit-cle-2026-10-01",
+   "currentPx": {
+    "value": "0.5775",
+    "currency": "USD"
+   },
+   "lastTradePx": {
+    "value": "0.5750",
+    "currency": "USD"
+   },
+   "settlementPx": null,
+   "sharesTraded": "673519.3200",
+   "openInterest": "205958.6400",
+   "bestAsk": {
+    "value": "0.5800",
+    "currency": "USD"
+   },
+   "bestBid": {
+    "value": "0.5750",
+    "currency": "USD"
+   },
+   "askDepth": 25,
+   "bidDepth": 28,
+   "lastPriceSample": {
+    "longPx": {
+     "value": "0.5750",
+     "currency": "USD"
+    },
+    "shortPx": {
+     "value": "0.425",
+     "currency": "USD"
+    },
+    "ts": "2026-09-30T19:04:08.814897656Z"
+   },
+   "longQuote": {
+    "value": "0.5800",
+    "currency": "USD"
+   },
+   "shortQuote": {
+    "value": "0.425",
+    "currency": "USD"
+   },
+   "state": "MARKET_STATE_OPEN",
+   "bidShares": "4800000",
+   "askShares": "4200000"
+  }
+ }
+]

@@ -3,6 +3,8 @@
 Mostly read-only. `scan`, `markets`, `odds-template`, `baselines-template` and
 `snapshot` touch nothing but the public gateway and the local filesystem.
 
+`extremes-paper` streams authenticated market data but places nothing.
+
 `autotrade`, `bids` and `bids-cancel` are the exceptions: the only commands that
 can move money or change orders. Each defaults to `--dry-run` and requires `--live`
 to be said out loud. See `autotrade.py` and `bids.py` for the guards and
@@ -577,6 +579,140 @@ def fills(
         f"${payout:,.2f} if every NO wins (${payout - cost:,.2f} profit)"
     )
     console.print(f"  [dim]CSV: {csv_out}[/dim]")
+
+
+@app.command("extremes-paper")
+def extremes_paper(
+    hours: Annotated[
+        float, typer.Option(help="Watch games kicking off up to this many hours ahead")
+    ] = 36.0,
+    shares: Annotated[float, typer.Option(help="Virtual shares per 1-cent bid")] = 100.0,
+    groups_per_conn: Annotated[
+        int, typer.Option(help="100-market groups per connection (venue max 5)")
+    ] = 5,
+    max_hours: Annotated[float, typer.Option(help="Stop after this long regardless")] = 40.0,
+    log_path: Annotated[Path, typer.Option("--log", help="Append-only paper log")] = Path(
+        "data/extremes/paper.jsonl"
+    ),
+    halt_file: Annotated[Path, typer.Option(help="Kill switch: exists = stop")] = HALT_FILE,
+) -> None:
+    """PAPER: virtual 1-cent YES and NO bids on every NFL market, held through the games.
+
+    Streams every trade and book snapshot and records which bids would have
+    filled, under both the optimistic and queue-aware models. Places nothing.
+    Runs until every market finishes, --max-hours pass, or the HALT file appears.
+    """
+    import asyncio
+
+    from .autotrade import is_halted
+    from .execution.credentials import MissingCredentialsError
+    from .extremes_paper import run
+
+    if is_halted(halt_file):
+        console.print(f"[yellow]HALTED[/yellow] -- {halt_file} exists. Nothing done.")
+        return
+    console.print(f"[bold]extremes-paper[/bold] [cyan]PAPER[/cyan]  {shares:g} shares a side, "
+                  f"games within {hours:g}h, log {log_path}")
+    try:
+        tracker = asyncio.run(
+            run(
+                hours=hours, shares=shares, groups_per_conn=groups_per_conn, max_hours=max_hours,
+                log_path=log_path, halted=lambda: is_halted(halt_file),
+                say=lambda s: console.print(s, markup=False, highlight=False),
+            )
+        )
+    except MissingCredentialsError as exc:
+        raise typer.BadParameter(f"the market stream is authenticated: {exc}") from exc
+    s = tracker.summary()
+    console.print(
+        f"done: {s['joined']:g} bids, {s['touched']:g} touched, "
+        f"{s['optimistic_fills']:g} optimistic / {s['queue_fills']:g} queue-aware fills"
+    )
+
+
+@app.command("extremes-report")
+def extremes_report(
+    log_path: Annotated[Path, typer.Option("--log", help="Paper log to read")] = Path(
+        "data/extremes/paper.jsonl"
+    ),
+    settle: Annotated[
+        bool, typer.Option("--settle/--no-settle", help="Fetch settlements for filled markets")
+    ] = True,
+    as_json: Annotated[bool, typer.Option("--json", help="Machine-readable output")] = False,
+) -> None:
+    """P&L of the 1-cent extremes paper trader, by market type, side and fill model."""
+    import json
+
+    from .extremes import bids_from_log, filled_rows, report_rows, settlements_from_log
+    from .extremes_paper import read_log, settle_filled
+
+    records = read_log(log_path)
+    if not records:
+        console.print(f"No paper log at {log_path} yet.")
+        return
+    if settle:
+        records += settle_filled(records, log_path)
+    bids = bids_from_log(records)
+    settlements = settlements_from_log(records)
+    rows = report_rows(bids, settlements)
+    fills_ = filled_rows(bids, settlements)
+    gaps = [r for r in records if r.get("event") == "gap"]
+    if as_json:
+        print(json.dumps({"groups": rows, "fills": fills_, "gaps": gaps}, indent=1, default=str))
+        return
+
+    def money(x: float) -> str:
+        return f"${x:,.2f}"
+
+    def rate(x: float | None) -> str:
+        return "-" if x is None else f"{x:.1%}"
+
+    table = Table(title=f"1c extremes, paper ({len(bids)} virtual bids)  break-even hit rate 1.0%")
+    for col in ("Type", "Side", "Cross", "Bids", "Touched"):
+        table.add_column(col)
+    for col in ("Opt fills", "Opt P&L", "Opt hit", "Queue fills", "Queue P&L", "Queue hit",
+                "Unsettled"):
+        table.add_column(col, justify="right")
+    for r in sorted(rows, key=lambda r: -r["queue_pnl"]):
+        table.add_row(
+            r["market_type"], r["side"], "yes" if r["would_cross"] else "",
+            str(r["bids"]), str(r["touched"]),
+            str(r["optimistic_fills"]), money(r["optimistic_pnl"]), rate(r["optimistic_hit_rate"]),
+            str(r["queue_fills"]), money(r["queue_pnl"]), rate(r["queue_hit_rate"]),
+            str(r["optimistic_unsettled"]),
+        )
+    console.print(table)
+    clean = [r for r in rows if not r["would_cross"]]
+    console.print(
+        f"  Total, excluding would-cross: optimistic "
+        f"[bold]{money(sum(r['optimistic_pnl'] for r in clean))}[/bold], queue-aware "
+        f"[bold]{money(sum(r['queue_pnl'] for r in clean))}[/bold] "
+        f"on {money(sum(r['queue_cost'] for r in clean))} filled"
+    )
+    stats_only = sum(r["stats_only"] for r in rows)
+    if gaps or stats_only:
+        console.print(
+            f"  [yellow]{len(gaps)} stream gap(s); {stats_only} bid(s) where the venue's "
+            "session low/high reached our price with no trade seen[/yellow]"
+        )
+
+    if fills_:
+        ft = Table(title="Filled bids, by queue-aware P&L")
+        for col in ("Game", "Type", "Side", "Market", "Touched (UTC)"):
+            ft.add_column(col)
+        for col in ("Queue ahead", "Vol @ px", "Opt", "Queue", "Settle", "Opt P&L", "Queue P&L"):
+            ft.add_column(col, justify="right")
+        for f in fills_:
+            ft.add_row(
+                f["game"].split()[0], f["market_type"], f["side"], f["title"][:48],
+                (f["first_touch"] or "")[:16].replace("T", " "),
+                f"{f['queue_at_join']:,.0f}", f"{f['volume_at_price']:,.0f}",
+                f"{f['optimistic_filled']:g}", f"{f['queue_filled']:g}",
+                "-" if f["settlement"] is None else f"{f['settlement']:g}",
+                "-" if f["optimistic_pnl"] is None else money(f["optimistic_pnl"]),
+                "-" if f["queue_pnl"] is None else money(f["queue_pnl"]),
+            )
+        console.print(ft)
 
 
 @app.command()

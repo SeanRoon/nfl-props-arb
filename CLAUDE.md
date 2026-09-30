@@ -44,6 +44,8 @@ uv run nflprops fills                        # every fill to date, with totals
 uv run nflprops bids --prop two_pt --shares 50   # DRY RUN: resting bids at max_buy
 uv run nflprops bids --live ...              # place them
 uv run nflprops bids-cancel [--all] [--live] # cancel our bids (--all: manual ones too)
+uv run --extra execute nflprops extremes-paper   # PAPER: 1c YES+NO bids on every market, through games
+uv run nflprops extremes-report              # paper P&L by market type, side, fill model
 ```
 
 `--slippage` adds a cushion *beyond* the modelled taker fee. `--days` sets the kickoff window.
@@ -167,6 +169,41 @@ or under `max_buy` once an hour, `bids` *makes*: a post-only NO bid at each prop
 
 **Bid fills are not in the autotrader's ledger.** They fill asynchronously, so the
 per-market cap does not see them, and neither does `nflprops fills`.
+
+### 1-cent extremes (paper)
+
+`extremes-paper` / `extremes-report`, added 2026-09-30. **Places nothing.** It
+tests one idea: rest a YES bid at 0.01 and a NO bid at 0.01 (long ask 0.99) in
+*every* NFL game market, hold them through play, and get filled when a market
+wicks to an extreme it should not have reached. Makers pay no fee, so a fill
+costs a cent and pays a dollar: break-even is a 1% hit rate among fills.
+
+- **Scale:** ~10,470 markets a week (5.6k props, 2.8k totals, 2k spreads, 16
+  moneylines). REST polling cannot see brief wicks, so this uses the
+  authenticated WebSocket (`execution/stream.py`; the signing lives in
+  `execution/` alongside the orders).
+- **Venue limits found live:** 100 slugs per subscription, **10 subscriptions per
+  connection** (undocumented). A week is 21 connections; no per-account connection
+  limit was hit.
+- **Fill rules** (`extremes.py`): the YES bid is hit only by a taker *selling*
+  long at <= 0.01, the NO bid only by a taker *buying* at >= 0.99. A print
+  *through* our price (moneylines tick at 0.005) sweeps the level and fills in
+  full.
+- **Two fill models, both reported.** *Optimistic*: every share at our price
+  fills us. *Queue-aware*: we sit behind the depth resting at join time, and
+  depth that shrinks without trading moves us up. The queues are deep: at the
+  first full join (2026-09-30) the median was 8,596 shares ahead on YES and
+  19,245 on NO. **Queue-aware P&L is the decision metric.**
+- `would_cross` sides (already at our price at join time, so a real post-only
+  bid is refused) are tracked but reported separately.
+- **Log:** `data/extremes/paper.jsonl`, one file across runs. A restart
+  replays it and keeps queue positions. Disconnects and restarts are logged as
+  `gap`s, since missed trades cannot be recovered. `stats_touch` flags a session
+  low/high at our price with no trade seen.
+- `extremes-report` settles filled markets via public `/bbo` (`settlementPx`)
+  and caches each settlement in the log.
+- `scripts/extremes_paper.ps1` is the Task Scheduler wrapper. Registering it is
+  left to the operator.
 
 ### Scheduling
 

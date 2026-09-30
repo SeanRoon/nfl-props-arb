@@ -1,0 +1,122 @@
+[
+ {
+  "requestId": "t0",
+  "subscriptionType": "SUBSCRIPTION_TYPE_TRADE",
+  "trade": {
+   "marketSlug": "aec-nfl-atl-no-2026-10-05",
+   "price": {
+    "value": "0.4325",
+    "currency": "USD"
+   },
+   "quantity": {
+    "value": "42.5200",
+    "currency": "USD"
+   },
+   "tradeTime": "2026-09-30T19:05:40.078105544Z",
+   "maker": {
+    "side": "ORDER_SIDE_SELL",
+    "intent": "ORDER_INTENT_UNDEFINED",
+    "outcomeSide": "OUTCOME_SIDE_UNSPECIFIED",
+    "action": "ORDER_ACTION_UNSPECIFIED"
+   },
+   "taker": {
+    "side": "ORDER_SIDE_BUY",
+    "intent": "ORDER_INTENT_BUY_LONG",
+    "outcomeSide": "OUTCOME_SIDE_YES",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "id": "CTJ5QDKSCYAJ",
+   "state": "TRADE_STATE_NEW"
+  }
+ },
+ {
+  "requestId": "t0",
+  "subscriptionType": "SUBSCRIPTION_TYPE_TRADE",
+  "trade": {
+   "marketSlug": "aec-nfl-ten-bal-2026-10-04",
+   "price": {
+    "value": "0.1450",
+    "currency": "USD"
+   },
+   "quantity": {
+    "value": "52.0600",
+    "currency": "USD"
+   },
+   "tradeTime": "2026-09-30T19:05:43.156754486Z",
+   "maker": {
+    "side": "ORDER_SIDE_SELL",
+    "intent": "ORDER_INTENT_BUY_SHORT",
+    "outcomeSide": "OUTCOME_SIDE_NO",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "taker": {
+    "side": "ORDER_SIDE_BUY",
+    "intent": "ORDER_INTENT_BUY_LONG",
+    "outcomeSide": "OUTCOME_SIDE_YES",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "id": "CTJ5QWHGJYAJ",
+   "state": "TRADE_STATE_NEW"
+  }
+ },
+ {
+  "requestId": "t3",
+  "subscriptionType": "SUBSCRIPTION_TYPE_TRADE",
+  "trade": {
+   "marketSlug": "tsc-nfl-pit-cle-2026-10-01-tt-pit-20pt5",
+   "price": {
+    "value": "0.4700",
+    "currency": "USD"
+   },
+   "quantity": {
+    "value": "0.9700",
+    "currency": "USD"
+   },
+   "tradeTime": "2026-09-30T19:05:47.236234433Z",
+   "maker": {
+    "side": "ORDER_SIDE_BUY",
+    "intent": "ORDER_INTENT_BUY_LONG",
+    "outcomeSide": "OUTCOME_SIDE_YES",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "taker": {
+    "side": "ORDER_SIDE_SELL",
+    "intent": "ORDER_INTENT_BUY_SHORT",
+    "outcomeSide": "OUTCOME_SIDE_NO",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "id": "CTJ5RW6SCYAJ",
+   "state": "TRADE_STATE_NEW"
+  }
+ },
+ {
+  "requestId": "t3",
+  "subscriptionType": "SUBSCRIPTION_TYPE_TRADE",
+  "trade": {
+   "marketSlug": "tsc-nfl-pit-cle-2026-10-01-tt-pit-20pt5",
+   "price": {
+    "value": "0.4600",
+    "currency": "USD"
+   },
+   "quantity": {
+    "value": "178.4900",
+    "currency": "USD"
+   },
+   "tradeTime": "2026-09-30T19:05:47.236234433Z",
+   "maker": {
+    "side": "ORDER_SIDE_BUY",
+    "intent": "ORDER_INTENT_UNDEFINED",
+    "outcomeSide": "OUTCOME_SIDE_UNSPECIFIED",
+    "action": "ORDER_ACTION_UNSPECIFIED"
+   },
+   "taker": {
+    "side": "ORDER_SIDE_SELL",
+    "intent": "ORDER_INTENT_BUY_SHORT",
+    "outcomeSide": "OUTCOME_SIDE_NO",
+    "action": "ORDER_ACTION_BUY"
+   },
+   "id": "CTJ5RW6SJYAJ",
+   "state": "TRADE_STATE_NEW"
+  }
+ }
+]

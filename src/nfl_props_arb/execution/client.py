@@ -77,6 +77,36 @@ def long_price_for_no(no_price: float, tick: float = PRICE_TICK) -> float:
     return long_price
 
 
+def sign(credentials: Credentials, payload: bytes) -> str:
+    """Ed25519 signature over `payload`, base64-encoded."""
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PrivateKey,
+        )
+    except ImportError as exc:  # pragma: no cover - depends on optional extra
+        raise RuntimeError(
+            "live orders need the 'execute' extra: uv sync --extra execute"
+        ) from exc
+
+    key = Ed25519PrivateKey.from_private_bytes(credentials.private_key)
+    return base64.b64encode(key.sign(payload)).decode("ascii")
+
+
+def auth_headers(
+    credentials: Credentials, method: str, path: str, *, now_ms: int | None = None
+) -> dict[str, str]:
+    """The three auth headers for one request. `path` excludes the host.
+
+    Shared by REST and the WebSocket handshake, which signs `GET` + its path.
+    """
+    ts = str(now_ms if now_ms is not None else int(time.time() * 1000))
+    return {
+        "X-PM-Access-Key": credentials.key_id,
+        "X-PM-Timestamp": ts,
+        "X-PM-Signature": sign(credentials, f"{ts}{method.upper()}{path}".encode()),
+    }
+
+
 class LiveOrderClient:
     """Signs and sends real orders. Requires KYC and an Ed25519 key."""
 
@@ -108,26 +138,11 @@ class LiveOrderClient:
 
     def sign(self, payload: bytes) -> str:
         """Ed25519 signature over `payload`, base64-encoded."""
-        try:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
-                Ed25519PrivateKey,
-            )
-        except ImportError as exc:  # pragma: no cover - depends on optional extra
-            raise RuntimeError(
-                "live orders need the 'execute' extra: uv sync --extra execute"
-            ) from exc
-
-        key = Ed25519PrivateKey.from_private_bytes(self._credentials.private_key)
-        return base64.b64encode(key.sign(payload)).decode("ascii")
+        return sign(self._credentials, payload)
 
     def auth_headers(self, method: str, path: str, *, now_ms: int | None = None) -> dict[str, str]:
         """The three auth headers for one request. `path` excludes the host."""
-        ts = str(now_ms if now_ms is not None else int(time.time() * 1000))
-        return {
-            "X-PM-Access-Key": self._credentials.key_id,
-            "X-PM-Timestamp": ts,
-            "X-PM-Signature": self.sign(f"{ts}{method.upper()}{path}".encode()),
-        }
+        return auth_headers(self._credentials, method, path, now_ms=now_ms)
 
     def buying_power(self) -> float:
         """USD buying power. Read-only; raises on any failure."""
