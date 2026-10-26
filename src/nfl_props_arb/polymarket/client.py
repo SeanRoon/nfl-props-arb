@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import time
+import warnings
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -92,6 +93,14 @@ def _amount(node: Any) -> float | None:
         return None
 
 
+def _num_markets(event: dict[str, Any]) -> int | None:
+    """The market count the venue says an event has, or None if it does not say."""
+    try:
+        return int((event.get("marketCounts") or {})["numMarkets"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
 def _team_from_slug(slug: str, game: GameKey) -> str | None:
     """Recover the team a team-scoped market belongs to.
 
@@ -153,7 +162,13 @@ class PolymarketUS:
         raise RuntimeError(f"Polymarket request failed after retries: {path}") from last
 
     def nfl_events(self, start_min: str, start_max: str, limit: int = 200) -> list[dict[str, Any]]:
-        """Open NFL events with kickoff inside the window (ISO-8601 UTC strings)."""
+        """Open NFL events with kickoff inside the window (ISO-8601 UTC strings).
+
+        Since 2026-10-15 the listing embeds only each event's "Primary" market
+        (the moneyline) while `marketCounts.numMarkets` still reports ~405. Any
+        event that comes back short is re-fetched by slug, which returns every
+        market. If the listing is ever whole again, no extra requests are made.
+        """
         data = self._get(
             "/v1/events",
             tagSlug="nfl",
@@ -164,7 +179,35 @@ class PolymarketUS:
             startDateMin=start_min,
             startDateMax=start_max,
         )
-        return data.get("events") or []
+        return [self._complete_event(ev) for ev in data.get("events") or []]
+
+    def _complete_event(self, event: dict[str, Any]) -> dict[str, Any]:
+        """The event with all its markets, re-fetching by slug if it was truncated."""
+        expected = _num_markets(event)
+        have = len(event.get("markets") or [])
+        if expected is None or have >= expected or not event.get("slug"):
+            return event
+        full: dict[str, Any] | None = next(
+            (ev for ev in self._get("/v1/events", slug=event["slug"]).get("events") or []
+             if ev.get("slug") == event["slug"]),
+            None,
+        )
+        if full is None:
+            warnings.warn(
+                f"{event['slug']}: listing has {have} of {expected} markets "
+                "and the by-slug fetch returned nothing",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return event
+        got = len(full.get("markets") or [])
+        if got < expected:
+            warnings.warn(
+                f"{event['slug']}: by-slug fetch has {got} of {expected} markets",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+        return full
 
     def props_from_events(
         self,

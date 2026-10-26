@@ -6,6 +6,7 @@ against the network.
 
 import json
 
+import httpx
 import pytest
 
 from nfl_props_arb.edge import no_levels_from_yes_bids
@@ -98,3 +99,92 @@ def test_team_slug_not_confused_by_the_leading_matchup():
     """The away-home pair appears earlier in every slug; the tail is what counts."""
     game = GameKey.from_ticker("nfl-det-buf-2026-09-17")
     assert _team_from_slug("astatc-nfl-det-buf-2026-09-17-tdstd-det-0pt5", game) == "det"
+
+
+# --- truncated event listing (2026-10-15 onward) ------------------------------
+#
+# The tagSlug listing began embedding only each event's Primary market while
+# `marketCounts.numMarkets` still reported the full count. These run against a
+# mock transport, so they stay offline.
+
+
+
+
+def _listing_client(listing, by_slug):
+    """A real PolymarketUS over a mock transport that records every request."""
+    seen = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(dict(request.url.params))
+        slug = request.url.params.get("slug")
+        if slug is None:
+            return httpx.Response(200, json={"events": listing})
+        return httpx.Response(200, json={"events": by_slug.get(slug, [])})
+
+    http = httpx.Client(base_url="https://test", transport=httpx.MockTransport(handler))
+    return PolymarketUS(client=http), seen
+
+
+def _truncated(event):
+    """The event as the listing now returns it: one market, full count reported."""
+    short = json.loads(json.dumps(event))
+    short["marketCounts"] = {"numMarkets": len(event["markets"])}
+    short["markets"] = event["markets"][:1]
+    return short
+
+
+def test_truncated_event_is_refetched_by_slug(nfl_event):
+    full = nfl_event["events"][0]
+    assert len(full["markets"]) > 1
+    pm, seen = _listing_client([_truncated(full)], {full["slug"]: [full]})
+
+    events = pm.nfl_events("2026-09-17T00:00:00Z", "2026-09-18T00:00:00Z")
+
+    assert len(events[0]["markets"]) == len(full["markets"])
+    assert [p.get("slug") for p in seen] == [None, full["slug"]]
+    props, _ = pm.props_from_events(events)
+    assert {p.key.prop for p in props} == set(PropType)
+
+
+def test_complete_event_makes_no_extra_request(nfl_event):
+    full = json.loads(json.dumps(nfl_event["events"][0]))
+    full["marketCounts"] = {"numMarkets": len(full["markets"])}
+    pm, seen = _listing_client([full], {})
+
+    events = pm.nfl_events("2026-09-17T00:00:00Z", "2026-09-18T00:00:00Z")
+
+    assert len(events[0]["markets"]) == len(full["markets"])
+    assert len(seen) == 1
+
+
+def test_event_without_market_counts_is_left_alone(nfl_event):
+    """Older payloads carry no marketCounts; nothing to compare, so no refetch."""
+    event = json.loads(json.dumps(nfl_event["events"][0]))
+    event.pop("marketCounts", None)
+    pm, seen = _listing_client([event], {})
+
+    pm.nfl_events("2026-09-17T00:00:00Z", "2026-09-18T00:00:00Z")
+
+    assert len(seen) == 1
+
+
+def test_refetch_that_comes_back_empty_warns_and_keeps_listing(nfl_event):
+    short = _truncated(nfl_event["events"][0])
+    pm, _ = _listing_client([short], {})
+
+    with pytest.warns(RuntimeWarning, match="returned nothing"):
+        events = pm.nfl_events("2026-09-17T00:00:00Z", "2026-09-18T00:00:00Z")
+
+    assert len(events[0]["markets"]) == 1
+
+
+def test_refetch_still_short_warns(nfl_event):
+    full = nfl_event["events"][0]
+    short = _truncated(full)
+    short["marketCounts"]["numMarkets"] = len(full["markets"]) + 10
+    pm, _ = _listing_client([short], {full["slug"]: [full]})
+
+    with pytest.warns(RuntimeWarning, match="by-slug fetch has"):
+        events = pm.nfl_events("2026-09-17T00:00:00Z", "2026-09-18T00:00:00Z")
+
+    assert len(events[0]["markets"]) == len(full["markets"])
