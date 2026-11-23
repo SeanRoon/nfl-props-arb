@@ -62,17 +62,41 @@ def subscribe_messages(conn_id: int, groups: list[list[str]]) -> list[dict[str, 
     ]
 
 
+PRIVATE_PATH = "/v1/ws/private"
+ORDER_SUB = "SUBSCRIPTION_TYPE_ORDER"
+
+
+def private_subscriptions() -> list[dict[str, Any]]:
+    """Every order update on the account: an empty slug list means all markets.
+
+    docs.polymarket.us websocket/private (read 2026-11-23). Updates arrive as
+    `orderSubscriptionUpdate.execution` (with the order's `state`,
+    `cumQuantity`, `leavesQuantity`), and a first `orderSubscriptionSnapshot`
+    lists the open orders. The docs' overview page shows a snake_case variant
+    with integer types instead; this follows the private page, which matches the
+    camelCase the market stream is known to accept. A stream that never sends an
+    order update on the first live run is the sign to check this.
+    """
+    return [{"subscribe": {"requestId": "orders", "subscriptionType": ORDER_SUB,
+                           "marketSlugs": []}}]
+
+
 async def run_connection(
     conn_id: int,
     credentials: Credentials,
     groups: list[list[str]],
     out: asyncio.Queue[dict[str, Any]],
     stop: asyncio.Event,
+    *,
+    path: str = WS_PATH,
+    subscriptions: list[dict[str, Any]] | None = None,
 ) -> None:
     """Hold one connection open until `stop`, reconnecting with backoff.
 
     Every message goes onto `out` as-is. A lost connection puts a `_gap` record
     there once it is back, since nothing seen while down can be recovered.
+    `path` and `subscriptions` default to the market stream for `groups`; the
+    private order stream passes its own (see `private_subscriptions`).
     """
     import websockets  # the 'execute' extra
 
@@ -81,12 +105,15 @@ async def run_connection(
     n_slugs = sum(len(g) for g in groups)
     while not stop.is_set():
         try:
-            headers = auth_headers(credentials, "GET", WS_PATH)
+            headers = auth_headers(credentials, "GET", path)
             async with websockets.connect(
-                WS_HOST + WS_PATH, additional_headers=headers, max_size=None,
+                WS_HOST + path, additional_headers=headers, max_size=None,
                 ping_interval=20, ping_timeout=30, open_timeout=30,
             ) as ws:
-                for sub in subscribe_messages(conn_id, groups):
+                subs = subscriptions if subscriptions is not None else (
+                    subscribe_messages(conn_id, groups)
+                )
+                for sub in subs:
                     await ws.send(json.dumps(sub))
                 if down_since is not None:
                     await out.put(

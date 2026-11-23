@@ -196,32 +196,88 @@ async def run(
     return tracker
 
 
+SETTLE_FLUSH_EVERY = 50
+
+
+def settlements_path(log_path: Path | str = DEFAULT_LOG) -> Path:
+    """Settlements live beside the paper log, in a file of their own.
+
+    The trader appends to the paper log for hours at a stretch, and two
+    processes appending to one file on Windows can clobber each other's lines.
+    Only the settle step writes here, so it can run while the trader streams.
+    """
+    return Path(log_path).with_name("settlements.jsonl")
+
+
+def read_log_with_settlements(log_path: Path | str = DEFAULT_LOG) -> list[dict[str, Any]]:
+    """The paper log plus its settlements file. Older `settle` records in the log still count."""
+    return read_log(log_path) + read_log(settlements_path(log_path))
+
+
 def settle_filled(
-    records: list[dict[str, Any]], log_path: Path = DEFAULT_LOG
+    records: list[dict[str, Any]],
+    log_path: Path | str = DEFAULT_LOG,
+    say: Callable[[str], None] | None = None,
+    flush_every: int = SETTLE_FLUSH_EVERY,
 ) -> list[dict[str, Any]]:
     """Fetch the settlement of every market with a fill and no `settle` record yet.
 
-    Few requests: fills are rare, and a settled market never needs asking twice.
+    `records` must include the settlements file (`read_log_with_settlements`),
+    or known markets are asked again. A settled market never needs asking twice.
+    Results are appended to the settlements file every `flush_every` markets, so
+    an interrupted run keeps what it fetched: the public endpoint allows about 60
+    requests a minute, and a backlog of weeks runs to hours. A market that is
+    not yet terminal, or whose request fails, is skipped and asked again next run.
     """
-    from .extremes import bids_from_log, is_terminal, settlements_from_log
+    from .extremes import bids_from_log
 
+    filled = {b.slug for b in bids_from_log(records).values() if b.optimistic_filled > 0}
+    return settle_slugs(filled, records, log_path, say=say, flush_every=flush_every)
+
+
+def settle_slugs(
+    slugs: set[str],
+    records: list[dict[str, Any]],
+    log_path: Path | str = DEFAULT_LOG,
+    say: Callable[[str], None] | None = None,
+    flush_every: int = SETTLE_FLUSH_EVERY,
+) -> list[dict[str, Any]]:
+    """Fetch and save the settlement of each of `slugs` that `records` has none for."""
+    from .extremes import is_terminal, settlements_from_log
+
+    out_path = settlements_path(log_path)
     known = settlements_from_log(records)
-    wanted = sorted(
-        {b.slug for b in bids_from_log(records).values() if b.optimistic_filled > 0} - set(known)
-    )
+    wanted = sorted(slugs - set(known))
+    if say:
+        say(f"{len(wanted)} filled market(s) without a settlement")
     if not wanted:
         return []
-    new = []
+    new: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    failed = open_ = 0
     with PolymarketUS() as pm:
-        for slug in wanted:
-            data = pm.bbo(slug)
+        for i, slug in enumerate(wanted, 1):
+            try:
+                data = pm.bbo(slug)
+            except RuntimeError:
+                failed += 1
+                continue
             state = str(data.get("state") or "")
             px = (data.get("settlementPx") or {}).get("value")
             if px is None or not is_terminal(state):
+                open_ += 1
                 continue
-            new.append(
-                {"event": "settle", "ts": datetime.now(UTC).isoformat(), "slug": slug,
-                 "settlement_px": float(px), "state": state}
-            )
-    append_log(new, log_path)
+            rec = {"event": "settle", "ts": datetime.now(UTC).isoformat(), "slug": slug,
+                   "settlement_px": float(px), "state": state}
+            new.append(rec)
+            pending.append(rec)
+            if len(pending) >= flush_every:
+                append_log(pending, out_path)
+                pending = []
+            if say and i % 500 == 0:
+                say(f"  {i}/{len(wanted)} asked, {len(new)} settled")
+    append_log(pending, out_path)
+    if say:
+        say(f"settled {len(new)}; {open_} not yet terminal, {failed} request(s) failed "
+            f"(both retried next run) -> {out_path}")
     return new

@@ -32,6 +32,7 @@ import base64
 import json
 import math
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
@@ -59,6 +60,56 @@ _DONE_EMPTY = {"ORDER_STATE_CANCELED", "ORDER_STATE_EXPIRED", "ORDER_STATE_REJEC
 
 class OrderSpecError(ValueError):
     """Raised for an order this client refuses to translate."""
+
+
+BATCH_PATH = "/v1/orders/batched"
+MAX_BATCH = 20  # docs.polymarket.us create-multiple-orders, read 2026-11-23
+
+# Buy YES is a long buy at the YES price; buy NO is a short buy, and its
+# price.value is still the YES price (1 - NO price) -- see the module docstring.
+BID_INTENT = {"YES": "ORDER_INTENT_BUY_LONG", "NO": "ORDER_INTENT_BUY_SHORT"}
+
+
+@dataclass(frozen=True)
+class RestingBid:
+    """One post-only, good-till-date bid to rest. `long_price` is what goes on the wire."""
+
+    slug: str
+    side: str            # "YES" or "NO"
+    long_price: float    # YES bid at 0.01 -> 0.01; NO bid at 0.01 -> 0.99
+    shares: float
+    expires_at: datetime
+
+
+@dataclass(frozen=True)
+class BatchResult:
+    status: str          # "accepted" | "rejected" | "unknown"
+    order_ids: list[str]
+    message: str
+
+
+def resting_bid_body(bid: RestingBid) -> dict[str, Any]:
+    """The `CreateOrderRequest` for one resting bid."""
+    intent = BID_INTENT.get(bid.side)
+    if intent is None:
+        raise OrderSpecError(f"unsupported side {bid.side!r}")
+    if not 0.0 < bid.long_price < 1.0:
+        raise OrderSpecError(f"long price out of range: {bid.long_price}")
+    if bid.shares <= 0:
+        raise OrderSpecError(f"non-positive size {bid.shares}")
+    if bid.expires_at.tzinfo is None:
+        raise OrderSpecError("expiry must be timezone-aware")
+    return {
+        "marketSlug": bid.slug,
+        "type": "ORDER_TYPE_LIMIT",
+        "price": {"value": f"{bid.long_price:.2f}", "currency": "USD"},
+        "quantity": bid.shares,
+        "tif": "TIME_IN_FORCE_GOOD_TILL_DATE",
+        "goodTillTime": bid.expires_at.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "intent": intent,
+        "participateDontInitiate": True,
+        "manualOrderIndicator": "MANUAL_ORDER_INDICATOR_AUTOMATIC",
+    }
 
 
 def long_price_for_no(no_price: float, tick: float = PRICE_TICK) -> float:
@@ -193,6 +244,45 @@ class LiveOrderClient:
         if not order_id:
             return OrderResult(status="submitted", message="no order id returned", raw=payload)
         return OrderResult(status="resting", order_id=order_id, raw=payload)
+
+    def place_resting_batch(self, orders: list[RestingBid]) -> BatchResult:
+        """Rest up to 20 post-only bids in one `POST /v1/orders/batched`.
+
+        The reply carries only `createdOrderIds`, in request order; whether each
+        order was accepted, rejected or filled arrives on the private order
+        stream. A 4xx means the venue refused the whole batch (it validates the
+        batch as one). 409, 5xx, or an id list of the wrong length is ambiguous:
+        some or all may exist, so nothing is retried and the caller reconciles.
+        """
+        if not 1 <= len(orders) <= MAX_BATCH:
+            raise OrderSpecError(f"batch of {len(orders)}; the venue takes 1 to {MAX_BATCH}")
+        body = {"orders": [resting_bid_body(o) for o in orders]}
+        raw = json.dumps(body, separators=(",", ":")).encode("utf-8")
+        headers = {"Content-Type": "application/json", **self.auth_headers("POST", BATCH_PATH)}
+        response = self._client.post(BATCH_PATH, content=raw, headers=headers)
+        code = response.status_code
+        if code == 409 or code >= 500:
+            return BatchResult("unknown", [], f"HTTP {code}: {response.text[:400]}")
+        if code >= 400:
+            return BatchResult("rejected", [], f"HTTP {code}: {response.text[:400]}")
+        try:
+            payload = json.loads(response.content.decode("utf-8"))
+            ids = [str(i) for i in payload.get("createdOrderIds") or []]
+        except (json.JSONDecodeError, AttributeError):
+            return BatchResult("unknown", [], f"unparseable reply: {response.text[:400]}")
+        if len(ids) != len(orders):
+            return BatchResult("unknown", ids, f"{len(ids)} ids for {len(orders)} orders")
+        return BatchResult("accepted", ids, "")
+
+    def get_order(self, order_id: str) -> dict[str, Any] | None:
+        """One order by id (`GET /v1/order/{id}`), or None if the venue has no such order."""
+        path = f"/v1/order/{order_id}"
+        response = self._client.get(path, headers=self.auth_headers("GET", path))
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        order: dict[str, Any] = response.json().get("order") or {}
+        return order
 
     def open_orders(self) -> list[dict[str, Any]]:
         """Every open order on the account. Read-only; raises on any failure."""

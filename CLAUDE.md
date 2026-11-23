@@ -46,6 +46,11 @@ uv run nflprops bids --live ...              # place them
 uv run nflprops bids-cancel [--all] [--live] # cancel our bids (--all: manual ones too)
 uv run --extra execute nflprops extremes-paper   # PAPER: 1c YES+NO bids on every market, through games
 uv run nflprops extremes-report              # paper P&L by market type, side, fill model
+uv run nflprops extremes-settle              # fetch settlements for filled paper bids (wrapper runs it)
+uv run --extra execute nflprops extremes-live [--live]  # 1c bids, real with --live, queue-model shadowed
+uv run nflprops extremes-live-report         # real vs shadow fills and P&L, bid for bid
+uv run nflprops extremes-live-reconcile      # recover fills the private stream missed
+uv run nflprops extremes-live-cancel [--live]   # cancel every open extremes-live order
 ```
 
 `--slippage` adds a cushion *beyond* the modelled taker fee. `--days` sets the kickoff window.
@@ -200,10 +205,76 @@ costs a cent and pays a dollar: break-even is a 1% hit rate among fills.
   replays it and keeps queue positions. Disconnects and restarts are logged as
   `gap`s, since missed trades cannot be recovered. `stats_touch` flags a session
   low/high at our price with no trade seen.
-- `extremes-report` settles filled markets via public `/bbo` (`settlementPx`)
-  and caches each settlement in the log.
-- `scripts/extremes_paper.ps1` is the Task Scheduler wrapper. Registering it is
-  left to the operator.
+- **Settlement:** `extremes-settle` fetches public `/bbo` (`settlementPx`) for
+  every filled market not yet settled and appends to
+  `data/extremes/settlements.jsonl` — a separate file, because two processes
+  appending to `paper.jsonl` on Windows can clobber lines, and the trader writes
+  it for hours. It flushes every 50 markets, so an interrupted run keeps its
+  progress; not-yet-terminal markets and failed requests are retried next run.
+  ~60 requests/min, so a backlog of weeks takes hours. `extremes-report`
+  reads both files (older `settle` records in `paper.jsonl` still count) and
+  by default settles too; `--no-settle` reports from what is cached.
+  Before 2026-11-22 nothing settled unless someone ran the report, so fills
+  from 10-29 on sat unsettled for weeks.
+- `scripts/extremes_paper.ps1` is the Task Scheduler wrapper. It launches
+  `extremes-settle` detached before the trader (last slate's late expiries) and
+  after it exits (this slate), logging to `logs/extremes-settle-YYYY-MM-DD.log`.
+  Both are detached so a long settle never delays kickoff or keeps the task
+  alive into the next trigger (`MultipleInstances IgnoreNew` would skip it).
+  Registering it is left to the operator.
+
+### 1-cent extremes (live)
+
+`extremes-live`, added 2026-11-23, **places real orders with `--live`** (dry run
+by default). Same bids as the paper trader, but real, and each one *shadowed* by
+the queue-aware model so real and modelled P&L are measured on identical bids.
+The venue decides real fills; the shadow is what the model says should have
+happened to that exact order. Their gap is the model's error. `extremes_live.py`
+has the rules; the ones that bite:
+
+- **Defaults:** 1 share a side, `--skip SPREAD:NO --skip TOTAL:NO` (the paper
+  results' reliable losers, 2026-11-23), `--max-exposure $200` -- dollars that
+  could still be lost on unfinished markets. A full slate is ~16k bids, ~$160.
+- **Decided once per market side, at the first OPEN snapshot**, as the paper
+  joins. `would_cross` is skipped for good (post-only would be refused). A cap
+  skip is retried as markets finish.
+- **Shadow joins when the venue acks the order** (private stream), against the
+  latest book, **minus our own unfilled shares** -- the live book contains our
+  order, the paper book never did. Stops on a venue cancel/expiry, *not* on a
+  real fill. `test_shadow_matches_the_paper_model_on_the_same_queue` pins the
+  equivalence.
+- **Orders:** `POST /v1/orders/batched` (20 per request, 4 requests/s), post-only,
+  GTD at kickoff + 24 h. YES is `ORDER_INTENT_BUY_LONG` at 0.01, NO is
+  `ORDER_INTENT_BUY_SHORT` at long 0.99. **BUY_LONG has never been sent live**
+  -- the docs name it, but only BUY_SHORT is proven.
+- **Never placed twice.** An `intent` is logged before sending; a key with one is
+  never sent again, even after a restart or an ambiguous (409/5xx/raised) reply.
+  Three refused or ambiguous batches in a row stop placement for the run.
+- **Real fills come only from `/v1/ws/private`** (`SUBSCRIPTION_TYPE_ORDER`,
+  empty `marketSlugs` = all). Per the docs; **unverified live**, and the docs'
+  overview page shows a snake_case variant. The first three private messages
+  are printed: if none arrive, the subscription format is wrong. A private-stream
+  gap loses fills until `extremes-live-reconcile` (GET each unfinished order,
+  ~10/s, writes `live-reconcile.jsonl`, safe while trading).
+- **HALT stops the trader but leaves bids resting** until GTD.
+  `extremes-live-cancel --live` cancels every open order in the live log.
+- **Logs:** `data/extremes/live.jsonl` (live), `live-dryrun.jsonl` (dry run).
+  `extremes-settle` settles both into the shared `settlements.jsonl`.
+  `extremes-live-report` shows real vs shadow fills and P&L by slice and every
+  bid where they disagree.
+- **Verified live 2026-11-23** (105 bids on CIN@WAS, cancelled unfilled):
+  batched placement, `BUY_LONG` at 0.01, `BUY_SHORT` at long 0.99 (the venue
+  shows it as `ORDER_SIDE_SELL`), 1-share orders, and the private stream in the
+  camelCase format, which delivered every ack.
+- `--game` limits to one event; `--quota TYPE:SIDE=N` caps bids per slice;
+  `--keys-from OLD_LOG` bids exactly the market sides an earlier log did.
+- **Scheduled once:** `scripts/extremes_live_test.ps1` as task
+  `nflprops-extremes-live-test`, 2026-11-23 18:00 ET -- the paper task's own
+  Monday trigger -- repeating the 105 bids from `live-test-2026-11-23.jsonl`.
+  The paper task's registered triggers are 6 pm Thu, 11 am Sun, 6 pm Mon, not
+  the times in `extremes_paper.ps1`'s comment.
+- The paper trader's 21 connections plus the live trader's few (one game) is
+  fine; a full live slate (~22 more) is untested against any connection limit.
 
 ### Scheduling
 

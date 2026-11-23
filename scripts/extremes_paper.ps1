@@ -35,6 +35,19 @@ $log = Join-Path $logDir ("extremes-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd'))
 
 "=== $((Get-Date).ToUniversalTime().ToString('u')) run start ===" | Add-Content -Path $log -Encoding utf8
 
+# Settle step: fetch settlements for filled bids into data\extremes\settlements.jsonl,
+# so extremes-report has nothing to catch up on. Public endpoint, no credentials.
+# It writes its own file, so it is safe alongside the trader. Two runs:
+#   before -- in the background, so a long backlog (~60 markets/min) never
+#             delays kickoff; catches last slate's markets that expired late.
+#   after  -- once the trader exits, for this slate's games. Also detached: the
+#             task must end promptly, or MultipleInstances IgnoreNew skips the
+#             next slate's trigger.
+# Output goes to logs\extremes-settle-YYYY-MM-DD.log. A failure never blocks the trader.
+$settleLog = Join-Path $logDir ("extremes-settle-{0}.log" -f (Get-Date -Format 'yyyy-MM-dd'))
+$settleCmd = "uv run nflprops extremes-settle >> `"$settleLog`" 2>&1"
+Start-Process -FilePath cmd.exe -ArgumentList '/c', $settleCmd -WorkingDirectory $repo -WindowStyle Hidden
+
 # The market stream is authenticated: needs POLYMARKET_US_KEY_ID and
 # POLYMARKET_US_KEY_FILE as user env vars, like the autotrader.
 # 'Continue' around the native call: see autotrade_hourly.ps1 for why.
@@ -42,6 +55,7 @@ $ErrorActionPreference = 'Continue'
 & uv run --extra execute nflprops extremes-paper --hours 36 --max-hours 20 *>&1 |
     ForEach-Object { "$_" } | Add-Content -Path $log -Encoding utf8
 $code = $LASTEXITCODE
+Start-Process -FilePath cmd.exe -ArgumentList '/c', $settleCmd -WorkingDirectory $repo -WindowStyle Hidden
 $ErrorActionPreference = 'Stop'
 
 "=== $((Get-Date).ToUniversalTime().ToString('u')) run end (exit $code) ===" | Add-Content -Path $log -Encoding utf8

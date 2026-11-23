@@ -196,3 +196,86 @@ def test_markets_from_events_takes_every_game_market_and_skips_futures(nfl_event
     assert len(metas) == 8
     assert all(m.market_type == "PROP" for m in metas)
     assert "fut" not in {m.slug for m in metas}
+
+
+# --- settle step ---------------------------------------------------------------
+
+
+class _FakePM:
+    """Stands in for PolymarketUS: `bbo` answers from a dict, raising for "boom"."""
+
+    def __init__(self, answers):
+        self.answers = answers
+        self.asked: list[str] = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def bbo(self, slug):
+        self.asked.append(slug)
+        if slug == "boom":
+            raise RuntimeError("Polymarket request failed after retries")
+        return self.answers[slug]
+
+
+def _settle_setup(monkeypatch, filled_slugs, answers):
+    from types import SimpleNamespace
+
+    import nfl_props_arb.extremes as ex
+    import nfl_props_arb.extremes_paper as ep
+
+    fake_bids = {(s, "YES"): SimpleNamespace(slug=s, optimistic_filled=1.0) for s in filled_slugs}
+    fake_bids[("unfilled", "YES")] = SimpleNamespace(slug="unfilled", optimistic_filled=0.0)
+    monkeypatch.setattr(ex, "bids_from_log", lambda records: fake_bids)
+    pm = _FakePM(answers)
+    monkeypatch.setattr(ep, "PolymarketUS", lambda: pm)
+    return ep, pm
+
+
+def _expired(px):
+    return {"state": "MARKET_STATE_EXPIRED", "settlementPx": {"value": str(px)}}
+
+
+def test_settle_writes_its_own_file_and_skips_known_open_and_failed(tmp_path, monkeypatch):
+    ep, pm = _settle_setup(
+        monkeypatch,
+        ["known", "a", "b", "live", "boom"],
+        {"a": _expired(1), "b": _expired(0), "live": {"state": "MARKET_STATE_OPEN"}},
+    )
+    log = tmp_path / "paper.jsonl"
+    log.write_text('{"event":"join"}\n', encoding="utf-8")
+    records = [{"event": "settle", "slug": "known", "settlement_px": 1.0}]
+
+    new = ep.settle_filled(records, log, flush_every=1)
+
+    assert {r["slug"] for r in new} == {"a", "b"}
+    assert "known" not in pm.asked and "unfilled" not in pm.asked  # never re-asked
+    assert log.read_text(encoding="utf-8") == '{"event":"join"}\n'  # paper log untouched
+    written = ep.read_log(ep.settlements_path(log))
+    assert {r["slug"]: r["settlement_px"] for r in written} == {"a": 1.0, "b": 0.0}
+
+    # The next run reads the settlements file and asks only what is still open or failed.
+    pm.asked.clear()
+    ep.settle_filled(records + ep.read_log_with_settlements(log), log)
+    assert sorted(pm.asked) == ["boom", "live"]
+
+
+def test_settle_flushes_in_batches_so_an_interrupted_run_keeps_progress(tmp_path, monkeypatch):
+    slugs = [f"m{i}" for i in range(5)] + ["zz"]
+    answers = {s: _expired(1) for s in slugs}
+    ep, pm = _settle_setup(monkeypatch, slugs, answers)
+
+    def dies_on_zz(slug):
+        if slug == "zz":
+            raise KeyboardInterrupt
+        return answers[slug]
+
+    pm.bbo = dies_on_zz
+    log = tmp_path / "paper.jsonl"
+    with pytest.raises(KeyboardInterrupt):
+        ep.settle_filled([], log, flush_every=2)
+    # m0..m3 flushed in two batches; m4 was pending when the run died.
+    assert len(ep.read_log(ep.settlements_path(log))) == 4

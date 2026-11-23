@@ -5,10 +5,11 @@ Mostly read-only. `scan`, `markets`, `odds-template`, `baselines-template` and
 
 `extremes-paper` streams authenticated market data but places nothing.
 
-`autotrade`, `bids` and `bids-cancel` are the exceptions: the only commands that
-can move money or change orders. Each defaults to `--dry-run` and requires `--live`
-to be said out loud. See `autotrade.py` and `bids.py` for the guards and
-`execution/` for the venue client.
+`autotrade`, `bids`, `bids-cancel`, `extremes-live` and `extremes-live-cancel` are
+the exceptions: the only commands that can move money or change orders. Each
+defaults to `--dry-run` and requires `--live` to be said out loud. See
+`autotrade.py`, `bids.py` and `extremes_live.py` for the guards and `execution/`
+for the venue client. `extremes-live-reconcile` reads orders but changes none.
 """
 
 from __future__ import annotations
@@ -630,6 +631,41 @@ def extremes_paper(
     )
 
 
+@app.command("extremes-settle")
+def extremes_settle(
+    log_path: Annotated[Path, typer.Option("--log", help="Paper log to settle")] = Path(
+        "data/extremes/paper.jsonl"
+    ),
+) -> None:
+    """Fetch settlements for every filled paper bid not yet settled. No report.
+
+    Also settles markets filled (really, or in the shadow model) by the live
+    trader's logs beside it -- one settlements file serves both. Writes to
+    settlements.jsonl beside the log, so it is safe to run while either trader
+    streams. Progress is saved as it goes; rerun to resume.
+    """
+    from .extremes import bids_from_log
+    from .extremes_live import LiveTracker
+    from .extremes_live_run import read_live_records
+    from .extremes_paper import read_log_with_settlements, settle_slugs
+
+    records = read_log_with_settlements(log_path)
+    slugs = {b.slug for b in bids_from_log(records).values() if b.optimistic_filled > 0}
+    for name in ("live.jsonl", "live-dryrun.jsonl"):
+        live_log = log_path.with_name(name)
+        if not live_log.exists():
+            continue
+        t = LiveTracker()
+        t.replay(read_live_records(live_log))
+        slugs |= {k[0] for k, o in t.orders.items() if o.cum_qty > 0}
+        slugs |= {b.slug for b in t.shadows.values() if b.optimistic_filled > 0}
+    if not slugs and not records:
+        console.print(f"No paper or live log beside {log_path} yet.")
+        return
+    settle_slugs(slugs, records, log_path,
+                 say=lambda s: console.print(s, markup=False, highlight=False))
+
+
 @app.command("extremes-report")
 def extremes_report(
     log_path: Annotated[Path, typer.Option("--log", help="Paper log to read")] = Path(
@@ -644,9 +680,9 @@ def extremes_report(
     import json
 
     from .extremes import bids_from_log, filled_rows, report_rows, settlements_from_log
-    from .extremes_paper import read_log, settle_filled
+    from .extremes_paper import read_log_with_settlements, settle_filled
 
-    records = read_log(log_path)
+    records = read_log_with_settlements(log_path)
     if not records:
         console.print(f"No paper log at {log_path} yet.")
         return
@@ -713,6 +749,233 @@ def extremes_report(
                 "-" if f["queue_pnl"] is None else money(f["queue_pnl"]),
             )
         console.print(ft)
+
+
+def _live_log(live: bool, log_path: Path | None) -> Path:
+    from .extremes_live_run import DRY_LOG, LIVE_LOG
+
+    return log_path or (LIVE_LOG if live else DRY_LOG)
+
+
+@app.command("extremes-live")
+def extremes_live(
+    live: Annotated[
+        bool, typer.Option("--live/--dry-run", help="Place real orders. Off by default.")
+    ] = False,
+    shares: Annotated[float, typer.Option(help="Shares per 1-cent bid")] = 1.0,
+    skip: Annotated[
+        list[str] | None,
+        typer.Option("--skip", help="TYPE:SIDE slice not to bid (repeatable). "
+                     "Default SPREAD:NO and TOTAL:NO; pass --skip NONE to bid everything."),
+    ] = None,
+    max_exposure: Annotated[
+        float, typer.Option(help="Most dollars that can be lost on unfinished markets")
+    ] = 200.0,
+    hours: Annotated[float, typer.Option(help="Bid games kicking off up to this far ahead")] = 36.0,
+    max_hours: Annotated[float, typer.Option(help="Stop after this long regardless")] = 20.0,
+    log_path: Annotated[Path | None, typer.Option("--log", help="Override the log")] = None,
+    game: Annotated[
+        str | None, typer.Option(help="Only events whose ticker contains this, e.g. cin-was")
+    ] = None,
+    quota: Annotated[
+        list[str] | None,
+        typer.Option("--quota", help="TYPE:SIDE=N, the most bids in that slice across the "
+                     "log (repeatable). Given any, slices without one get no bids."),
+    ] = None,
+    keys_from: Annotated[
+        Path | None,
+        typer.Option("--keys-from", help="Bid only the market sides an earlier live log "
+                     "bid, to repeat a test on the same bids"),
+    ] = None,
+    halt_file: Annotated[Path, typer.Option(help="Kill switch: exists = stop")] = HALT_FILE,
+) -> None:
+    """1-cent YES/NO bids on every NFL market, each shadowed by the queue-aware model.
+
+    Rests a post-only bid on each market side the paper trader would join
+    (minus the --skip slices), held through the game, and runs the queue-aware
+    model on exactly those orders from the moment each rests. The live report
+    compares real fills with the shadow's. Dry run acks every bid on the spot
+    and places nothing.
+    """
+    import asyncio
+
+    from .autotrade import is_halted
+    from .execution.credentials import MissingCredentialsError
+    from .extremes_live import DEFAULT_SKIP, parse_quotas, parse_skip
+    from .extremes_live_run import run
+
+    if is_halted(halt_file):
+        console.print(f"[yellow]HALTED[/yellow] -- {halt_file} exists. Nothing done.")
+        return
+    if skip is None:
+        slices = DEFAULT_SKIP
+    elif [s.upper() for s in skip] == ["NONE"]:
+        slices = frozenset()
+    else:
+        try:
+            slices = parse_skip(skip)
+        except ValueError as exc:
+            raise typer.BadParameter(str(exc)) from exc
+    try:
+        quotas = parse_quotas(quota) if quota else None
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    allowed = None
+    if keys_from is not None:
+        from .extremes_live import intent_keys
+        from .extremes_paper import read_log
+
+        allowed = intent_keys(read_log(keys_from))
+        if not allowed:
+            raise typer.BadParameter(f"no bids in {keys_from}")
+    log = _live_log(live, log_path)
+    if keys_from is not None and keys_from.resolve() == log.resolve():
+        raise typer.BadParameter("--keys-from must be another log: every key in this one "
+                                 "is already spent and would never be placed again")
+    mode = "[red]LIVE[/red]" if live else "[cyan]DRY RUN[/cyan]"
+    skipped = ", ".join(f"{t}:{s}" for t, s in sorted(slices)) or "none"
+    console.print(f"[bold]extremes-live[/bold] {mode}  {shares:g} share(s) a side, "
+                  f"skip {skipped}, cap ${max_exposure:,.2f}, "
+                  f"{'game ' + game + ', ' if game else ''}"
+                  f"{'quotas ' + ' '.join(quota) + ', ' if quota else ''}"
+                  f"{f'{len(allowed)} keys from {keys_from}, ' if allowed else ''}log {log}")
+    try:
+        tracker = asyncio.run(run(
+            live=live, hours=hours, shares=shares, skip=slices, max_exposure=max_exposure,
+            max_hours=max_hours, log_path=log, game=game, quotas=quotas, allowed_keys=allowed,
+            halted=lambda: is_halted(halt_file),
+            say=lambda s: console.print(s, markup=False, highlight=False),
+        ))
+    except MissingCredentialsError as exc:
+        raise typer.BadParameter(f"the streams are authenticated: {exc}") from exc
+    s = tracker.summary()
+    console.print(f"done: {s['placed']:g} placed, {s['rejected']:g} rejected, "
+                  f"{s['unknown']:g} unknown; fills real {s['real_fills']:g} / "
+                  f"shadow {s['shadow_fills']:g}")
+
+
+@app.command("extremes-live-report")
+def extremes_live_report(
+    live: Annotated[bool, typer.Option("--live/--dry-run", help="Which log to read")] = True,
+    log_path: Annotated[Path | None, typer.Option("--log", help="Override the log")] = None,
+    as_json: Annotated[bool, typer.Option("--json", help="Machine-readable output")] = False,
+) -> None:
+    """Real fills and P&L against the queue-aware shadow, bid for bid. Reads cached
+    settlements only; `extremes-settle` fetches them."""
+    import json
+    from collections import Counter
+
+    from .extremes import settlements_from_log
+    from .extremes_live import LiveTracker, compare_groups, compare_rows
+    from .extremes_live_run import read_live_records
+    from .extremes_paper import read_log, settlements_path
+
+    log = _live_log(live, log_path)
+    records = read_live_records(log)
+    if not records:
+        console.print(f"No live log at {log} yet.")
+        return
+    tracker = LiveTracker()
+    tracker.replay(records)
+    settlements = settlements_from_log(records + read_log(settlements_path(log)))
+    rows = compare_rows(tracker, settlements)
+    groups = compare_groups(rows)
+    skips = Counter(tracker.skipped.values())
+    statuses = Counter(o.status for o in tracker.orders.values())
+    if as_json:
+        print(json.dumps({"groups": groups, "orders": rows, "skips": skips,
+                          "statuses": statuses}, indent=1, default=str))
+        return
+
+    def money(x: float) -> str:
+        return f"${x:,.2f}"
+
+    table = Table(title=f"1c extremes, real vs queue-aware shadow ({log.name})")
+    for col in ("Type", "Side"):
+        table.add_column(col)
+    for col in ("Orders", "Real fills", "Shadow fills", "Both", "Real only", "Shadow only",
+                "Real P&L", "Shadow P&L", "Unsettled"):
+        table.add_column(col, justify="right")
+    for g in groups:
+        table.add_row(g["market_type"], g["side"], str(g["orders"]), str(g["real_fills"]),
+                      str(g["shadow_fills"]), str(g["both"]), str(g["real_only"]),
+                      str(g["shadow_only"]), money(g["real_pnl"]), money(g["shadow_pnl"]),
+                      str(g["unsettled"]))
+    console.print(table)
+    agree = sum(r["agree"] for r in rows)
+    console.print(
+        f"  Real [bold]{money(sum(g['real_pnl'] for g in groups))}[/bold] vs shadow "
+        f"[bold]{money(sum(g['shadow_pnl'] for g in groups))}[/bold] (settled only). "
+        f"Fill/no-fill agreement on {agree}/{len(rows)} orders."
+    )
+    console.print(f"  Orders: {dict(statuses)}; skipped: {dict(skips)}; "
+                  f"{sum(not r['shadowed'] for r in rows)} rested without a shadow join, "
+                  f"{sum(r['stopped'] for r in rows)} cancelled/expired by the venue")
+    gaps = [r for r in records if r.get("event") == "gap"]
+    if gaps:
+        console.print(f"  [yellow]{len(gaps)} stream gap(s); run extremes-live-reconcile "
+                      "for real fills missed meanwhile[/yellow]")
+    diff = [r for r in rows if not r["agree"]
+            or abs(r["real_filled"] - r["shadow_queue_filled"]) > 1e-9]
+    if diff:
+        dt = Table(title="Where real and shadow disagree")
+        for col in ("Type", "Side", "Market", "Queue at join", "Real", "Shadow", "Settle"):
+            dt.add_column(col)
+        for r in diff[:50]:
+            dt.add_row(r["market_type"], r["side"], (r["title"] or r["slug"])[:48],
+                       f"{r['queue_at_join']:,.0f}" if r["queue_at_join"] is not None else "-",
+                       f"{r['real_filled']:g}", f"{r['shadow_queue_filled']:g}",
+                       "-" if r["settlement"] is None else f"{r['settlement']:g}")
+        console.print(dt)
+
+
+@app.command("extremes-live-reconcile")
+def extremes_live_reconcile(
+    log_path: Annotated[Path | None, typer.Option("--log", help="Override the log")] = None,
+) -> None:
+    """Fetch the venue's state of every live order not known to be finished.
+
+    Recovers fills and cancels the private stream missed. Read-only at the venue;
+    writes live-reconcile.jsonl, so it is safe while the trader runs.
+    """
+    from .extremes_live_run import reconcile
+
+    log = _live_log(True, log_path)
+    with _order_client() as client:
+        reconcile(log, client, say=lambda s: console.print(s, markup=False, highlight=False))
+
+
+@app.command("extremes-live-cancel")
+def extremes_live_cancel(
+    live: Annotated[
+        bool, typer.Option("--live/--dry-run", help="Actually cancel. Off by default.")
+    ] = False,
+    log_path: Annotated[Path | None, typer.Option("--log", help="Override the log")] = None,
+) -> None:
+    """Cancel every open order the live extremes trader placed. Nothing else is touched."""
+    import time
+
+    from .extremes_live import LiveTracker
+    from .extremes_live_run import read_live_records
+
+    log = _live_log(True, log_path)
+    tracker = LiveTracker()
+    tracker.replay(read_live_records(log))
+    mine = set(tracker.by_id)
+    with _order_client() as client:
+        targets = [o for o in client.open_orders() if str(o.get("id")) in mine]
+        console.print(f"{len(targets)} open order(s) placed by extremes-live "
+                      f"({'[red]LIVE[/red]' if live else '[cyan]DRY RUN[/cyan]'})")
+        if not live:
+            return
+        ok = 0
+        for o in targets:
+            done, detail = client.cancel(str(o["id"]), str(o.get("marketSlug") or ""))
+            ok += done
+            if not done:
+                console.print(f"  {o['id']}: {detail}")
+            time.sleep(0.1)
+        console.print(f"cancelled {ok}/{len(targets)}")
 
 
 @app.command()
