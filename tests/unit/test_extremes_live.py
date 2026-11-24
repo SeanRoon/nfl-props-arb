@@ -367,3 +367,13 @@ def test_keys_from_an_earlier_log_repeats_exactly_those_bids():
         _, new = t.handle_market(_md(slug, {}, {}), NOW)
         got += [(i.slug, i.side) for i in new]
     assert got == [("a", "NO")]
+
+
+def test_keep_awake_sets_then_clears_the_execution_state(monkeypatch):
+    import nfl_props_arb.awake as awake
+
+    calls = []
+    monkeypatch.setattr(awake, "_set", lambda flags: calls.append(flags) or True)
+    with awake.keep_awake() as ok:
+        assert ok
+    assert calls == [awake.ES_CONTINUOUS | awake.ES_SYSTEM_REQUIRED, awake.ES_CONTINUOUS]

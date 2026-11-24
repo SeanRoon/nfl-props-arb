@@ -614,14 +614,18 @@ def extremes_paper(
         return
     console.print(f"[bold]extremes-paper[/bold] [cyan]PAPER[/cyan]  {shares:g} shares a side, "
                   f"games within {hours:g}h, log {log_path}")
+    from .awake import keep_awake
+
     try:
-        tracker = asyncio.run(
-            run(
-                hours=hours, shares=shares, groups_per_conn=groups_per_conn, max_hours=max_hours,
-                log_path=log_path, halted=lambda: is_halted(halt_file),
-                say=lambda s: console.print(s, markup=False, highlight=False),
+        with keep_awake() as awake:
+            console.print(f"keeping the PC awake: {'yes' if awake else 'NO (not Windows?)'}")
+            tracker = asyncio.run(
+                run(
+                    hours=hours, shares=shares, groups_per_conn=groups_per_conn,
+                    max_hours=max_hours, log_path=log_path, halted=lambda: is_halted(halt_file),
+                    say=lambda s: console.print(s, markup=False, highlight=False),
+                )
             )
-        )
     except MissingCredentialsError as exc:
         raise typer.BadParameter(f"the market stream is authenticated: {exc}") from exc
     s = tracker.summary()
@@ -839,13 +843,17 @@ def extremes_live(
                   f"{'game ' + game + ', ' if game else ''}"
                   f"{'quotas ' + ' '.join(quota) + ', ' if quota else ''}"
                   f"{f'{len(allowed)} keys from {keys_from}, ' if allowed else ''}log {log}")
+    from .awake import keep_awake
+
     try:
-        tracker = asyncio.run(run(
-            live=live, hours=hours, shares=shares, skip=slices, max_exposure=max_exposure,
-            max_hours=max_hours, log_path=log, game=game, quotas=quotas, allowed_keys=allowed,
-            halted=lambda: is_halted(halt_file),
-            say=lambda s: console.print(s, markup=False, highlight=False),
-        ))
+        with keep_awake() as awake:
+            console.print(f"keeping the PC awake: {'yes' if awake else 'NO (not Windows?)'}")
+            tracker = asyncio.run(run(
+                live=live, hours=hours, shares=shares, skip=slices, max_exposure=max_exposure,
+                max_hours=max_hours, log_path=log, game=game, quotas=quotas,
+                allowed_keys=allowed, halted=lambda: is_halted(halt_file),
+                say=lambda s: console.print(s, markup=False, highlight=False),
+            ))
     except MissingCredentialsError as exc:
         raise typer.BadParameter(f"the streams are authenticated: {exc}") from exc
     s = tracker.summary()

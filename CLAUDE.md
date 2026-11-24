@@ -285,6 +285,14 @@ operator's limits — and appends to `logs/autotrade-YYYY-MM-DD.log`. It runs
 2026-09-23 (interactive logon only: it runs while the operator is logged in). Registration command is in its header
 comment. Not registered as part of the build; that is the operator's call.
 
+**Every trader task wakes the PC** (operator, 2026-11-23): register paper and
+live trader tasks with `-WakeToRun`, set on `nflprops-extremes-paper` that day
+after its Monday 6 pm trigger was missed while the PC slept. `extremes-paper`
+and `extremes-live` also hold Windows awake while they run (`awake.py`,
+`SetThreadExecutionState`), since waking alone lets the idle timer sleep it
+again mid-run. Limits: the Balanced plan here blocks wake timers on battery
+(and sleeps after 3 min idle on battery), and a closed lid sleeps regardless.
+
 ## Venue: Polymarket US (public read API)
 
 - **Public gateway:** `https://gateway.polymarket.us` — markets, books, BBO, events, series, sports. **No auth, no KYC.**

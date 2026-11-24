@@ -12,14 +12,17 @@
 #     New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday   -At 7:00pm
 #   )
 #   $s = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
-#     -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 20)
+#     -StartWhenAvailable -WakeToRun -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 20)
 #   Register-ScheduledTask -TaskName nflprops-extremes-paper -Action $a -Trigger $t -Settings $s
 #
 # A Sunday start also subscribes Monday night's markets (36 h window), so it
 # never "finishes" early; --max-hours 20 ends it Monday morning, and the Monday
 # trigger covers the night game. Queue positions carry over through the log.
-# The machine must stay awake: nothing is watched while it sleeps, and the
-# restart is logged as a gap.
+# -WakeToRun (set on the registered task 2026-11-23) wakes the PC for each trigger, and
+# the trader holds it awake while it streams (awake.py). Neither works on
+# battery: this laptop's plan blocks wake timers on DC, and closing the lid
+# sleeps regardless. Nothing is watched while it sleeps; a restart is a gap.
+# Registered triggers are 6 pm Thu, 11 am Sun, 6 pm Mon, not the times above.
 #
 # Stop it:  New-Item data\HALT   (also stops the autotrader -- same kill switch)
 
