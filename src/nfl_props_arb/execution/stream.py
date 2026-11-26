@@ -128,9 +128,12 @@ async def run_connection(
                     except TimeoutError:
                         continue
                     try:
-                        await out.put(json.loads(raw))
+                        obj = json.loads(raw)
                     except json.JSONDecodeError:
                         continue
+                    if isinstance(obj, dict):
+                        obj["_conn"] = conn_id  # which connection, for the raw capture
+                    await out.put(obj)
         except asyncio.CancelledError:
             raise
         except Exception as exc:  # noqa: BLE001 - any failure means reconnect

@@ -615,9 +615,14 @@ def extremes_paper(
     console.print(f"[bold]extremes-paper[/bold] [cyan]PAPER[/cyan]  {shares:g} shares a side, "
                   f"games within {hours:g}h, log {log_path}")
     from .awake import keep_awake
+    from .runlock import lock_path, single_instance
 
     try:
-        with keep_awake() as awake:
+        with single_instance(lock_path(log_path)) as mine, keep_awake() as awake:
+            if not mine:
+                console.print(f"[yellow]ALREADY RUNNING[/yellow] -- another extremes-paper holds "
+                              f"{lock_path(log_path)}. Nothing done.")
+                return
             console.print(f"keeping the PC awake: {'yes' if awake else 'NO (not Windows?)'}")
             tracker = asyncio.run(
                 run(
@@ -844,9 +849,14 @@ def extremes_live(
                   f"{'quotas ' + ' '.join(quota) + ', ' if quota else ''}"
                   f"{f'{len(allowed)} keys from {keys_from}, ' if allowed else ''}log {log}")
     from .awake import keep_awake
+    from .runlock import lock_path, single_instance
 
     try:
-        with keep_awake() as awake:
+        with single_instance(lock_path(log)) as mine, keep_awake() as awake:
+            if not mine:
+                console.print(f"[yellow]ALREADY RUNNING[/yellow] -- another extremes-live holds "
+                              f"{lock_path(log)}. Nothing done.")
+                return
             console.print(f"keeping the PC awake: {'yes' if awake else 'NO (not Windows?)'}")
             tracker = asyncio.run(run(
                 live=live, hours=hours, shares=shares, skip=slices, max_exposure=max_exposure,
@@ -951,6 +961,65 @@ def extremes_live_reconcile(
     log = _live_log(True, log_path)
     with _order_client() as client:
         reconcile(log, client, say=lambda s: console.print(s, markup=False, highlight=False))
+
+
+@app.command("extremes-live-audit")
+def extremes_live_audit(
+    log_path: Annotated[Path | None, typer.Option("--log", help="Override the live log")] = None,
+    show: Annotated[int, typer.Option(help="Fills to list, worst verdicts first")] = 40,
+) -> None:
+    """Check every real fill against the raw stream capture: counted, misread, or missing.
+
+    Pulls the account's trades from the venue (read-only), keeps those on
+    orders in the live log, and looks each up in the raw-*.jsonl captures the
+    paper and live traders write beside their logs. Saves the venue's trades to
+    live-venue-trades.jsonl.
+    """
+    import json
+
+    from .extremes_audit import audit, our_fills, summarize
+    from .extremes_live import LiveTracker
+    from .extremes_live_run import read_live_records
+    from .extremes_paper import read_log
+
+    log = _live_log(True, log_path)
+    records = read_live_records(log)
+    tracker = LiveTracker()
+    tracker.replay(records)
+    ids = set(tracker.by_id)
+    if not ids:
+        console.print(f"No placed orders in {log}.")
+        return
+    since = min(str(r.get("ts") or "") for r in records if r.get("event") == "placed")
+    with _order_client() as client:
+        trades = client.trade_activities(since=since[:19] + "Z")
+    venue_file = log.with_name(log.stem + "-venue-trades.jsonl")
+    venue_file.write_text("".join(json.dumps(t) + "\n" for t in trades), encoding="utf-8")
+    fills = our_fills(trades, ids)
+    raw_files = sorted(log.parent.glob("raw-*.jsonl"))
+    raw = [r for p in raw_files for r in read_log(p)]
+    counted = {str(r["trade_id"]) for r in records if r.get("event") == "trade"}
+    gaps = [r for r in records if r.get("event") == "gap"]
+    rows = audit(fills, raw, counted, gaps)
+    s = summarize(rows)
+    console.print(f"{len(trades)} account trades since {since[:19]}; {s['fills']} on our "
+                  f"{len(ids)} orders; raw capture: {len(raw_files)} file(s), {len(raw)} messages")
+    for verdict, n in sorted(s["verdicts"].items(), key=lambda kv: -kv[1]):
+        console.print(f"  {verdict:24s} {n}")
+    if s["feed_sides_seen"]:
+        console.print(f"  taker side as the feed sent it: {s['feed_sides_seen']}")
+    table = Table(title="Real fills vs the feed")
+    for col in ("Time", "Market", "Qty", "Aggressor", "Verdict", "Feed px/qty/side", "Conn"):
+        table.add_column(col)
+    order = {"not on feed": 0, "on feed, not counted": 1, "on feed, other id": 2,
+             "not on feed (in gap)": 3, "counted": 4}
+    for r in sorted(rows, key=lambda r: (order.get(r["verdict"], 9), r["time"]))[:show]:
+        f = r["feed"] or {}
+        table.add_row(r["time"][11:19], r["slug"][-32:], f"{r['qty']:g}",
+                      r["aggressor_intent"].removeprefix("ORDER_INTENT_"), r["verdict"],
+                      f"{f.get('px')}/{f.get('qty')}/{f.get('raw_side')}" if f else "-",
+                      str(f.get("conn", "-")))
+    console.print(table)
 
 
 @app.command("extremes-live-cancel")

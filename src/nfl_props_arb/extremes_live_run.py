@@ -33,7 +33,15 @@ from .extremes_live import (
     Intent,
     LiveTracker,
 )
-from .extremes_paper import DISCOVER_EVERY, STATUS_EVERY, append_log, discover_markets, read_log
+from .extremes_paper import (
+    DISCOVER_EVERY,
+    STATUS_EVERY,
+    append_log,
+    discover_markets,
+    raw_path,
+    raw_records,
+    read_log,
+)
 
 LIVE_LOG = Path("data/extremes/live.jsonl")
 DRY_LOG = Path("data/extremes/live-dryrun.jsonl")
@@ -196,6 +204,9 @@ async def run(
 
     last_discover = last_status = datetime.now(UTC)
     private_seen = 0
+    errors_shown = 0
+    raw_file = raw_path(log, last_discover)
+    say(f"raw stream capture -> {raw_file}")
     try:
         while True:
             now = datetime.now(UTC)
@@ -228,6 +239,7 @@ async def run(
                 m = private_q.get_nowait()
                 private_seen += 1
                 stamp = datetime.now(UTC)
+                append_log(raw_records([{**m, "_stream": "private"}], stamp), raw_file)
                 if "_gap" in m:
                     batch.append({"event": "gap", "ts": stamp.isoformat(), "stream": "private",
                                   **m["_gap"]})
@@ -252,11 +264,15 @@ async def run(
             while not market_q.empty() and len(pending) < 5000:
                 pending.append(market_q.get_nowait())
             stamp = datetime.now(UTC)
+            append_log(raw_records(pending, stamp), raw_file)
             for m in pending:
                 if "_gap" in m:
                     batch.append({"event": "gap", "ts": stamp.isoformat(), **m["_gap"]})
                     continue
                 if "_conn_error" in m or "error" in m or "code" in m:
+                    if errors_shown < 10:
+                        errors_shown += 1
+                        say(f"stream message not handled: {json.dumps(m)[:300]}")
                     continue
                 recs, intents = tracker.handle_market(m, stamp)
                 for r in recs:

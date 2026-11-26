@@ -44,6 +44,25 @@ def read_log(path: Path | str = DEFAULT_LOG) -> list[dict[str, Any]]:
     return out
 
 
+def raw_path(log_path: Path | str, started: datetime) -> Path:
+    """Where a run's raw stream capture goes: beside the log, one file per run start."""
+    p = Path(log_path)
+    return p.with_name(f"raw-{p.stem}-{started:%Y%m%dT%H%M}.jsonl")
+
+
+def raw_records(messages: list[dict[str, Any]], stamp: datetime) -> list[dict[str, Any]]:
+    """Every stream message except book snapshots, stamped with when it arrived.
+
+    The models log a trade only when it hits a bid of theirs, so a print they
+    misread leaves no trace. This keeps every trade print, subscription reply
+    and error as the venue sent it, to audit the feed against real fills.
+    Book snapshots are left out: they are most of the volume and the models
+    already act on them.
+    """
+    rx = stamp.isoformat()
+    return [{"_rx": rx, **m} for m in messages if "marketData" not in m]
+
+
 def append_log(records: list[dict[str, Any]], path: Path | str = DEFAULT_LOG) -> None:
     """Append a batch, fsynced once. Batched because a slate's joins run to ~20,000."""
     if not records:
@@ -105,6 +124,8 @@ async def run(
     tasks: list[asyncio.Task[None]] = []
     started = datetime.now(UTC)
     deadline = started + timedelta(hours=max_hours)
+    raw_file = raw_path(log_path, started)
+    say(f"raw stream capture -> {raw_file}")
 
     async def discover() -> None:
         metas = await asyncio.to_thread(discover_markets, hours)
@@ -166,6 +187,7 @@ async def run(
             while not queue.empty() and len(pending) < 5000:
                 pending.append(queue.get_nowait())
             stamp = datetime.now(UTC)
+            append_log(raw_records(pending, stamp), raw_file)
             for m in pending:
                 messages += 1
                 if "_gap" in m:

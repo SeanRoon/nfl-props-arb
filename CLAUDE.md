@@ -276,6 +276,36 @@ has the rules; the ones that bite:
 - The paper trader's 21 connections plus the live trader's few (one game) is
   fine; a full live slate (~22 more) is untested against any connection limit.
 
+### The feed does not show most real fills (2026-11-24)
+
+CIN@WAS, 105 live bids: **the venue filled 55 orders (65 trades); the shadow
+predicted 12.** Every shadow fill was real; the other 43 were not predicted,
+and all 55 settled against us (-$0.55 real vs -$0.12 shadow). Only **8 of the 65
+trades reached the models** -- the paper trader's and the live trader's own
+connections saw the same 8 -- and fills came behind displayed queues of
+50k-1.1M shares, mostly against `BUY_SHORT` takers (a NO buy at 0.99 minting
+against our YES at 0.01). The private stream also reported only 7 of 55;
+`extremes-live-reconcile` found the rest. **Until explained, the paper
+trader's P&L is not trustworthy** -- it reads the same feed with the same model.
+
+- **Raw capture:** both traders write every non-book stream message (trades,
+  subscription replies, errors, gaps; the live trader also every private
+  message), tagged `_conn` and `_rx`, to `data/extremes/raw-<log>-<start>.jsonl`.
+- **`extremes-live-audit --log ...`** pulls the account's trades
+  (`/v1/portfolio/activities`, the ground truth), saves them to
+  `<log>-venue-trades.jsonl`, and labels each real fill *counted*, *on feed,
+  not counted* (misread by the model), *on feed, other id*, or *not on feed*
+  (in or out of a gap).
+- A 70 s raw sample on GB@LAR (2026-11-26) showed 1-cent prints against YES
+  bids labelled taker `ORDER_SIDE_SELL` with `BUY_SHORT` intent -- what the
+  model expects -- so missing prints, not misread ones, is the leading theory.
+  Trade prints also carry `maker`/`taker` intent and outcome side.
+- **One trader per log:** `runlock.py` holds an OS lock on `<log>.lock`; a
+  second `extremes-paper`/`extremes-live` on the same log exits at once.
+- **Thanksgiving 2026 test:** `scripts/extremes_live_game.ps1 -Game <x>` (the
+  105-bid split, own log `live-<game>.jsonl`) on chi-det, phi-dal and kc-buf, plus
+  a hand-started 30 h paper run (`extremes_paper.ps1 -MaxHours 30`).
+
 ### Scheduling
 
 `scripts/autotrade_hourly.ps1` pins the working directory to the repo — config

@@ -25,6 +25,12 @@
 # Registered triggers are 6 pm Thu, 11 am Sun, 6 pm Mon, not the times above.
 #
 # Stop it:  New-Item data\HALT   (also stops the autotrader -- same kill switch)
+#
+# -MaxHours overrides the 20 h cap for a hand-started run (2026-11-25: 30 h to
+# cover all of Thanksgiving). A trigger that fires while such a run is going
+# finds the log locked and exits at once (runlock.py), so two never write it.
+
+param([string]$MaxHours = '20')
 
 $ErrorActionPreference = 'Stop'
 
@@ -55,7 +61,7 @@ Start-Process -FilePath cmd.exe -ArgumentList '/c', $settleCmd -WorkingDirectory
 # POLYMARKET_US_KEY_FILE as user env vars, like the autotrader.
 # 'Continue' around the native call: see autotrade_hourly.ps1 for why.
 $ErrorActionPreference = 'Continue'
-& uv run --extra execute nflprops extremes-paper --hours 36 --max-hours 20 *>&1 |
+& uv run --extra execute nflprops extremes-paper --hours 36 --max-hours $MaxHours *>&1 |
     ForEach-Object { "$_" } | Add-Content -Path $log -Encoding utf8
 $code = $LASTEXITCODE
 Start-Process -FilePath cmd.exe -ArgumentList '/c', $settleCmd -WorkingDirectory $repo -WindowStyle Hidden

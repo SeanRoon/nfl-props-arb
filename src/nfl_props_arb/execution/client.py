@@ -274,6 +274,33 @@ class LiveOrderClient:
             return BatchResult("unknown", ids, f"{len(ids)} ids for {len(orders)} orders")
         return BatchResult("accepted", ids, "")
 
+    def trade_activities(self, since: str = "", max_pages: int = 50) -> list[dict[str, Any]]:
+        """The account's trades (`GET /v1/portfolio/activities`, type TRADE), newest first.
+
+        The venue's own record of every fill, with both sides' orders: the
+        ground truth the streams are audited against. Pages until a trade older
+        than `since` (ISO-8601 UTC) or the end. Read-only; raises on failure.
+        """
+        path = "/v1/portfolio/activities"
+        out: list[dict[str, Any]] = []
+        cursor = None
+        for _ in range(max_pages):
+            params: dict[str, Any] = {"limit": 100, "types": "ACTIVITY_TYPE_TRADE"}
+            if cursor:
+                params["cursor"] = cursor
+            response = self._client.get(path, params=params,
+                                        headers=self.auth_headers("GET", path))
+            response.raise_for_status()
+            data = response.json()
+            page = [a["trade"] for a in data.get("activities") or [] if a.get("trade")]
+            out.extend(page)
+            if not page or data.get("eof") or not data.get("nextCursor"):
+                break
+            if since and min(str(t.get("createTime") or "") for t in page) < since:
+                break
+            cursor = data["nextCursor"]
+        return [t for t in out if not since or str(t.get("createTime") or "") >= since]
+
     def get_order(self, order_id: str) -> dict[str, Any] | None:
         """One order by id (`GET /v1/order/{id}`), or None if the venue has no such order."""
         path = f"/v1/order/{order_id}"
