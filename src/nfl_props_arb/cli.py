@@ -648,22 +648,21 @@ def extremes_settle(
 ) -> None:
     """Fetch settlements for every filled paper bid not yet settled. No report.
 
-    Also settles markets filled (really, or in the shadow model) by the live
-    trader's logs beside it -- one settlements file serves both. Writes to
-    settlements.jsonl beside the log, so it is safe to run while either trader
-    streams. Progress is saved as it goes; rerun to resume.
+    Also settles markets filled (really, or in the shadow model) by every live
+    trader log beside it -- live.jsonl, live-dryrun.jsonl and the per-game
+    live-<game>.jsonl logs, counting fills `extremes-live-reconcile` recovered --
+    one settlements file serves both. Writes to settlements.jsonl beside the log,
+    so it is safe to run while either trader streams. Progress is saved as it
+    goes; rerun to resume.
     """
     from .extremes import bids_from_log
     from .extremes_live import LiveTracker
-    from .extremes_live_run import read_live_records
+    from .extremes_live_run import live_logs, read_live_records
     from .extremes_paper import read_log_with_settlements, settle_slugs
 
     records = read_log_with_settlements(log_path)
     slugs = {b.slug for b in bids_from_log(records).values() if b.optimistic_filled > 0}
-    for name in ("live.jsonl", "live-dryrun.jsonl"):
-        live_log = log_path.with_name(name)
-        if not live_log.exists():
-            continue
+    for live_log in live_logs(log_path.parent):
         t = LiveTracker()
         t.replay(read_live_records(live_log))
         slugs |= {k[0] for k, o in t.orders.items() if o.cum_qty > 0}

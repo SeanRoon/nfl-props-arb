@@ -55,6 +55,17 @@ def reconcile_path(log_path: Path | str) -> Path:
     return p.with_name(p.stem + "-reconcile.jsonl")
 
 
+# Files beside a live log that are not trader logs themselves.
+_LIVE_SIDECARS = ("-reconcile", "-venue-trades")
+
+
+def live_logs(directory: Path | str) -> list[Path]:
+    """Every live trader log in `directory`: live.jsonl, live-dryrun.jsonl and the
+    per-game live-<game>.jsonl logs, without their reconcile/venue-trades sidecars."""
+    return sorted(p for p in Path(directory).glob("live*.jsonl")
+                  if not p.stem.endswith(_LIVE_SIDECARS))
+
+
 def read_live_records(log_path: Path | str) -> list[dict[str, Any]]:
     return read_log(log_path) + read_log(reconcile_path(log_path))
 

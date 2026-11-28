@@ -15,7 +15,7 @@ from nfl_props_arb.extremes_live import (
     compare_rows,
     parse_skip,
 )
-from nfl_props_arb.extremes_live_run import dry_ack
+from nfl_props_arb.extremes_live_run import dry_ack, live_logs
 
 NOW = datetime(2026, 11, 26, 20, 0, tzinfo=UTC)
 
@@ -377,3 +377,13 @@ def test_keep_awake_sets_then_clears_the_execution_state(monkeypatch):
     with awake.keep_awake() as ok:
         assert ok
     assert calls == [awake.ES_CONTINUOUS | awake.ES_SYSTEM_REQUIRED, awake.ES_CONTINUOUS]
+
+
+def test_live_logs_finds_per_game_logs_but_not_sidecars(tmp_path):
+    names = ["live.jsonl", "live-dryrun.jsonl", "live-kc-buf.jsonl", "live-kc-buf-reconcile.jsonl",
+             "live-reconcile.jsonl", "live-venue-trades.jsonl", "live-kc-buf.lock",
+             "paper.jsonl", "raw-live-kc-buf-20261126T0149.jsonl", "settlements.jsonl"]
+    for n in names:
+        (tmp_path / n).write_text("")
+    assert [p.name for p in live_logs(tmp_path)] == [
+        "live-dryrun.jsonl", "live-kc-buf.jsonl", "live.jsonl"]
