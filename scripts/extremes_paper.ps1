@@ -22,7 +22,7 @@
 # the trader holds it awake while it streams (awake.py). Neither works on
 # battery: this laptop's plan blocks wake timers on DC, and closing the lid
 # sleeps regardless. Nothing is watched while it sleeps; a restart is a gap.
-# Registered triggers are 6 pm Thu, 11 am Sun, 6 pm Mon, not the times above.
+# Registered triggers are 6 pm Thu, 10:25 am Sun, 6 pm Mon, not the times above.
 #
 # Stop it:  New-Item data\HALT   (also stops the autotrader -- same kill switch)
 #
